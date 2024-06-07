@@ -1,0 +1,12 @@
+{
+  "topic": "Utility",
+  "packs": [
+    {
+      "pack_id": "KillEmptyBoats",
+      "pack_name": "Kill Empty Boats",
+      "pack_description": "Adds a QOL Command to delete all empty boats.",
+      "conflict": [],
+      "compatibility": []
+    }
+  ]
+}

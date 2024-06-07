@@ -1,0 +1,26 @@
+{
+  "topic": "Anti Grief",
+  "packs": [
+    {
+      "pack_id": "AntiCreeperGrief",
+      "pack_name": "Anti Creeper Grief",
+      "pack_description": "Makes Creepers not destroy blocks when it explodes.",
+      "conflict": [],
+      "compatibility": []
+    },
+    {
+      "pack_id": "AntiEndermanGrief",
+      "pack_name": "Anti Enderman Grief",
+      "pack_description": "Makes Enderman not pick up blocks.",
+      "conflict": [],
+      "compatibility": []
+    },
+    {
+      "pack_id": "AntiGhastGrief",
+      "pack_name": "Anti Ghast Grief",
+      "pack_description": "Makes Ghast fireballs not destroy blocks",
+      "conflict": [],
+      "compatibility": []
+    }
+  ]
+}

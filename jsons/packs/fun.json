@@ -1,0 +1,19 @@
+{
+  "topic": "Fun",
+  "packs": [
+    {
+      "pack_id": "LargerPhantoms",
+      "pack_name": "Larger Phantoms",
+      "pack_description": "Makes Phantoms larger, the longer you don't sleep.",
+      "conflict": [],
+      "compatibility": []
+    },
+    {
+      "pack_id": "VillagerDeathMessages",
+      "pack_name": "Villager Death Messages",
+      "pack_description": "Makes a chat message when a villager is killed.",
+      "conflict": [],
+      "compatibility": []
+    }
+  ]
+}
