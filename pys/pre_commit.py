@@ -138,7 +138,7 @@ def pre_commit():
                 to_add_pack = to_add_pack.replace("pack_description", file["packs"][i]["pack_description"])
                 to_add_pack = to_add_pack.replace("tweaknumber", f"tweak{packs}")
                 to_add_pack = to_add_pack.replace("relloctopackicon", f'packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/pack_icon.png')
-                to_add_pack = to_add_pack.replace("https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/","../")
+                #to_add_pack = to_add_pack.replace("https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/","../")
                 html += to_add_pack
         html += category_end
     html += html_end
