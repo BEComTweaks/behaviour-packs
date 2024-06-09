@@ -12,7 +12,7 @@
 </div>
 <div align="left">
 
-A repo containing every single tweak **possible** ported from <a href="https://vanillatweaks.net/picker/behaviour-packs">Vanilla Tweaks' Behaviour Packs</a> with a Command Line and Web Interface.
+A repo containing every single tweak **possible** ported from <a href="https://vanillatweaks.net/picker/datapacks">Vanilla Tweaks' Data-Packs</a> with a Command Line and Web Interface.
 
 How to clone:
 
