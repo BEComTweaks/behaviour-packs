@@ -12,7 +12,7 @@ function toggleCategory(label) {
 function downloadSelectedTweaks() {
     var packName = document.getElementById('fileNameInput').value;
     if (!packName) {
-        packName=`BTRP-${String(Math.floor(Math.random()*1000000)).padStart(6,"0")}`
+        packName=`BTBP-${String(Math.floor(Math.random()*1000000)).padStart(6,"0")}`
     }
     const selectedTweaks = [];
     const tweakElements = document.querySelectorAll('.tweak.selected');
@@ -25,39 +25,17 @@ function downloadSelectedTweaks() {
     });
 
     const tweaksByCategory = {
-        "Aesthetic": [],
-        "Colorful Slime": [],
-        "Fixes and Consistency": [],
-        "Fun": [],
-        "HUD and GUI": [],
-        "Lower and Sides": [],
-        "Menu Panoramas": [],
-        "More Zombies": [],
-        "Parity": [],
-        "Peace and Quiet": [],
-        "Retro": [],
-        "Terrain": [],
-        "Unobtrusive": [],
-        "Utility": [],
-        "Variation": []
+        "Anti Grief":[],
+        "Drops":[],
+        "Fun":[],
+        "Utility":[]
     };
 
     const indicesByCategory = {
-        "Aesthetic": [],
-        "Colorful Slime": [],
-        "Fixes and Consistency": [],
-        "Fun": [],
-        "HUD and GUI": [],
-        "Lower and Sides": [],
-        "Menu Panoramas": [],
-        "More Zombies": [],
-        "Parity": [],
-        "Peace and Quiet": [],
-        "Retro": [],
-        "Terrain": [],
-        "Unobtrusive": [],
-        "Utility": [],
-        "Variation": []
+        "Anti Grief":[],
+        "Drops":[],
+        "Fun":[],
+        "Utility":[]
     };
 
     selectedTweaks.forEach(tweak => {
@@ -66,65 +44,21 @@ function downloadSelectedTweaks() {
     });
 
     const jsonData = {
-        "Aesthetic": {
-            "packs": tweaksByCategory["Aesthetic"],
-            "index": indicesByCategory["Aesthetic"]
+        "Anti Grief": {
+            "packs": tweaksByCategory["Anti Grief"],
+            "index": indicesByCategory["Anti Grief"]
         },
-        "Colorful Slime": {
-            "packs": tweaksByCategory["Colorful Slime"],
-            "index": indicesByCategory["Colorful Slime"]
-        },
-        "Fixes and Consistency": {
-            "packs": tweaksByCategory["Fixes and Consistency"],
-            "index": indicesByCategory["Fixes and Consistency"]
+        "Drops": {
+            "packs": tweaksByCategory["Drops"],
+            "index": indicesByCategory["Drops"]
         },
         "Fun": {
             "packs": tweaksByCategory["Fun"],
             "index": indicesByCategory["Fun"]
         },
-        "HUD and GUI": {
-            "packs": tweaksByCategory["HUD and GUI"],
-            "index": indicesByCategory["HUD and GUI"]
-        },
-        "Lower and Sides": {
-            "packs": tweaksByCategory["Lower and Sides"],
-            "index": indicesByCategory["Lower and Sides"]
-        },
-        "Menu Panoramas": {
-            "packs": tweaksByCategory["Menu Panoramas"],
-            "index": indicesByCategory["Menu Panoramas"]
-        },
-        "More Zombies": {
-            "packs": tweaksByCategory["More Zombies"],
-            "index": indicesByCategory["More Zombies"]
-        },
-        "Parity": {
-            "packs": tweaksByCategory["Parity"],
-            "index": indicesByCategory["Parity"]
-        },
-        "Peace and Quiet": {
-            "packs": tweaksByCategory["Peace and Quiet"],
-            "index": indicesByCategory["Peace and Quiet"]
-        },
-        "Retro": {
-            "packs": tweaksByCategory["Retro"],
-            "index": indicesByCategory["Retro"]
-        },
-        "Terrain": {
-            "packs": tweaksByCategory["Terrain"],
-            "index": indicesByCategory["Terrain"]
-        },
-        "Unobtrusive": {
-            "packs": tweaksByCategory["Unobtrusive"],
-            "index": indicesByCategory["Unobtrusive"]
-        },
         "Utility": {
             "packs": tweaksByCategory["Utility"],
             "index": indicesByCategory["Utility"]
-        },
-        "Variation": {
-            "packs": tweaksByCategory["Variation"],
-            "index": indicesByCategory["Variation"]
         },
         "raw": selectedTweaks.map(tweak => tweak.name)
     };
@@ -133,7 +67,7 @@ function downloadSelectedTweaks() {
 const serverip = 'localhost';
 
 function fetchPack(protocol, jsonData,packName) {
-    fetch(`${protocol}://${serverip}/exportPack`, {
+    fetch(`${protocol}://${serverip}/exportBehaviourPack`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
