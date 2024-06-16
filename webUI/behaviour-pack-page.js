@@ -10,6 +10,34 @@ function toggleSelection(element) {
     element.classList.toggle('selected');
     const checkbox = element.querySelector('input[type="checkbox"]');
     checkbox.checked = !checkbox.checked;
+    var selectedTweaks = [];
+    const tweakElements = document.querySelectorAll('.tweak.selected');
+    tweakElements.forEach(tweak => {
+        const labelElement = tweak.querySelector('.tweak-info .tweak-title');
+        selectedTweaks.push("**" + tweak.dataset.category)
+        selectedTweaks.push(labelElement.textContent);
+    });
+    selectedTweaks = [...new Set(selectedTweaks)];
+    document.getElementById('selected-tweaks').innerHTML = ''; // Clear the container
+    selectedTweaks.forEach(tweak => {
+        const tweakItem = document.createElement('div');
+        if (tweak.includes("**")) {
+            // tweakItem.className = ("tweakListCategory")
+            var label = document.createElement('label')
+            tweak = tweak.substring(2)
+            label.textContent = tweak
+            label.className = 'tweak-list-category'
+            tweakItem.append(label);
+        }
+        else {
+            tweakItem.className='tweak-list-pack'
+            tweakItem.textContent = tweak;
+        }
+        document.getElementById('selected-tweaks').appendChild(tweakItem);
+    });
+    console.log(selectedTweaks.length)
+    if (selectedTweaks.length == 0) document.getElementById('selected-tweaks').style.display = "none"
+    else document.getElementById('selected-tweaks').style.display = "block"
 }
 
 function toggleCategory(label) {
@@ -23,14 +51,14 @@ function downloadSelectedTweaks() {
         packName = `BTBP-${String(Math.floor(Math.random() * 1000000)).padStart(6, "0")}`
     }
     packName = packName.replaceAll('/', '-')
-        const selectedTweaks = [];
+    const selectedTweaks = [];
     const tweakElements = document.querySelectorAll('.tweak.selected');
     tweakElements.forEach(tweak => {
         selectedTweaks.push({
             category: tweak.dataset.category,
             name: tweak.dataset.name,
             index: parseInt(tweak.dataset.index)
-        });
+        })
     });
 
     const tweaksByCategory = {
@@ -85,29 +113,29 @@ function fetchPack(protocol, jsonData, packName) {
         },
         body: JSON.stringify(jsonData)
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        hideLoading();
-        return response.blob();
-    })
-    .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        a.download = `${packName}.mcpack`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-    })
-    .catch(error => {
-        if (protocol === 'https') {
-            console.error('HTTPS error, trying HTTP:', error);
-            fetchPack('http', jsonData, packName); // Retry with HTTP
-        } else {
-            console.error('Error:', error);
-        }
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            hideLoading();
+            return response.blob();
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `${packName}.mcpack`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
+            if (protocol === 'https') {
+                console.error('HTTPS error, trying HTTP:', error);
+                fetchPack('http', jsonData, packName); // Retry with HTTP
+            } else {
+                console.error('Error:', error);
+            }
+        });
 }
