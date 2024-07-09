@@ -1,214 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Bedrock Tweaks/behaviour-packs</title>
-        <link rel="stylesheet" href="behaviour-pack-page.css">
-    </head>
-    <body>
-        <br>
-        <div class="image-container">
-            <a href="https://becomtweaks.github.io"><img id="title" alt="Behaviour Packs" src="images/title.png"></a>
-        </div>
-        <div id="background-container"></div>
-        <script>
-            // Array of textures with their corresponding probabilities
-            const textures = [
-                { src: "images/blocks/deepslate.png", probability: 0.618 },
-                { src: "images/blocks/deepslate_copper_ore.png", probability: 0.128 },
-                { src: "images/blocks/deepslate_coal_ore.png", probability: 0.128 },
-                { src: "images/blocks/deepslate_iron_ore.png", probability: 0.064 },
-                { src: "images/blocks/deepslate_lapis_ore.png", probability: 0.032 },
-                { src: "images/blocks/deepslate_redstone_ore.png", probability: 0.016 },
-                { src: "images/blocks/deepslate_gold_ore.png", probability: 0.008 },
-                { src: "images/blocks/deepslate_emerald_ore.png", probability: 0.004 },
-                { src: "images/blocks/deepslate_diamond_ore.png", probability: 0.002 }
-            ];
-            
-            // Function to select a texture based on the defined probabilities
-            function selectTexture() {
-                const rand = Math.random();
-                let cumulativeProbability = 0;
-            
-                for (const texture of textures) {
-                    cumulativeProbability += texture.probability;
-                    if (rand < cumulativeProbability) {
-                        return texture.src;
-                    }
-                }
-            }
-            
-            // Function to create tiles with random background images
-            function createTiles() {
-                const container = document.getElementById("background-container");
-                const numColumns = Math.ceil(window.innerWidth / 100) + 2;
-                const numRows = Math.ceil(window.innerHeight / 100) + 2;
-            
-                container.innerHTML = "";
-            
-                for (let i = 0; i < numColumns; i++) {
-                    const rowDiv = document.createElement("div");
-                    rowDiv.className = "row"; // Add a class for styling purposes if needed
-            
-                    for (let j = 0; j < numRows; j++) {
-                        const tile = document.createElement("div");
-                        tile.className = "tile";
-                        tile.style.backgroundImage = `url("${selectTexture()}")`;
-                        rowDiv.appendChild(tile);
-                    }
-            
-                    container.appendChild(rowDiv);
-                }
-            }
-            // Call the function to create tiles
-            createTiles();
-            
-            // Redraw tiles on window resize to maintain the grid
-            window.addEventListener("resize", () => {
-                document.getElementById("background-container").innerHTML = "";
-                createTiles();
-            });
-        </script>
-        <div class="container">
-            <!-- Categories -->
-            <div class="category">
-                <div class="category-label" onclick="toggleCategory(this)">Anti Grief</div>
-                <div class="tweaks">
-                    <div class="tweak" onclick="toggleSelection(this)" data-category="Anti Grief"
-                        data-name="AntiCreeperGrief" data-index="0">
-                        <div class="tweak-info">
-                            <input type="checkbox" id="tweak0" name="tweak" value="tweak0">
-                            <img src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/anti grief/AntiCreeperGrief/pack_icon.png"
-                                style="width:82px; height:82px;" alt="Anti Creeper Grief"><br>
-                            <label for="tweak" class="tweak-title">Anti Creeper Grief</label>
-                            <div class="tweak-description">Makes Creepers not destroy blocks when it explodes.</div>
-                        </div>
-                    </div>
-                    <div class="tweak" onclick="toggleSelection(this)" data-category="Anti Grief"
-                        data-name="AntiEndermanGrief" data-index="1">
-                        <div class="tweak-info">
-                            <input type="checkbox" id="tweak1" name="tweak" value="tweak1">
-                            <img src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/anti grief/AntiEndermanGrief/pack_icon.png"
-                                style="width:82px; height:82px;" alt="Anti Enderman Grief"><br>
-                            <label for="tweak" class="tweak-title">Anti Enderman Grief</label>
-                            <div class="tweak-description">Makes Enderman not pick up blocks.</div>
-                        </div>
-                    </div>
-                    <div class="tweak" onclick="toggleSelection(this)" data-category="Anti Grief"
-                        data-name="AntiGhastGrief" data-index="2">
-                        <div class="tweak-info">
-                            <input type="checkbox" id="tweak2" name="tweak" value="tweak2">
-                            <img src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/anti grief/AntiGhastGrief/pack_icon.png"
-                                style="width:82px; height:82px;" alt="Anti Ghast Grief"><br>
-                            <label for="tweak" class="tweak-title">Anti Ghast Grief</label>
-                            <div class="tweak-description">Makes Ghast fireballs not destroy blocks</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="category">
-                <div class="category-label" onclick="toggleCategory(this)">Drops</div>
-                <div class="tweaks">
-                    <div class="tweak" onclick="toggleSelection(this)" data-category="Drops"
-                        data-name="Bat Membranes" data-index="0">
-                        <div class="tweak-info">
-                            <input type="checkbox" id="tweak3" name="tweak" value="tweak3">
-                            <img src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/drops/Bat Membranes/pack_icon.png"
-                                style="width:82px; height:82px;" alt="Bat Membranes"><br>
-                            <label for="tweak" class="tweak-title">Bat Membranes</label>
-                            <div class="tweak-description">Makes Bats drop membranes.</div>
-                        </div>
-                    </div>
-                    <div class="tweak" onclick="toggleSelection(this)" data-category="Drops"
-                        data-name="DoubleShulkerShells" data-index="1">
-                        <div class="tweak-info">
-                            <input type="checkbox" id="tweak4" name="tweak" value="tweak4">
-                            <img src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/drops/DoubleShulkerShells/pack_icon.png"
-                                style="width:82px; height:82px;" alt="Double Shulker Shells"><br>
-                            <label for="tweak" class="tweak-title">Double Shulker Shells</label>
-                            <div class="tweak-description">Makes Shulkers drop two shells instead of one.</div>
-                        </div>
-                    </div>
-                    <div class="tweak" onclick="toggleSelection(this)" data-category="Drops"
-                        data-name="DragonDrops" data-index="2">
-                        <div class="tweak-info">
-                            <input type="checkbox" id="tweak5" name="tweak" value="tweak5">
-                            <img src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/drops/DragonDrops/pack_icon.png"
-                                style="width:82px; height:82px;" alt="Dragon Drops"><br>
-                            <label for="tweak" class="tweak-title">Dragon Drops</label>
-                            <div class="tweak-description">Makes the Ender Dragon drop an Elytra on defeat.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="category">
-                <div class="category-label" onclick="toggleCategory(this)">Fun</div>
-                <div class="tweaks">
-                    <div class="tweak" onclick="toggleSelection(this)" data-category="Fun"
-                        data-name="LargerPhantoms" data-index="0">
-                        <div class="tweak-info">
-                            <input type="checkbox" id="tweak6" name="tweak" value="tweak6">
-                            <img src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/fun/LargerPhantoms/pack_icon.png"
-                                style="width:82px; height:82px;" alt="Larger Phantoms"><br>
-                            <label for="tweak" class="tweak-title">Larger Phantoms</label>
-                            <div class="tweak-description">Makes Phantoms larger, the longer you don't sleep.</div>
-                        </div>
-                    </div>
-                    <div class="tweak" onclick="toggleSelection(this)" data-category="Fun"
-                        data-name="VillagerDeathMessages" data-index="1">
-                        <div class="tweak-info">
-                            <input type="checkbox" id="tweak7" name="tweak" value="tweak7">
-                            <img src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/fun/VillagerDeathMessages/pack_icon.png"
-                                style="width:82px; height:82px;" alt="Villager Death Messages"><br>
-                            <label for="tweak" class="tweak-title">Villager Death Messages</label>
-                            <div class="tweak-description">Makes a chat message when a villager is killed.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="category">
-                <div class="category-label" onclick="toggleCategory(this)">Utility</div>
-                <div class="tweaks">
-                    <div class="tweak" onclick="toggleSelection(this)" data-category="Utility"
-                        data-name="KillEmptyBoats" data-index="0">
-                        <div class="tweak-info">
-                            <input type="checkbox" id="tweak8" name="tweak" value="tweak8">
-                            <img src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/utility/KillEmptyBoats/pack_icon.png"
-                                style="width:82px; height:82px;" alt="Kill Empty Boats"><br>
-                            <label for="tweak" class="tweak-title">Kill Empty Boats</label>
-                            <div class="tweak-description">Adds a QOL Command to delete all empty boats.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="download-container">
-                <div class="file-download">
-                    <input type="text" id="fileNameInput" placeholder="Enter Pack name">
-                </div>
-                <button class="download-selected-button" onclick="downloadSelectedTweaks()">Download Selected Tweaks</button>
-                <div id="loading-circle"></div>
-                <div id="selected-tweaks" style="display: none;"></div>
-            </div>
+ <head>
+  <meta content="Bedrock Edition Community Tweaks Behaviour Packs" name="author"/>
+  <meta content="Behaviour Pack tweak selector. Unofficially updated by BEComTweaks on GitHub" name="description"/>
+  <meta charset="utf-8">
+   <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>
+     Behaviour Packs
+    </title>
+    <link href="behaviour-pack-page.css" rel="stylesheet"/>
+    <link href="images/icon.png" rel="icon" type="image/x-icon"/>
+   </meta>
+  </meta>
+ </head>
+ <body>
+  <br/>
+  <div class="image-container">
+   <a href="https://becomtweaks.github.io">
+    <img alt="Behaviour Packs" id="title" src="images/title.png"/>
+   </a>
+  </div>
+  <div id="background-container">
+  </div>
+  <script>
+   const textures = [{ src: "images/blocks/deepslate.png", probability: 0.618 },{ src: "images/blocks/deepslate_copper_ore.png", probability: 0.128 },{ src: "images/blocks/deepslate_coal_ore.png", probability: 0.128 },{ src: "images/blocks/deepslate_iron_ore.png", probability: 0.064 },{ src: "images/blocks/deepslate_lapis_ore.png", probability: 0.032 },{ src: "images/blocks/deepslate_redstone_ore.png", probability: 0.016 },{ src: "images/blocks/deepslate_gold_ore.png", probability: 0.008 },{ src: "images/blocks/deepslate_emerald_ore.png", probability: 0.004 },{ src: "images/blocks/deepslate_diamond_ore.png", probability: 0.002 }];function selectTexture() {const rand = Math.random();let cumulativeProbability = 0;for (const texture of textures) {cumulativeProbability += texture.probability;if (rand < cumulativeProbability) {return texture.src;}}} function createTiles() {const container = document.getElementById("background-container");const numColumns = Math.ceil(window.innerWidth / 100) + 2;const numRows = Math.ceil(window.innerHeight / 100) + 2;container.innerHTML = "";for (let i = 0; i < numColumns; i++) {const rowDiv = document.createElement("div");rowDiv.className = "row"; for (let j = 0; j < numRows; j++) {const tile = document.createElement("div");tile.className = "tile";tile.style.backgroundImage = `url("${selectTexture()}")`;rowDiv.appendChild(tile);}container.appendChild(rowDiv);}}createTiles();window.addEventListener("resize", () => {document.getElementById("background-container").innerHTML = "";createTiles();});
+  </script>
+  <div class="container">
+   <!-- Categories -->
+   <div class="category">
+    <div class="category-label" onclick="toggleCategory(this)">
+     Anti Grief
+    </div>
+    <div class="tweaks">
+     <div class="tweak" data-category="Anti Grief" data-index="0" data-name="AntiCreeperGrief" onclick="toggleSelection(this)">
+      <div class="tweak-info">
+       <input id="tweak0" name="tweak" type="checkbox" value="tweak0"/>
+       <img alt="Anti Creeper Grief" src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/anti grief/AntiCreeperGrief/pack_icon.png" style="width:82px; height:82px;"/>
+       <br/>
+       <label class="tweak-title" for="tweak">
+        Anti Creeper Grief
+       </label>
+       <div class="tweak-description">
+        Makes Creepers not destroy blocks when it explodes.
        </div>
-        <script src="behaviour-pack-page.js"></script>
-    </body>
-    <footer style="auto" class="footer-container">
-        <div class="credits-footer">
-            <h2>This would not have been possible if not for the following</h2>
-            <h3>Websites<br></h3>
-            <p><br><a href="https://vanillatweaks.net">Vanilla Tweaks</a><br>
-            - Without them, Bedrock Tweaks would have not been this way
-            <br><a href="https://bedrocktweaks.net">Bedrock Tweaks</a><br>
-            - Without DrAV, this would have taken a long time to complete</p>
-            <h3>Individuals<br></h3>
-            <p><a href="https://github.com/yzabeast1">YzaBeast1</a><br>
-            - Pointed out issues with my code preventing Linux Distributions from running the scripts<br>
-            - Made the webUI and backend if we host it
-            <br><a href="https://github.com/NSPC911">NSPC911</a><br>
-            - Yep, that's me, the one who started this all!</p>
-            <p>If you contributed directly or indirectly and want a place here, contact me on Discord at <code>@nspg911</code></p>
-			<p><a href="https://github.com/BedrockTweaks/behaviour-packs">GitHub</a></p>
-        </div>
-    </footer>
+      </div>
+     </div>
+     <div class="tweak" data-category="Anti Grief" data-index="1" data-name="AntiEndermanGrief" onclick="toggleSelection(this)">
+      <div class="tweak-info">
+       <input id="tweak1" name="tweak" type="checkbox" value="tweak1"/>
+       <img alt="Anti Enderman Grief" src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/anti grief/AntiEndermanGrief/pack_icon.png" style="width:82px; height:82px;"/>
+       <br/>
+       <label class="tweak-title" for="tweak">
+        Anti Enderman Grief
+       </label>
+       <div class="tweak-description">
+        Makes Enderman not pick up blocks.
+       </div>
+      </div>
+     </div>
+     <div class="tweak" data-category="Anti Grief" data-index="2" data-name="AntiGhastGrief" onclick="toggleSelection(this)">
+      <div class="tweak-info">
+       <input id="tweak2" name="tweak" type="checkbox" value="tweak2"/>
+       <img alt="Anti Ghast Grief" src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/anti grief/AntiGhastGrief/pack_icon.png" style="width:82px; height:82px;"/>
+       <br/>
+       <label class="tweak-title" for="tweak">
+        Anti Ghast Grief
+       </label>
+       <div class="tweak-description">
+        Makes Ghast fireballs not destroy blocks
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="category">
+    <div class="category-label" onclick="toggleCategory(this)">
+     Drops
+    </div>
+    <div class="tweaks">
+     <div class="tweak" data-category="Drops" data-index="0" data-name="Bat Membranes" onclick="toggleSelection(this)">
+      <div class="tweak-info">
+       <input id="tweak3" name="tweak" type="checkbox" value="tweak3"/>
+       <img alt="Bat Membranes" src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/drops/Bat Membranes/pack_icon.png" style="width:82px; height:82px;"/>
+       <br/>
+       <label class="tweak-title" for="tweak">
+        Bat Membranes
+       </label>
+       <div class="tweak-description">
+        Makes Bats drop membranes.
+       </div>
+      </div>
+     </div>
+     <div class="tweak" data-category="Drops" data-index="1" data-name="DoubleShulkerShells" onclick="toggleSelection(this)">
+      <div class="tweak-info">
+       <input id="tweak4" name="tweak" type="checkbox" value="tweak4"/>
+       <img alt="Double Shulker Shells" src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/drops/DoubleShulkerShells/pack_icon.png" style="width:82px; height:82px;"/>
+       <br/>
+       <label class="tweak-title" for="tweak">
+        Double Shulker Shells
+       </label>
+       <div class="tweak-description">
+        Makes Shulkers drop two shells instead of one.
+       </div>
+      </div>
+     </div>
+     <div class="tweak" data-category="Drops" data-index="2" data-name="DragonDrops" onclick="toggleSelection(this)">
+      <div class="tweak-info">
+       <input id="tweak5" name="tweak" type="checkbox" value="tweak5"/>
+       <img alt="Dragon Drops" src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/drops/DragonDrops/pack_icon.png" style="width:82px; height:82px;"/>
+       <br/>
+       <label class="tweak-title" for="tweak">
+        Dragon Drops
+       </label>
+       <div class="tweak-description">
+        Makes the Ender Dragon drop an Elytra on defeat.
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="category">
+    <div class="category-label" onclick="toggleCategory(this)">
+     Fun
+    </div>
+    <div class="tweaks">
+     <div class="tweak" data-category="Fun" data-index="0" data-name="LargerPhantoms" onclick="toggleSelection(this)">
+      <div class="tweak-info">
+       <input id="tweak6" name="tweak" type="checkbox" value="tweak6"/>
+       <img alt="Larger Phantoms" src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/fun/LargerPhantoms/pack_icon.png" style="width:82px; height:82px;"/>
+       <br/>
+       <label class="tweak-title" for="tweak">
+        Larger Phantoms
+       </label>
+       <div class="tweak-description">
+        Makes Phantoms larger, the longer you don't sleep.
+       </div>
+      </div>
+     </div>
+     <div class="tweak" data-category="Fun" data-index="1" data-name="VillagerDeathMessages" onclick="toggleSelection(this)">
+      <div class="tweak-info">
+       <input id="tweak7" name="tweak" type="checkbox" value="tweak7"/>
+       <img alt="Villager Death Messages" src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/fun/VillagerDeathMessages/pack_icon.png" style="width:82px; height:82px;"/>
+       <br/>
+       <label class="tweak-title" for="tweak">
+        Villager Death Messages
+       </label>
+       <div class="tweak-description">
+        Makes a chat message when a villager is killed.
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="category">
+    <div class="category-label" onclick="toggleCategory(this)">
+     Utility
+    </div>
+    <div class="tweaks">
+     <div class="tweak" data-category="Utility" data-index="0" data-name="KillEmptyBoats" onclick="toggleSelection(this)">
+      <div class="tweak-info">
+       <input id="tweak8" name="tweak" type="checkbox" value="tweak8"/>
+       <img alt="Kill Empty Boats" src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/packs/utility/KillEmptyBoats/pack_icon.png" style="width:82px; height:82px;"/>
+       <br/>
+       <label class="tweak-title" for="tweak">
+        Kill Empty Boats
+       </label>
+       <div class="tweak-description">
+        Adds a QOL Command to delete all empty boats.
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="download-container">
+    <div class="file-download">
+     <input id="fileNameInput" placeholder="Enter Pack name" type="text"/>
+    </div>
+    <button class="download-selected-button" onclick="downloadSelectedTweaks()">
+     Download Selected Tweaks
+    </button>
+    <div id="loading-circle">
+    </div>
+   </div>
+  </div>
+  <script src="behaviour-pack-page.js">
+  </script>
+ </body>
+ <footer class="footer-container" style="auto">
+  <div class="credits-footer">
+   <h2>
+    This would not have been possible if not for the following
+   </h2>
+   <h3>
+    Websites
+    <br/>
+   </h3>
+   <p>
+    <br/>
+    <a href="https://vanillatweaks.net">
+     Vanilla Tweaks
+    </a>
+    <br/>
+    - Without them, Bedrock Tweaks would have not been this way
+    <br/>
+    <a href="https://bedrocktweaks.net">
+     Bedrock Tweaks
+    </a>
+    <br/>
+    - Without DrAV, this would have taken a long time to complete
+   </p>
+   <h3>
+    Individuals
+    <br/>
+   </h3>
+   <p>
+    <a href="https://github.com/yzabeast1">
+     YzaBeast1
+    </a>
+    <br/>
+    - Pointed out issues with my code preventing Linux Distributions from running the scripts
+    <br/>
+    - Made the webUI and backend if we host it
+    <br/>
+    <a href="https://github.com/NSPC911">
+     NSPC911
+    </a>
+    <br/>
+    - Yep, that's me, the one who started this all!
+   </p>
+   <p>
+    If you contributed directly or indirectly and want a place here, contact me on Discord at
+    <code>
+     @nspg911
+    </code>
+   </p>
+   <p>
+    <a href="https://github.com/BedrockTweaks/Bedrock-Tweaks-Base">
+     GitHub
+    </a>
+   </p>
+  </div>
+ </footer>
 </html>

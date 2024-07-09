@@ -12,30 +12,33 @@ if str(os.getcwd()).endswith("system32"):
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 from custom_functions import *
-check("clrprint")  # Check for clrprint module
+check("clrprint")
 from clrprint import clrprint
-check("markdown")#  Check for markdown module
+check("markdown")
 from markdown import markdown
+check("bs4","beautifulsoup4")
+check("lxml")
+from bs4 import BeautifulSoup
 
-category_start = '\n            <div class="category">\n                <div class="category-label" onclick="toggleCategory(this)">topic_name</div>\n                <div class="tweaks">'
-pack_start = '\n                    <div class="tweak" onclick="toggleSelection(this)" data-category="topic_name"\n                        data-name="pack_id" data-index="pack_index">'
-html_comp = '\n                        <div class="comp-hover-text">Incompatible with: <incompatible></div>'
-pack_mid = '\n                        <div class="tweak-info">\n                            <input type="checkbox" id="tweaknumber" name="tweak" value="tweaknumber">\n                            <img src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/relloctopackicon"\n                                style="width:82px; height:82px;" alt="pack_name"><br>\n                            <label for="tweak" class="tweak-title">pack_name</label>\n                            <div class="tweak-description">pack_description</div>\n                        </div>'
-html_conf = '\n                        <div class="conf-hover-text">Conflicts with: <conflicts></div>'
-pack_end = '\n                    </div>'
+category_start = '<div class="category"><div class="category-label" onclick="toggleCategory(this)">topic_name</div><div class="tweaks">'
+pack_start = '<div class="tweak" onclick="toggleSelection(this)" data-category="topic_name"data-name="pack_id" data-index="pack_index">'
+html_comp = '<div class="comp-hover-text">Incompatible with: <incompatible></div>'
+pack_mid = '<div class="tweak-info"><input type="checkbox" id="tweaknumber" name="tweak" value="tweaknumber"><img src="https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/relloctopackicon"style="width:82px; height:82px;" alt="pack_name"><br><label for="tweak" class="tweak-title">pack_name</label><div class="tweak-description">pack_description</div></div>'
+html_conf = '<div class="conf-hover-text">Conflicts with: <conflicts></div>'
+pack_end = '</div>'
 
-category_end = '\n                </div>\n            </div>'
+category_end = '</div></div>'
 with open(f"{cdir()}/credits.md","r") as credits:
     cred = str(markdown(credits.read()))
     indented = ""
     for i in cred:
         indented += i
-        if i == "\n":
+        if i == "":
             indented += "            "
-    html_end = f'\n            <div class="download-container">\n                <div class="file-download">\n                    <input type="text" id="fileNameInput" placeholder="Enter Pack name">\n                </div>\n                <button class="download-selected-button" onclick="downloadSelectedTweaks()">Download Selected Tweaks</button>\n                <div id="loading-circle"></div>\n            </div>\n       </div>\n        <script src="behaviour-pack-page.js"></script>\n    </body>\n    <footer style="auto" class="footer-container">\n        <div class="credits-footer">\n            {indented}\n			<p><a href="https://github.com/BedrockTweaks/behaviour-packs">GitHub</a></p>\n        </div>\n    </footer>\n</html>'
+    html_end = f'<div class="download-container"><div class="file-download"><input type="text" id="fileNameInput" placeholder="Enter Pack name"></div><button class="download-selected-button" onclick="downloadSelectedTweaks()">Download Selected Tweaks</button><div id="loading-circle"></div></div>   </div><script src="behaviour-pack-page.js"></script></body><footer style="auto" class="footer-container"><div class="credits-footer">{indented}			<p><a href="https://github.com/BedrockTweaks/Bedrock-Tweaks-Base">GitHub</a></p></div></footer></html>'
 
 def pre_commit():
-    html = '<!DOCTYPE html>\n<html lang="en">\n    <head>\n        <meta charset="UTF-8">\n        <meta name="viewport" content="width=device-width, initial-scale=1.0">\n        <title>Bedrock Tweaks/behaviour-packs</title>\n        <link rel="stylesheet" href="behaviour-pack-page.css">\n    </head>\n    <body>\n        <br>\n        <div class="image-container">\n            <a href="https://becomtweaks.github.io"><img id="title" alt="Behaviour Packs" src="images/title.png"></a>\n        </div>\n        <div id="background-container"></div>\n        <script>\n            // Array of textures with their corresponding probabilities\n            const textures = [\n                { src: "images/blocks/deepslate.png", probability: 0.618 },\n                { src: "images/blocks/deepslate_copper_ore.png", probability: 0.128 },\n                { src: "images/blocks/deepslate_coal_ore.png", probability: 0.128 },\n                { src: "images/blocks/deepslate_iron_ore.png", probability: 0.064 },\n                { src: "images/blocks/deepslate_lapis_ore.png", probability: 0.032 },\n                { src: "images/blocks/deepslate_redstone_ore.png", probability: 0.016 },\n                { src: "images/blocks/deepslate_gold_ore.png", probability: 0.008 },\n                { src: "images/blocks/deepslate_emerald_ore.png", probability: 0.004 },\n                { src: "images/blocks/deepslate_diamond_ore.png", probability: 0.002 }\n            ];\n            \n            // Function to select a texture based on the defined probabilities\n            function selectTexture() {\n                const rand = Math.random();\n                let cumulativeProbability = 0;\n            \n                for (const texture of textures) {\n                    cumulativeProbability += texture.probability;\n                    if (rand < cumulativeProbability) {\n                        return texture.src;\n                    }\n                }\n            }\n            \n            // Function to create tiles with random background images\n            function createTiles() {\n                const container = document.getElementById("background-container");\n                const numColumns = Math.ceil(window.innerWidth / 100) + 2;\n                const numRows = Math.ceil(window.innerHeight / 100) + 2;\n            \n                container.innerHTML = "";\n            \n                for (let i = 0; i < numColumns; i++) {\n                    const rowDiv = document.createElement("div");\n                    rowDiv.className = "row"; // Add a class for styling purposes if needed\n            \n                    for (let j = 0; j < numRows; j++) {\n                        const tile = document.createElement("div");\n                        tile.className = "tile";\n                        tile.style.backgroundImage = `url("${selectTexture()}")`;\n                        rowDiv.appendChild(tile);\n                    }\n            \n                    container.appendChild(rowDiv);\n                }\n            }\n            // Call the function to create tiles\n            createTiles();\n            \n            // Redraw tiles on window resize to maintain the grid\n            window.addEventListener("resize", () => {\n                document.getElementById("background-container").innerHTML = "";\n                createTiles();\n            });\n        </script>\n        <div class="container">\n            <!-- Categories -->'
+    html = '<!DOCTYPE html><html lang="en"><head><meta name="author" content="Bedrock Edition Community Tweaks Behaviour Packs"><meta name="description" content="Behaviour Pack tweak selector. Unofficially updated by BEComTweaks on GitHub"><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><title>Behaviour Packs</title><link href="behaviour-pack-page.css" rel="stylesheet"/><link href="images/icon.png" rel="icon" type="image/x-icon"></head><body><br/><div class="image-container"><a href="https://becomtweaks.github.io"><img alt="Behaviour Packs" id="title" src="images/title.png"/></a></div><div id="background-container"></div><script>const textures = [{ src: "images/blocks/deepslate.png", probability: 0.618 },{ src: "images/blocks/deepslate_copper_ore.png", probability: 0.128 },{ src: "images/blocks/deepslate_coal_ore.png", probability: 0.128 },{ src: "images/blocks/deepslate_iron_ore.png", probability: 0.064 },{ src: "images/blocks/deepslate_lapis_ore.png", probability: 0.032 },{ src: "images/blocks/deepslate_redstone_ore.png", probability: 0.016 },{ src: "images/blocks/deepslate_gold_ore.png", probability: 0.008 },{ src: "images/blocks/deepslate_emerald_ore.png", probability: 0.004 },{ src: "images/blocks/deepslate_diamond_ore.png", probability: 0.002 }];function selectTexture() {const rand = Math.random();let cumulativeProbability = 0;for (const texture of textures) {cumulativeProbability += texture.probability;if (rand < cumulativeProbability) {return texture.src;}}} function createTiles() {const container = document.getElementById("background-container");const numColumns = Math.ceil(window.innerWidth / 100) + 2;const numRows = Math.ceil(window.innerHeight / 100) + 2;container.innerHTML = "";for (let i = 0; i < numColumns; i++) {const rowDiv = document.createElement("div");rowDiv.className = "row"; for (let j = 0; j < numRows; j++) {const tile = document.createElement("div");tile.className = "tile";tile.style.backgroundImage = `url("${selectTexture()}")`;rowDiv.appendChild(tile);}container.appendChild(rowDiv);}}createTiles();window.addEventListener("resize", () => {document.getElementById("background-container").innerHTML = "";createTiles();});</script><div class="container"><!-- Categories -->'
     stats = [0, 0]
     incomplete_packs = {"Anti Grief": [], "Drops": [], "Fun": [], "Utility": []}
     cstats = [0, 0]
@@ -45,9 +48,17 @@ def pre_commit():
     incomplete_pkics = {"Anti Grief": [], "Drops": [], "Fun": [], "Utility": []}
     packs = -1
     clrprint("Going through Packs...", clr="yellow")
+    pack_list = []
+    with open(f"{cdir()}/jsons/others/pack_order_list.txt","r") as pol:
+        for i in pol:
+            pack_list.append(i)
     # Counts Packs and Compatibilities
-    pack_jsons = sorted(os.listdir(f'{cdir()}/jsons/packs'))
-    for _, j in enumerate(pack_jsons):
+    for j in pack_list:
+        if j.endswith("\n"):
+            j = j[:-1]
+        # Subcat not done yet
+        if j.startswith("\t"):
+            j =j[1:]
         file = load_json(f"{cdir()}/jsons/packs/{j}")
         html += category_start.replace("topic_name", file["topic"])
         # Runs through the packs
@@ -137,11 +148,16 @@ def pre_commit():
                 to_add_pack = to_add_pack.replace("pack_description", file["packs"][i]["pack_description"])
                 to_add_pack = to_add_pack.replace("tweaknumber", f"tweak{packs}")
                 to_add_pack = to_add_pack.replace("relloctopackicon", f'packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/pack_icon.png')
-                #to_add_pack = to_add_pack.replace("https://raw.githubusercontent.com/BedrockTweaks/behaviour-packs/main/","../")
+                #to_add_pack = to_add_pack.replace("https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/","../")
                 html += to_add_pack
         html += category_end
-    html += html_end
     clrprint("Finished Counting!", clr="green")
+    
+    # HTML formatting
+    html += html_end
+    soup = BeautifulSoup(html, 'html.parser')
+    html = soup.prettify()
+    
     # Update files
     clrprint("Updating files...", clr="yellow")
     dump_json(f"{cdir()}/jsons/others/incomplete_packs.json", incomplete_packs)

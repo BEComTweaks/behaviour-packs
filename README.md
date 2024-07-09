@@ -1,12 +1,13 @@
 > [!IMPORTANT]
-> As of 17/6/24, BEComTweaks and its repositories will be archived in favour of BedrockTweaks.
+> Behaviour Packs will be of least importance due to the difficulty of updating it.
+> Pull Requests are greatly accepted!
 
 <div align="center">
 
-# BedrockTweaks/behaviour-packs
+# BEComTweaks/behaviour-packs
 
-![Commit Activity](https://img.shields.io/github/commit-activity/w/BedrockTweaks/behaviour-packs?style=for-the-badge&label=Commits&color=purple)
-![GitHub repo size](https://img.shields.io/github/repo-size/BedrockTweaks/behaviour-packs?style=for-the-badge&label=Size&color=pink)
+![Commit Activity](https://img.shields.io/github/commit-activity/w/BEComTweaks/behaviour-packs?style=for-the-badge&label=Commits&color=purple)
+![GitHub repo size](https://img.shields.io/github/repo-size/BEComTweaks/behaviour-packs?style=for-the-badge&label=Size&color=pink)
 <br>
 ![Completed Packs](https://img.shields.io/badge/Packs-9%2F9-blue?style=for-the-badge&color=blue)
 ![Completed Compatibilities for Packs](https://img.shields.io/badge/Compatibilities-0%2F0-cyan?style=for-the-badge&color=cyan)
@@ -20,7 +21,7 @@ A repo containing every single tweak **possible** ported from <a href="https://v
 How to clone:
 
 ```bash
-git clone https://github.com/BedrockTweaks/behaviour-packs/
+git clone https://github.com/BEComTweaks/behaviour-packs/
 cd behaviour-packs/pys
 echo 0 | python3 folder_creator.py
 ```
