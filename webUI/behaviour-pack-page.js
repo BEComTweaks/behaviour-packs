@@ -36,7 +36,9 @@ function toggleSelection(element) {
         document.getElementById('selected-tweaks').appendChild(tweakItem);
     });
     console.log(selectedTweaks.length)
-    if (selectedTweaks.length == 0) document.getElementById('selected-tweaks').style.display = "none"
+    if (selectedTweaks.length == 0 || window.matchMedia('(max-width: 767px)').matches) {
+        document.getElementById('selected-tweaks').style.display = "none";
+    }
     else document.getElementById('selected-tweaks').style.display = "block"
 }
 
