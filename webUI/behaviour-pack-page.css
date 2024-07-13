@@ -1,27 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
 
 a:link {
-    color: cyan;
+    color: white;
     background-color: transparent;
     text-decoration: none;
 }
 
 a:visited {
-    color: pink;
+    color: white;
     background-color: transparent;
     text-decoration: none;
 }
 
 a:hover {
-    color: hotpink;
+    color: white;
     background-color: transparent;
     text-decoration: underline;
 }
 
 a:active {
-    color: yellow;
+    color: white;
     background-color: transparent;
     text-decoration: underline;
+    font-weight: bold;
 }
 
 body {
@@ -282,7 +283,7 @@ header {
 }
 
 #selected-tweaks {
-	display: none;
+    display: none;
     text-align: center;
     border: 2px solid #111;
     border-radius: 5px;
@@ -295,13 +296,13 @@ header {
 }
 
 .tweak-list-category {
-	display: none;
+    display: none;
     font-size: 1.2em;
     font-weight: bold;
 }
 
 .tweak-list-pack {
-	display: none;
+    display: none;
 }
 
 @keyframes spin {
@@ -316,9 +317,9 @@ header {
 
 @media (min-width: 768px) {
     /*.category {
-		margin-right: var(--rightmargin);
-		margin-left: var(--leftmargin);
-	}*/
+        margin-right: var(--rightmargin);
+        margin-left: var(--leftmargin);
+    }*/
     .container {
         margin-right: var(--rightmargin);
         margin-left: var(--leftmargin);
@@ -341,7 +342,7 @@ header {
 
     .download-container {
         position: fixed;
-        right: -20px;
+        right: -25px;
         top: 100px;
         left: auto;
         bottom: auto;

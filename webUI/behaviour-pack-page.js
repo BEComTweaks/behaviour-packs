@@ -35,12 +35,22 @@ function toggleSelection(element) {
         }
         document.getElementById('selected-tweaks').appendChild(tweakItem);
     });
-    console.log(selectedTweaks.length)
-    if (selectedTweaks.length == 0 || window.matchMedia('(max-width: 767px)').matches) {
-        document.getElementById('selected-tweaks').style.display = "none";
+    console.log(selectedTweaks.length);
+    if (selectedTweaks.length == 0) {
+        const tweakItem = document.createElement("div");
+        tweakItem.className = "tweak-list-pack";
+        tweakItem.textContent = "Select some packs and see them appear here!";
+        document.getElementById("selected-tweaks").appendChild(tweakItem);
     }
-    else document.getElementById('selected-tweaks').style.display = "block"
 }
+
+window.addEventListener("resize", () => {
+    if (window.matchMedia("(max-width: 767px)").matches) {
+        document.getElementById("selected-tweaks").style.display = "none";
+    } else {
+        document.getElementById("selected-tweaks").style.display = "block";
+    }
+});
 
 function toggleCategory(label) {
     const tweaksContainer = label.nextElementSibling;
