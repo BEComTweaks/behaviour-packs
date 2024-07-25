@@ -11,7 +11,7 @@
 [YzaBeast1](https://github.com/yzabeast1)
 - Pointed out issues with my code preventing Linux Distributions from running the scripts and made the webUI and backend
 
-[Gyver5681](https://www.twitch.tv/gyver5681)
+[Gyver5681](https://github.com/gyver5681)
 - Made AFK Display
 
 [NSPC911](https://github.com/NSPC911)
