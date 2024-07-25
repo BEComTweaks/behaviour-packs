@@ -39,11 +39,7 @@
         "on_death": "query.last_hit_by_player ? 5 : 0"
       },
       "minecraft:type_family": {
-        "family": [
-          "enderman",
-          "monster",
-          "mob"
-        ]
+        "family": ["enderman", "monster", "mob"]
       },
       "minecraft:breathable": {
         "total_supply": 15,
@@ -94,11 +90,7 @@
       "minecraft:teleport": {
         "random_teleports": true,
         "max_random_teleport_time": 30,
-        "random_teleport_cube": [
-          64,
-          32,
-          64
-        ],
+        "random_teleport_cube": [64, 32, 64],
         "target_distance": 16,
         "target_teleport_chance": 0.05,
         "light_teleport_chance": 0.05
@@ -184,33 +176,23 @@
       "minecraft:entity_spawned": {
         "remove": {},
         "add": {
-          "component_groups": [
-            "minecraft:enderman_calm"
-          ]
+          "component_groups": ["minecraft:enderman_calm"]
         }
       },
       "minecraft:become_angry": {
         "remove": {
-          "component_groups": [
-            "minecraft:enderman_calm"
-          ]
+          "component_groups": ["minecraft:enderman_calm"]
         },
         "add": {
-          "component_groups": [
-            "minecraft:enderman_angry"
-          ]
+          "component_groups": ["minecraft:enderman_angry"]
         }
       },
       "minecraft:on_calm": {
         "remove": {
-          "component_groups": [
-            "minecraft:enderman_angry"
-          ]
+          "component_groups": ["minecraft:enderman_angry"]
         },
         "add": {
-          "component_groups": [
-            "minecraft:enderman_calm"
-          ]
+          "component_groups": ["minecraft:enderman_calm"]
         }
       }
     }

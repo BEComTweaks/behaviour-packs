@@ -7,9 +7,7 @@
       "is_summonable": false,
       "is_experimental": false,
       "scripts": {
-        "animate": [
-          "phantom_sleep_check"
-        ]
+        "animate": ["phantom_sleep_check"]
       },
       "animations": {
         "phantom_sleep_check": "controller.animation.bp.player.phantom_sleep_check",
@@ -39,9 +37,7 @@
         "on_death": "Math.Min(query.player_level * 7, 100)"
       },
       "minecraft:type_family": {
-        "family": [
-          "player"
-        ]
+        "family": ["player"]
       },
       "minecraft:is_hidden_when_invisible": {},
       "minecraft:loot": {
@@ -119,27 +115,17 @@
       },
       "minecraft:rideable": {
         "seat_count": 2,
-        "family_types": [
-          "parrot_tame"
-        ],
+        "family_types": ["parrot_tame"],
         "pull_in_entities": true,
         "seats": [
           {
-            "position": [
-              0.4,
-              -0.2,
-              -0.1
-            ],
+            "position": [0.4, -0.2, -0.1],
             "min_rider_count": 0,
             "max_rider_count": 0,
             "lock_rider_rotation": 0
           },
           {
-            "position": [
-              -0.4,
-              -0.2,
-              -0.1
-            ],
+            "position": [-0.4, -0.2, -0.1],
             "min_rider_count": 1,
             "max_rider_count": 2,
             "lock_rider_rotation": 0
@@ -183,10 +169,7 @@
           ]
         },
         "minecraft:timer": {
-          "time": [
-            0.0,
-            0.0
-          ],
+          "time": [0.0, 0.0],
           "looping": false,
           "time_down_event": {
             "event": "minecraft:clear_add_bad_omen",
@@ -227,35 +210,25 @@
     "events": {
       "minecraft:gain_bad_omen": {
         "add": {
-          "component_groups": [
-            "minecraft:add_bad_omen"
-          ]
+          "component_groups": ["minecraft:add_bad_omen"]
         }
       },
       "minecraft:clear_add_bad_omen": {
         "remove": {
-          "component_groups": [
-            "minecraft:add_bad_omen"
-          ]
+          "component_groups": ["minecraft:add_bad_omen"]
         },
         "add": {
-          "component_groups": [
-            "minecraft:clear_bad_omen_spell_effect"
-          ]
+          "component_groups": ["minecraft:clear_bad_omen_spell_effect"]
         }
       },
       "minecraft:trigger_raid": {
         "add": {
-          "component_groups": [
-            "minecraft:raid_trigger"
-          ]
+          "component_groups": ["minecraft:raid_trigger"]
         }
       },
       "minecraft:remove_raid_trigger": {
         "remove": {
-          "component_groups": [
-            "minecraft:raid_trigger"
-          ]
+          "component_groups": ["minecraft:raid_trigger"]
         }
       },
       "set_dimension": {
@@ -284,9 +257,7 @@
               ]
             },
             "add": {
-              "component_groups": [
-                "in_overworld"
-              ]
+              "component_groups": ["in_overworld"]
             }
           },
           {
@@ -299,9 +270,7 @@
               ]
             },
             "add": {
-              "component_groups": [
-                "in_the_nether"
-              ]
+              "component_groups": ["in_the_nether"]
             }
           },
           {
@@ -314,9 +283,7 @@
               ]
             },
             "add": {
-              "component_groups": [
-                "in_the_end"
-              ]
+              "component_groups": ["in_the_end"]
             }
           }
         ]

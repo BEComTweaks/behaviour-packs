@@ -13,12 +13,7 @@
         "on_death": "query.last_hit_by_player ? 5 : 0"
       },
       "minecraft:type_family": {
-        "family": [
-          "phantom",
-          "undead",
-          "monster",
-          "mob"
-        ]
+        "family": ["phantom", "undead", "monster", "mob"]
       },
       "minecraft:loot": {
         "table": "loot_tables/entities/phantom.json"
@@ -124,10 +119,7 @@
         "priority": 2,
         "damage_reach": 0.2,
         "speed_multiplier": 1.0,
-        "delay_range": [
-          10.0,
-          20.0
-        ]
+        "delay_range": [10.0, 20.0]
       },
       "minecraft:behavior.circle_around_anchor": {
         "priority": 3,
@@ -136,18 +128,9 @@
         "height_adjustment_chance": 0.002857,
         "goal_radius": 1.0,
         "angle_change": 15.0,
-        "radius_range": [
-          5.0,
-          15.0
-        ],
-        "height_offset_range": [
-          -4.0,
-          5.0
-        ],
-        "height_above_target_range": [
-          20.0,
-          40.0
-        ]
+        "radius_range": [5.0, 15.0],
+        "height_offset_range": [-4.0, 5.0],
+        "height_above_target_range": [20.0, 40.0]
       }
     },
     "component_groups": {
@@ -230,37 +213,27 @@
     "events": {
       "minecraft:entity_spawned": {
         "add": {
-          "component_groups": [
-            "size_0"
-          ]
+          "component_groups": ["size_0"]
         }
       },
       "become_size_2": {
         "add": {
-          "component_groups": [
-            "size_2"
-          ]
+          "component_groups": ["size_2"]
         }
       },
       "become_size_3": {
         "add": {
-          "component_groups": [
-            "size_3"
-          ]
+          "component_groups": ["size_3"]
         }
       },
       "become_size_4": {
         "add": {
-          "component_groups": [
-            "size_4"
-          ]
+          "component_groups": ["size_4"]
         }
       },
       "become_size_5": {
         "add": {
-          "component_groups": [
-            "size_5"
-          ]
+          "component_groups": ["size_5"]
         }
       }
     }

@@ -7,9 +7,7 @@
       "is_summonable": false,
       "is_experimental": false,
       "scripts": {
-        "animate": [
-          "death_check"
-        ]
+        "animate": ["death_check"]
       },
       "animations": {
         "death_check": "controller.animation.bp.villager.dead"
@@ -831,11 +829,7 @@
           "min_perimeter": 1.0,
           "min_dist_from_target": 2.5,
           "timer_ratio": 2.0,
-          "dist_from_boundary": [
-            5.0,
-            0.0,
-            5.0
-          ]
+          "dist_from_boundary": [5.0, 0.0, 5.0]
         }
       },
       "behavior_peasant": {
@@ -925,11 +919,7 @@
       },
       "unskilled": {
         "minecraft:type_family": {
-          "family": [
-            "villager",
-            "peasant",
-            "mob"
-          ]
+          "family": ["villager", "peasant", "mob"]
         },
         "minecraft:variant": {
           "value": 0
@@ -937,12 +927,7 @@
       },
       "farmer": {
         "minecraft:type_family": {
-          "family": [
-            "villager",
-            "peasant",
-            "farmer",
-            "mob"
-          ]
+          "family": ["villager", "peasant", "farmer", "mob"]
         },
         "minecraft:variant": {
           "value": 1
@@ -960,14 +945,8 @@
           "table": "trading/economy_trades/farmer_trades.json",
           "new_screen": true,
           "persist_trades": true,
-          "cured_discount": [
-            -100,
-            -100
-          ],
-          "max_cured_discount": [
-            -500,
-            -500
-          ]
+          "cured_discount": [-100, -100],
+          "max_cured_discount": [-500, -500]
         },
         "minecraft:dweller": {
           "dwelling_type": "village",
@@ -982,12 +961,7 @@
       },
       "fisherman": {
         "minecraft:type_family": {
-          "family": [
-            "villager",
-            "peasant",
-            "fisherman",
-            "mob"
-          ]
+          "family": ["villager", "peasant", "fisherman", "mob"]
         },
         "minecraft:variant": {
           "value": 2
@@ -1005,14 +979,8 @@
           "table": "trading/economy_trades/fisherman_trades.json",
           "new_screen": true,
           "persist_trades": true,
-          "cured_discount": [
-            -100,
-            -100
-          ],
-          "max_cured_discount": [
-            -500,
-            -500
-          ]
+          "cured_discount": [-100, -100],
+          "max_cured_discount": [-500, -500]
         },
         "minecraft:dweller": {
           "dwelling_type": "village",
@@ -1027,12 +995,7 @@
       },
       "shepherd": {
         "minecraft:type_family": {
-          "family": [
-            "villager",
-            "peasant",
-            "shepherd",
-            "mob"
-          ]
+          "family": ["villager", "peasant", "shepherd", "mob"]
         },
         "minecraft:variant": {
           "value": 3
@@ -1050,14 +1013,8 @@
           "table": "trading/economy_trades/shepherd_trades.json",
           "new_screen": true,
           "persist_trades": true,
-          "cured_discount": [
-            -100,
-            -100
-          ],
-          "max_cured_discount": [
-            -500,
-            -500
-          ]
+          "cured_discount": [-100, -100],
+          "max_cured_discount": [-500, -500]
         },
         "minecraft:dweller": {
           "dwelling_type": "village",
@@ -1072,12 +1029,7 @@
       },
       "fletcher": {
         "minecraft:type_family": {
-          "family": [
-            "villager",
-            "peasant",
-            "fletcher",
-            "mob"
-          ]
+          "family": ["villager", "peasant", "fletcher", "mob"]
         },
         "minecraft:variant": {
           "value": 4
@@ -1095,14 +1047,8 @@
           "table": "trading/economy_trades/fletcher_trades.json",
           "new_screen": true,
           "persist_trades": true,
-          "cured_discount": [
-            -100,
-            -100
-          ],
-          "max_cured_discount": [
-            -500,
-            -500
-          ]
+          "cured_discount": [-100, -100],
+          "max_cured_discount": [-500, -500]
         },
         "minecraft:dweller": {
           "dwelling_type": "village",
@@ -1117,11 +1063,7 @@
       },
       "librarian": {
         "minecraft:type_family": {
-          "family": [
-            "villager",
-            "librarian",
-            "mob"
-          ]
+          "family": ["villager", "librarian", "mob"]
         },
         "minecraft:variant": {
           "value": 5
@@ -1139,14 +1081,8 @@
           "table": "trading/economy_trades/librarian_trades.json",
           "new_screen": true,
           "persist_trades": true,
-          "cured_discount": [
-            -100,
-            -100
-          ],
-          "max_cured_discount": [
-            -500,
-            -500
-          ]
+          "cured_discount": [-100, -100],
+          "max_cured_discount": [-500, -500]
         },
         "minecraft:dweller": {
           "dwelling_type": "village",
@@ -1161,11 +1097,7 @@
       },
       "cartographer": {
         "minecraft:type_family": {
-          "family": [
-            "villager",
-            "cartographer",
-            "mob"
-          ]
+          "family": ["villager", "cartographer", "mob"]
         },
         "minecraft:variant": {
           "value": 6
@@ -1183,14 +1115,8 @@
           "table": "trading/economy_trades/cartographer_trades.json",
           "new_screen": true,
           "persist_trades": true,
-          "cured_discount": [
-            -100,
-            -100
-          ],
-          "max_cured_discount": [
-            -500,
-            -500
-          ]
+          "cured_discount": [-100, -100],
+          "max_cured_discount": [-500, -500]
         },
         "minecraft:dweller": {
           "dwelling_type": "village",
@@ -1205,12 +1131,7 @@
       },
       "cleric": {
         "minecraft:type_family": {
-          "family": [
-            "villager",
-            "priest",
-            "cleric",
-            "mob"
-          ]
+          "family": ["villager", "priest", "cleric", "mob"]
         },
         "minecraft:variant": {
           "value": 7
@@ -1228,14 +1149,8 @@
           "table": "trading/economy_trades/cleric_trades.json",
           "new_screen": true,
           "persist_trades": true,
-          "cured_discount": [
-            -100,
-            -100
-          ],
-          "max_cured_discount": [
-            -500,
-            -500
-          ]
+          "cured_discount": [-100, -100],
+          "max_cured_discount": [-500, -500]
         },
         "minecraft:dweller": {
           "dwelling_type": "village",
@@ -1250,12 +1165,7 @@
       },
       "armorer": {
         "minecraft:type_family": {
-          "family": [
-            "villager",
-            "blacksmith",
-            "armorer",
-            "mob"
-          ]
+          "family": ["villager", "blacksmith", "armorer", "mob"]
         },
         "minecraft:variant": {
           "value": 8
@@ -1273,14 +1183,8 @@
           "table": "trading/economy_trades/armorer_trades.json",
           "new_screen": true,
           "persist_trades": true,
-          "cured_discount": [
-            -100,
-            -100
-          ],
-          "max_cured_discount": [
-            -500,
-            -500
-          ]
+          "cured_discount": [-100, -100],
+          "max_cured_discount": [-500, -500]
         },
         "minecraft:dweller": {
           "dwelling_type": "village",
@@ -1295,12 +1199,7 @@
       },
       "weaponsmith": {
         "minecraft:type_family": {
-          "family": [
-            "villager",
-            "blacksmith",
-            "weaponsmith",
-            "mob"
-          ]
+          "family": ["villager", "blacksmith", "weaponsmith", "mob"]
         },
         "minecraft:variant": {
           "value": 9
@@ -1318,14 +1217,8 @@
           "table": "trading/economy_trades/weapon_smith_trades.json",
           "new_screen": true,
           "persist_trades": true,
-          "cured_discount": [
-            -100,
-            -100
-          ],
-          "max_cured_discount": [
-            -500,
-            -500
-          ]
+          "cured_discount": [-100, -100],
+          "max_cured_discount": [-500, -500]
         },
         "minecraft:dweller": {
           "dwelling_type": "village",
@@ -1340,12 +1233,7 @@
       },
       "toolsmith": {
         "minecraft:type_family": {
-          "family": [
-            "villager",
-            "blacksmith",
-            "toolsmith",
-            "mob"
-          ]
+          "family": ["villager", "blacksmith", "toolsmith", "mob"]
         },
         "minecraft:variant": {
           "value": 10
@@ -1363,14 +1251,8 @@
           "table": "trading/economy_trades/tool_smith_trades.json",
           "new_screen": true,
           "persist_trades": true,
-          "cured_discount": [
-            -100,
-            -100
-          ],
-          "max_cured_discount": [
-            -500,
-            -500
-          ]
+          "cured_discount": [-100, -100],
+          "max_cured_discount": [-500, -500]
         },
         "minecraft:dweller": {
           "dwelling_type": "village",
@@ -1385,12 +1267,7 @@
       },
       "butcher": {
         "minecraft:type_family": {
-          "family": [
-            "villager",
-            "artisan",
-            "butcher",
-            "mob"
-          ]
+          "family": ["villager", "artisan", "butcher", "mob"]
         },
         "minecraft:variant": {
           "value": 11
@@ -1408,14 +1285,8 @@
           "table": "trading/economy_trades/butcher_trades.json",
           "new_screen": true,
           "persist_trades": true,
-          "cured_discount": [
-            -100,
-            -100
-          ],
-          "max_cured_discount": [
-            -500,
-            -500
-          ]
+          "cured_discount": [-100, -100],
+          "max_cured_discount": [-500, -500]
         },
         "minecraft:dweller": {
           "dwelling_type": "village",
@@ -1430,12 +1301,7 @@
       },
       "leatherworker": {
         "minecraft:type_family": {
-          "family": [
-            "villager",
-            "artisan",
-            "leatherworker",
-            "mob"
-          ]
+          "family": ["villager", "artisan", "leatherworker", "mob"]
         },
         "minecraft:variant": {
           "value": 12
@@ -1453,14 +1319,8 @@
           "table": "trading/economy_trades/leather_worker_trades.json",
           "new_screen": true,
           "persist_trades": true,
-          "cured_discount": [
-            -100,
-            -100
-          ],
-          "max_cured_discount": [
-            -500,
-            -500
-          ]
+          "cured_discount": [-100, -100],
+          "max_cured_discount": [-500, -500]
         },
         "minecraft:dweller": {
           "dwelling_type": "village",
@@ -1475,12 +1335,7 @@
       },
       "mason": {
         "minecraft:type_family": {
-          "family": [
-            "villager",
-            "artisan",
-            "stone_mason",
-            "mob"
-          ]
+          "family": ["villager", "artisan", "stone_mason", "mob"]
         },
         "minecraft:variant": {
           "value": 13
@@ -1498,14 +1353,8 @@
           "table": "trading/economy_trades/stone_mason_trades.json",
           "new_screen": true,
           "persist_trades": true,
-          "cured_discount": [
-            -100,
-            -100
-          ],
-          "max_cured_discount": [
-            -500,
-            -500
-          ]
+          "cured_discount": [-100, -100],
+          "max_cured_discount": [-500, -500]
         },
         "minecraft:dweller": {
           "dwelling_type": "village",
@@ -1520,12 +1369,7 @@
       },
       "nitwit": {
         "minecraft:type_family": {
-          "family": [
-            "villager",
-            "peasant",
-            "nitwit",
-            "mob"
-          ]
+          "family": ["villager", "peasant", "nitwit", "mob"]
         },
         "minecraft:variant": {
           "value": 14
@@ -1553,9 +1397,7 @@
           "preferred_path_blocks": [
             {
               "cost": 0,
-              "blocks": [
-                "grass_path"
-              ]
+              "blocks": ["grass_path"]
             },
             {
               "cost": 1,
@@ -1644,9 +1486,7 @@
           "preferred_path_blocks": [
             {
               "cost": 0,
-              "blocks": [
-                "grass_path"
-              ]
+              "blocks": ["grass_path"]
             },
             {
               "cost": 1,
@@ -1785,10 +1625,7 @@
     "components": {
       "minecraft:is_hidden_when_invisible": {},
       "minecraft:type_family": {
-        "family": [
-          "villager",
-          "mob"
-        ]
+        "family": ["villager", "mob"]
       },
       "minecraft:mark_variant": {
         "value": 0
@@ -2001,9 +1838,7 @@
     "events": {
       "become_witch": {
         "add": {
-          "component_groups": [
-            "become_witch"
-          ]
+          "component_groups": ["become_witch"]
         }
       },
       "become_zombie": {
@@ -2017,9 +1852,7 @@
               {
                 "weight": 50,
                 "add": {
-                  "component_groups": [
-                    "become_zombie"
-                  ]
+                  "component_groups": ["become_zombie"]
                 }
               },
               {
@@ -2033,9 +1866,7 @@
               "value": "hard"
             },
             "add": {
-              "component_groups": [
-                "become_zombie"
-              ]
+              "component_groups": ["become_zombie"]
             }
           }
         ]
@@ -2052,49 +1883,37 @@
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_0"
-                  ]
+                  "component_groups": ["villager_skin_0"]
                 }
               },
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_1"
-                  ]
+                  "component_groups": ["villager_skin_1"]
                 }
               },
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_2"
-                  ]
+                  "component_groups": ["villager_skin_2"]
                 }
               },
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_3"
-                  ]
+                  "component_groups": ["villager_skin_3"]
                 }
               },
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_4"
-                  ]
+                  "component_groups": ["villager_skin_4"]
                 }
               },
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_5"
-                  ]
+                  "component_groups": ["villager_skin_5"]
                 }
               }
             ]
@@ -2109,10 +1928,7 @@
               {
                 "weight": 5,
                 "add": {
-                  "component_groups": [
-                    "baby",
-                    "child_schedule"
-                  ]
+                  "component_groups": ["baby", "child_schedule"]
                 }
               },
               {
@@ -2120,9 +1936,7 @@
                 "sequence": [
                   {
                     "add": {
-                      "component_groups": [
-                        "adult"
-                      ]
+                      "component_groups": ["adult"]
                     }
                   },
                   {
@@ -2287,9 +2101,7 @@
               ]
             },
             "add": {
-              "component_groups": [
-                "desert_villager"
-              ]
+              "component_groups": ["desert_villager"]
             }
           },
           {
@@ -2298,9 +2110,7 @@
               "value": "jungle"
             },
             "add": {
-              "component_groups": [
-                "jungle_villager"
-              ]
+              "component_groups": ["jungle_villager"]
             }
           },
           {
@@ -2309,9 +2119,7 @@
               "value": "savanna"
             },
             "add": {
-              "component_groups": [
-                "savanna_villager"
-              ]
+              "component_groups": ["savanna_villager"]
             }
           },
           {
@@ -2337,9 +2145,7 @@
               ]
             },
             "add": {
-              "component_groups": [
-                "snow_villager"
-              ]
+              "component_groups": ["snow_villager"]
             }
           },
           {
@@ -2348,9 +2154,7 @@
               "value": "swamp"
             },
             "add": {
-              "component_groups": [
-                "swamp_villager"
-              ]
+              "component_groups": ["swamp_villager"]
             }
           },
           {
@@ -2376,9 +2180,7 @@
               ]
             },
             "add": {
-              "component_groups": [
-                "taiga_villager"
-              ]
+              "component_groups": ["taiga_villager"]
             }
           }
         ]
@@ -2395,18 +2197,13 @@
               {
                 "weight": 5,
                 "add": {
-                  "component_groups": [
-                    "baby",
-                    "child_schedule"
-                  ]
+                  "component_groups": ["baby", "child_schedule"]
                 }
               },
               {
                 "weight": 95,
                 "add": {
-                  "component_groups": [
-                    "adult"
-                  ]
+                  "component_groups": ["adult"]
                 },
                 "sequence": [
                   {
@@ -2447,49 +2244,37 @@
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_0"
-                  ]
+                  "component_groups": ["villager_skin_0"]
                 }
               },
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_1"
-                  ]
+                  "component_groups": ["villager_skin_1"]
                 }
               },
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_2"
-                  ]
+                  "component_groups": ["villager_skin_2"]
                 }
               },
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_3"
-                  ]
+                  "component_groups": ["villager_skin_3"]
                 }
               },
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_4"
-                  ]
+                  "component_groups": ["villager_skin_4"]
                 }
               },
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_5"
-                  ]
+                  "component_groups": ["villager_skin_5"]
                 }
               }
             ]
@@ -2508,9 +2293,7 @@
               ]
             },
             "add": {
-              "component_groups": [
-                "desert_villager"
-              ]
+              "component_groups": ["desert_villager"]
             }
           },
           {
@@ -2519,9 +2302,7 @@
               "value": "jungle"
             },
             "add": {
-              "component_groups": [
-                "jungle_villager"
-              ]
+              "component_groups": ["jungle_villager"]
             }
           },
           {
@@ -2530,9 +2311,7 @@
               "value": "savanna"
             },
             "add": {
-              "component_groups": [
-                "savanna_villager"
-              ]
+              "component_groups": ["savanna_villager"]
             }
           },
           {
@@ -2558,9 +2337,7 @@
               ]
             },
             "add": {
-              "component_groups": [
-                "snow_villager"
-              ]
+              "component_groups": ["snow_villager"]
             }
           },
           {
@@ -2569,9 +2346,7 @@
               "value": "swamp"
             },
             "add": {
-              "component_groups": [
-                "swamp_villager"
-              ]
+              "component_groups": ["swamp_villager"]
             }
           },
           {
@@ -2597,9 +2372,7 @@
               ]
             },
             "add": {
-              "component_groups": [
-                "taiga_villager"
-              ]
+              "component_groups": ["taiga_villager"]
             }
           }
         ]
@@ -2614,10 +2387,7 @@
               "value": "minecraft:is_baby"
             },
             "add": {
-              "component_groups": [
-                "baby",
-                "child_schedule"
-              ]
+              "component_groups": ["baby", "child_schedule"]
             }
           },
           {
@@ -2630,9 +2400,7 @@
             "sequence": [
               {
                 "add": {
-                  "component_groups": [
-                    "adult"
-                  ]
+                  "component_groups": ["adult"]
                 }
               },
               {
@@ -2834,9 +2602,7 @@
                   "value": 0
                 },
                 "add": {
-                  "component_groups": [
-                    "villager_skin_0"
-                  ]
+                  "component_groups": ["villager_skin_0"]
                 }
               },
               {
@@ -2846,9 +2612,7 @@
                   "value": 1
                 },
                 "add": {
-                  "component_groups": [
-                    "villager_skin_1"
-                  ]
+                  "component_groups": ["villager_skin_1"]
                 }
               },
               {
@@ -2858,9 +2622,7 @@
                   "value": 2
                 },
                 "add": {
-                  "component_groups": [
-                    "villager_skin_2"
-                  ]
+                  "component_groups": ["villager_skin_2"]
                 }
               },
               {
@@ -2870,9 +2632,7 @@
                   "value": 3
                 },
                 "add": {
-                  "component_groups": [
-                    "villager_skin_3"
-                  ]
+                  "component_groups": ["villager_skin_3"]
                 }
               },
               {
@@ -2882,9 +2642,7 @@
                   "value": 4
                 },
                 "add": {
-                  "component_groups": [
-                    "villager_skin_4"
-                  ]
+                  "component_groups": ["villager_skin_4"]
                 }
               },
               {
@@ -2894,9 +2652,7 @@
                   "value": 5
                 },
                 "add": {
-                  "component_groups": [
-                    "villager_skin_5"
-                  ]
+                  "component_groups": ["villager_skin_5"]
                 }
               },
               {
@@ -2906,9 +2662,7 @@
                   "value": 1
                 },
                 "add": {
-                  "component_groups": [
-                    "desert_villager"
-                  ]
+                  "component_groups": ["desert_villager"]
                 }
               },
               {
@@ -2918,9 +2672,7 @@
                   "value": 2
                 },
                 "add": {
-                  "component_groups": [
-                    "jungle_villager"
-                  ]
+                  "component_groups": ["jungle_villager"]
                 }
               },
               {
@@ -2930,9 +2682,7 @@
                   "value": 3
                 },
                 "add": {
-                  "component_groups": [
-                    "savanna_villager"
-                  ]
+                  "component_groups": ["savanna_villager"]
                 }
               },
               {
@@ -2942,9 +2692,7 @@
                   "value": 4
                 },
                 "add": {
-                  "component_groups": [
-                    "snow_villager"
-                  ]
+                  "component_groups": ["snow_villager"]
                 }
               },
               {
@@ -2954,9 +2702,7 @@
                   "value": 5
                 },
                 "add": {
-                  "component_groups": [
-                    "swamp_villager"
-                  ]
+                  "component_groups": ["swamp_villager"]
                 }
               },
               {
@@ -2966,9 +2712,7 @@
                   "value": 6
                 },
                 "add": {
-                  "component_groups": [
-                    "taiga_villager"
-                  ]
+                  "component_groups": ["taiga_villager"]
                 }
               }
             ]
@@ -2986,49 +2730,37 @@
                   {
                     "weight": 1,
                     "add": {
-                      "component_groups": [
-                        "villager_skin_0"
-                      ]
+                      "component_groups": ["villager_skin_0"]
                     }
                   },
                   {
                     "weight": 1,
                     "add": {
-                      "component_groups": [
-                        "villager_skin_1"
-                      ]
+                      "component_groups": ["villager_skin_1"]
                     }
                   },
                   {
                     "weight": 1,
                     "add": {
-                      "component_groups": [
-                        "villager_skin_2"
-                      ]
+                      "component_groups": ["villager_skin_2"]
                     }
                   },
                   {
                     "weight": 1,
                     "add": {
-                      "component_groups": [
-                        "villager_skin_3"
-                      ]
+                      "component_groups": ["villager_skin_3"]
                     }
                   },
                   {
                     "weight": 1,
                     "add": {
-                      "component_groups": [
-                        "villager_skin_4"
-                      ]
+                      "component_groups": ["villager_skin_4"]
                     }
                   },
                   {
                     "weight": 1,
                     "add": {
-                      "component_groups": [
-                        "villager_skin_5"
-                      ]
+                      "component_groups": ["villager_skin_5"]
                     }
                   }
                 ]
@@ -3047,9 +2779,7 @@
                   ]
                 },
                 "add": {
-                  "component_groups": [
-                    "desert_villager"
-                  ]
+                  "component_groups": ["desert_villager"]
                 }
               },
               {
@@ -3058,9 +2788,7 @@
                   "value": "jungle"
                 },
                 "add": {
-                  "component_groups": [
-                    "jungle_villager"
-                  ]
+                  "component_groups": ["jungle_villager"]
                 }
               },
               {
@@ -3069,9 +2797,7 @@
                   "value": "savanna"
                 },
                 "add": {
-                  "component_groups": [
-                    "savanna_villager"
-                  ]
+                  "component_groups": ["savanna_villager"]
                 }
               },
               {
@@ -3097,9 +2823,7 @@
                   ]
                 },
                 "add": {
-                  "component_groups": [
-                    "snow_villager"
-                  ]
+                  "component_groups": ["snow_villager"]
                 }
               },
               {
@@ -3108,9 +2832,7 @@
                   "value": "swamp"
                 },
                 "add": {
-                  "component_groups": [
-                    "swamp_villager"
-                  ]
+                  "component_groups": ["swamp_villager"]
                 }
               },
               {
@@ -3136,9 +2858,7 @@
                   ]
                 },
                 "add": {
-                  "component_groups": [
-                    "taiga_villager"
-                  ]
+                  "component_groups": ["taiga_villager"]
                 }
               }
             ]
@@ -3157,60 +2877,44 @@
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_0"
-                  ]
+                  "component_groups": ["villager_skin_0"]
                 }
               },
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_1"
-                  ]
+                  "component_groups": ["villager_skin_1"]
                 }
               },
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_2"
-                  ]
+                  "component_groups": ["villager_skin_2"]
                 }
               },
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_3"
-                  ]
+                  "component_groups": ["villager_skin_3"]
                 }
               },
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_4"
-                  ]
+                  "component_groups": ["villager_skin_4"]
                 }
               },
               {
                 "weight": 1,
                 "add": {
-                  "component_groups": [
-                    "villager_skin_5"
-                  ]
+                  "component_groups": ["villager_skin_5"]
                 }
               }
             ]
           },
           {
             "add": {
-              "component_groups": [
-                "baby",
-                "unskilled",
-                "child_schedule"
-              ]
+              "component_groups": ["baby", "unskilled", "child_schedule"]
             }
           },
           {
@@ -3219,9 +2923,7 @@
               "value": "desert"
             },
             "add": {
-              "component_groups": [
-                "desert_villager"
-              ]
+              "component_groups": ["desert_villager"]
             }
           },
           {
@@ -3230,9 +2932,7 @@
               "value": "jungle"
             },
             "add": {
-              "component_groups": [
-                "jungle_villager"
-              ]
+              "component_groups": ["jungle_villager"]
             }
           },
           {
@@ -3241,9 +2941,7 @@
               "value": "savanna"
             },
             "add": {
-              "component_groups": [
-                "savanna_villager"
-              ]
+              "component_groups": ["savanna_villager"]
             }
           },
           {
@@ -3260,9 +2958,7 @@
               ]
             },
             "add": {
-              "component_groups": [
-                "snow_villager"
-              ]
+              "component_groups": ["snow_villager"]
             }
           },
           {
@@ -3271,9 +2967,7 @@
               "value": "swamp"
             },
             "add": {
-              "component_groups": [
-                "swamp_villager"
-              ]
+              "component_groups": ["swamp_villager"]
             }
           },
           {
@@ -3282,9 +2976,7 @@
               "value": "taiga"
             },
             "add": {
-              "component_groups": [
-                "taiga_villager"
-              ]
+              "component_groups": ["taiga_villager"]
             }
           }
         ]
@@ -3302,10 +2994,7 @@
               ]
             },
             "remove": {
-              "component_groups": [
-                "baby",
-                "child_schedule"
-              ]
+              "component_groups": ["baby", "child_schedule"]
             }
           },
           {
@@ -3319,10 +3008,7 @@
               ]
             },
             "remove": {
-              "component_groups": [
-                "baby",
-                "child_schedule"
-              ]
+              "component_groups": ["baby", "child_schedule"]
             }
           },
           {
@@ -3336,10 +3022,7 @@
               ]
             },
             "remove": {
-              "component_groups": [
-                "baby",
-                "child_schedule"
-              ]
+              "component_groups": ["baby", "child_schedule"]
             }
           },
           {
@@ -3353,10 +3036,7 @@
               ]
             },
             "remove": {
-              "component_groups": [
-                "baby",
-                "child_schedule"
-              ]
+              "component_groups": ["baby", "child_schedule"]
             }
           },
           {
@@ -3370,10 +3050,7 @@
               ]
             },
             "remove": {
-              "component_groups": [
-                "baby",
-                "child_schedule"
-              ]
+              "component_groups": ["baby", "child_schedule"]
             }
           }
         ]
@@ -3391,10 +3068,7 @@
               ]
             },
             "remove": {
-              "component_groups": [
-                "baby",
-                "child_schedule"
-              ]
+              "component_groups": ["baby", "child_schedule"]
             }
           },
           {
@@ -3407,10 +3081,7 @@
               ]
             },
             "remove": {
-              "component_groups": [
-                "baby",
-                "child_schedule"
-              ]
+              "component_groups": ["baby", "child_schedule"]
             }
           }
         ]
@@ -3425,10 +3096,7 @@
           ]
         },
         "remove": {
-          "component_groups": [
-            "baby",
-            "child_schedule"
-          ]
+          "component_groups": ["baby", "child_schedule"]
         }
       },
       "minecraft:spawn_armorer": {
@@ -3444,10 +3112,7 @@
               ]
             },
             "remove": {
-              "component_groups": [
-                "baby",
-                "child_schedule"
-              ]
+              "component_groups": ["baby", "child_schedule"]
             }
           },
           {
@@ -3461,10 +3126,7 @@
               ]
             },
             "remove": {
-              "component_groups": [
-                "baby",
-                "child_schedule"
-              ]
+              "component_groups": ["baby", "child_schedule"]
             }
           },
           {
@@ -3478,10 +3140,7 @@
               ]
             },
             "remove": {
-              "component_groups": [
-                "baby",
-                "child_schedule"
-              ]
+              "component_groups": ["baby", "child_schedule"]
             }
           }
         ]
@@ -3499,10 +3158,7 @@
               ]
             },
             "remove": {
-              "component_groups": [
-                "baby",
-                "child_schedule"
-              ]
+              "component_groups": ["baby", "child_schedule"]
             }
           },
           {
@@ -3516,10 +3172,7 @@
               ]
             },
             "remove": {
-              "component_groups": [
-                "baby",
-                "child_schedule"
-              ]
+              "component_groups": ["baby", "child_schedule"]
             }
           }
         ]
@@ -3529,10 +3182,7 @@
           {
             "weight": 10,
             "remove": {
-              "component_groups": [
-                "baby",
-                "child_schedule"
-              ]
+              "component_groups": ["baby", "child_schedule"]
             },
             "add": {
               "component_groups": [
@@ -3546,10 +3196,7 @@
           {
             "weight": 90,
             "remove": {
-              "component_groups": [
-                "baby",
-                "child_schedule"
-              ]
+              "component_groups": ["baby", "child_schedule"]
             },
             "add": {
               "component_groups": [
@@ -3826,9 +3473,7 @@
           ]
         },
         "add": {
-          "component_groups": [
-            "wander_schedule_villager"
-          ]
+          "component_groups": ["wander_schedule_villager"]
         }
       },
       "minecraft:schedule_gather_villager": {
@@ -3843,9 +3488,7 @@
           ]
         },
         "add": {
-          "component_groups": [
-            "gather_schedule_villager"
-          ]
+          "component_groups": ["gather_schedule_villager"]
         }
       },
       "minecraft:schedule_home_villager": {
@@ -3860,9 +3503,7 @@
           ]
         },
         "add": {
-          "component_groups": [
-            "home_schedule_villager"
-          ]
+          "component_groups": ["home_schedule_villager"]
         }
       },
       "minecraft:schedule_bed_villager": {
@@ -3877,9 +3518,7 @@
           ]
         },
         "add": {
-          "component_groups": [
-            "bed_schedule_villager"
-          ]
+          "component_groups": ["bed_schedule_villager"]
         }
       },
       "minecraft:schedule_play_villager": {
@@ -3894,9 +3533,7 @@
           ]
         },
         "add": {
-          "component_groups": [
-            "play_schedule_villager"
-          ]
+          "component_groups": ["play_schedule_villager"]
         }
       },
       "minecraft:schedule_work_pro_villager": {
@@ -3910,9 +3547,7 @@
           ]
         },
         "add": {
-          "component_groups": [
-            "work_schedule_villager"
-          ]
+          "component_groups": ["work_schedule_villager"]
         }
       },
       "minecraft:schedule_work_farmer": {
@@ -3927,9 +3562,7 @@
           ]
         },
         "add": {
-          "component_groups": [
-            "work_schedule_farmer"
-          ]
+          "component_groups": ["work_schedule_farmer"]
         }
       },
       "minecraft:schedule_work_fisher": {
@@ -3944,9 +3577,7 @@
           ]
         },
         "add": {
-          "component_groups": [
-            "work_schedule_fisher"
-          ]
+          "component_groups": ["work_schedule_fisher"]
         }
       },
       "minecraft:schedule_work_librarian": {
@@ -3961,30 +3592,22 @@
           ]
         },
         "add": {
-          "component_groups": [
-            "work_schedule_librarian"
-          ]
+          "component_groups": ["work_schedule_librarian"]
         }
       },
       "minecraft:resupply_trades": {
         "add": {
-          "component_groups": [
-            "trade_resupply_component_group"
-          ]
+          "component_groups": ["trade_resupply_component_group"]
         }
       },
       "minecraft:start_celebrating": {
         "add": {
-          "component_groups": [
-            "minecraft:celebrate"
-          ]
+          "component_groups": ["minecraft:celebrate"]
         }
       },
       "minecraft:stop_celebrating": {
         "remove": {
-          "component_groups": [
-            "minecraft:celebrate"
-          ]
+          "component_groups": ["minecraft:celebrate"]
         }
       }
     }
