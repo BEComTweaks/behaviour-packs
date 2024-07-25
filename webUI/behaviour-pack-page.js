@@ -73,7 +73,7 @@ function toggleCategory(label) {
 function downloadSelectedTweaks() {
   var packName = document.getElementById("fileNameInput").value;
   if (!packName) {
-    packName = `BTRP-${String(Math.floor(Math.random() * 1000000)).padStart(
+    packName = `BTBP-${String(Math.floor(Math.random() * 1000000)).padStart(
       6,
       "0",
     )}`;
