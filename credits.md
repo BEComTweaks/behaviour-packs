@@ -1,16 +1,20 @@
 ## This would not have been possible if not for the following
 
-### Websites<br>
-<br>[Vanilla Tweaks](https://vanillatweaks.net)<br>
+### Websites
+[Vanilla Tweaks](https://vanillatweaks.net)
 - Without them, Bedrock Tweaks would have not been this way
-<br>[Bedrock Tweaks](https://bedrocktweaks.net)<br>
+
+[Bedrock Tweaks](https://bedrocktweaks.net)
 - Without DrAV, this would have taken a long time to complete
 
 ### Individuals<br>
-[YzaBeast1](https://github.com/yzabeast1)<br>
-- Pointed out issues with my code preventing Linux Distributions from running the scripts<br>
-- Made the webUI and backend if we host it
-<br>[NSPC911](https://github.com/NSPC911)<br>
+[YzaBeast1](https://github.com/yzabeast1)
+- Pointed out issues with my code preventing Linux Distributions from running the scripts and made the webUI and backend
+
+[Gyver5681](https://www.twitch.tv/gyver5681)
+- Made AFK Display
+
+[NSPC911](https://github.com/NSPC911)
 - Yep, that's me, the one who started this all!
 
 If you contributed directly or indirectly and want a place here, contact me on Discord at `@nspg911`

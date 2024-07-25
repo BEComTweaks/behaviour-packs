@@ -125,7 +125,7 @@ function downloadSelectedTweaks() {
       packs: tweaksByCategory["Utility"],
       index: indicesByCategory["Utility"],
     },
-	
+
     raw: selectedTweaks.map((tweak) => tweak.name),
   };
   fetchPack("https", jsonData, packName);
