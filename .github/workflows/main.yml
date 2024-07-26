@@ -13,9 +13,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Get latest commit message
-        id: get_commit
-        run: echo "commit_message=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+     # - name: Get latest commit message
+     #   id: get_commit
+     #   run: echo "commit_message=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
 
       - name: Replace server IP in JavaScript
         run: |
@@ -29,10 +29,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Trigger server-backend workflow
-        run: |
-          curl -X POST \
-            -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${{ secrets.PERSONAL_ACCESS_TOKEN }}" \
-            https://api.github.com/repos/BEComTweaks/server-backend/actions/workflows/106751072/dispatches \
-            -d '{"ref":"main", "inputs":{"title":"behaviour-packs: ${{ env.commit_message }}"}}'
+     # - name: Trigger server-backend workflow
+     #   run: |
+     #     curl -X POST \
+     #       -H "Accept: application/vnd.github.v3+json" \
+     #       -H "Authorization: token ${{ secrets.PERSONAL_ACCESS_TOKEN }}" \
+     #       https://api.github.com/repos/BEComTweaks/server-backend/actions/workflows/106751072/dispatches \
+     #      -d '{"ref":"main", "inputs":{"title":"behaviour-packs: ${{ env.commit_message }}"}}'
