@@ -11,17 +11,13 @@
           ]
         },
         "no_spleeping": {
-          "animations": [
-            "phantom_sizing"
-          ],
+          "animations": ["phantom_sizing"],
           "transitions": [
             {
               "default": "query.is_sleeping"
             }
           ],
-          "on_exit": [
-            "/scoreboard players set @s lp_no_sleep_time 0"
-          ]
+          "on_exit": ["/scoreboard players set @s lp_no_sleep_time 0"]
         }
       }
     }

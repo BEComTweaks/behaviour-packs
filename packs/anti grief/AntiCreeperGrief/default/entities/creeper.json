@@ -62,11 +62,7 @@
         "on_death": "query.last_hit_by_player ? 5 : 0"
       },
       "minecraft:type_family": {
-        "family": [
-          "creeper",
-          "monster",
-          "mob"
-        ]
+        "family": ["creeper", "monster", "mob"]
       },
       "minecraft:breathable": {
         "total_supply": 15,
@@ -262,9 +258,7 @@
               "value": "minecraft:is_charged"
             },
             "add": {
-              "component_groups": [
-                "minecraft:forced_exploding"
-              ]
+              "component_groups": ["minecraft:forced_exploding"]
             }
           },
           {
@@ -273,9 +267,7 @@
               "value": "minecraft:is_charged"
             },
             "add": {
-              "component_groups": [
-                "minecraft:forced_charged_exploding"
-              ]
+              "component_groups": ["minecraft:forced_charged_exploding"]
             }
           }
         ]
@@ -289,9 +281,7 @@
               "value": "minecraft:is_charged"
             },
             "add": {
-              "component_groups": [
-                "minecraft:exploding"
-              ]
+              "component_groups": ["minecraft:exploding"]
             }
           },
           {
@@ -300,30 +290,22 @@
               "value": "minecraft:is_charged"
             },
             "add": {
-              "component_groups": [
-                "minecraft:charged_exploding"
-              ]
+              "component_groups": ["minecraft:charged_exploding"]
             }
           }
         ]
       },
       "minecraft:stop_exploding": {
         "remove": {
-          "component_groups": [
-            "minecraft:exploding"
-          ]
+          "component_groups": ["minecraft:exploding"]
         }
       },
       "minecraft:become_charged": {
         "remove": {
-          "component_groups": [
-            "minecraft:exploding"
-          ]
+          "component_groups": ["minecraft:exploding"]
         },
         "add": {
-          "component_groups": [
-            "minecraft:charged_creeper"
-          ]
+          "component_groups": ["minecraft:charged_creeper"]
         }
       }
     }

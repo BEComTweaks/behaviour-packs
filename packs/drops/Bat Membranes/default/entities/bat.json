@@ -10,10 +10,7 @@
     "components": {
       "minecraft:is_hidden_when_invisible": {},
       "minecraft:type_family": {
-        "family": [
-          "bat",
-          "mob"
-        ]
+        "family": ["bat", "mob"]
       },
       "minecraft:loot": {
         "table": "loot_tables/entities/bat.json"
@@ -65,10 +62,7 @@
         "y_dist": 7,
         "y_offset": -2.0,
         "random_reselect": true,
-        "float_duration": [
-          0.1,
-          0.35
-        ]
+        "float_duration": [0.1, 0.35]
       },
       "minecraft:can_fly": {},
       "minecraft:health": {

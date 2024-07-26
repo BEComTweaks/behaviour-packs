@@ -42,11 +42,7 @@
         "uncertainty_base": 0,
         "uncertainty_multiplier": 0,
         "anchor": 1,
-        "offset": [
-          0,
-          -0.1,
-          0
-        ],
+        "offset": [0, -0.1, 0],
         "reflect_on_hurt": true,
         "catch_fire": true
       },
@@ -66,9 +62,7 @@
     "events": {
       "minecraft:explode": {
         "add": {
-          "component_groups": [
-            "minecraft:exploding"
-          ]
+          "component_groups": ["minecraft:exploding"]
         }
       }
     }

@@ -46,10 +46,7 @@
     "components": {
       "minecraft:is_hidden_when_invisible": {},
       "minecraft:type_family": {
-        "family": [
-          "dragon",
-          "mob"
-        ]
+        "family": ["dragon", "mob"]
       },
       "minecraft:loot": {
         "table": "loot_tables/entities/ender_dragon.json"
@@ -108,46 +105,31 @@
       "minecraft:entity_spawned": {
         "remove": {},
         "add": {
-          "component_groups": [
-            "dragon_flying"
-          ]
+          "component_groups": ["dragon_flying"]
         }
       },
       "minecraft:start_land": {
         "remove": {
-          "component_groups": [
-            "dragon_flying"
-          ]
+          "component_groups": ["dragon_flying"]
         },
         "add": {
-          "component_groups": [
-            "dragon_sitting"
-          ]
+          "component_groups": ["dragon_sitting"]
         }
       },
       "minecraft:start_fly": {
         "remove": {
-          "component_groups": [
-            "dragon_sitting"
-          ]
+          "component_groups": ["dragon_sitting"]
         },
         "add": {
-          "component_groups": [
-            "dragon_flying"
-          ]
+          "component_groups": ["dragon_flying"]
         }
       },
       "minecraft:start_death": {
         "remove": {
-          "component_groups": [
-            "dragon_sitting",
-            "dragon_flying"
-          ]
+          "component_groups": ["dragon_sitting", "dragon_flying"]
         },
         "add": {
-          "component_groups": [
-            "dragon_death"
-          ]
+          "component_groups": ["dragon_death"]
         }
       }
     }

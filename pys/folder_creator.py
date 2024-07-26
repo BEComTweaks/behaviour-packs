@@ -6,6 +6,7 @@ if str(os.getcwd()).endswith("system32"):
     # Because for some reason, it runs it at C:\Windows\System32
     # Yeah, it is stupid, but I can't put these lines in custom_functions
     # Because that still brings up an error
+
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 from custom_functions import *
@@ -60,29 +61,33 @@ def folder_creator():
                 # Makes the default directory in PackID
                 os.mkdir(f'{cdir()}/packs/{pack_json["topic"].lower()}/{pack_json["packs"][i]["pack_id"]}/default')
                 if showerror != 0:
-                    clrprint(f'+ |-------> Made folder', '`default`', clr='b,w')
+                    clrprint('+ |-------> Made folder', '`default`', clr='b,w')
             except FileExistsError:
                 if showerror == 2:
-                    clrprint(f'- |-------> Folder', '`default`', 'already exists!', clr='y,w,y')
+                    clrprint('- |-------> Folder', '`default`', 'already exists!', clr='y,w,y')
                 else:
                     pass
 
             # Pack Directory pack_icon.png
-            with open(f'{cdir()}/packs/{pack_json["topic"].lower()}/{pack_json["packs"][i]["pack_id"]}/pack_icon.png','a') as _:
-                # The main purpose of doing this is to
-                # 1. Create a pack_icon.png as  \packs\topic\packid\
-                # 2. Make no changes to \packs\topic\packid\pack_icon.png if it is already made/modified
-                pass
-            if os.path.getsize(f'{cdir()}/packs/{pack_json["topic"].lower()}/{pack_json["packs"][i]["pack_id"]}/pack_icon.png') == 0:
-                # Basically checks whether pack_icon.png is empty, and
-                # if so, it copies the pack_icon.png to \packs\topic\packid
-                copyfile(f'{cdir()}/pack_icons/missing_texture.png',
-                         f'{cdir()}/packs/{pack_json["topic"].lower()}/{pack_json["packs"][i]["pack_id"]}/pack_icon.png')
-                if showerror != 0:
-                    clrprint('+ |----------> Made', '`pack_icon.png`', clr='g,w')
-            elif showerror == 2:
-                # When length of pack_icon.png is larger than 0
-                clrprint('- |---------->', '`pack_icon.png`', 'has been modified!', clr='m,w,m')
+            try:
+                if pack_json["packs"][i]["details"]["icon"] != "png":
+                    pass
+            except:
+                with open(f'{cdir()}/packs/{pack_json["topic"].lower()}/{pack_json["packs"][i]["pack_id"]}/pack_icon.png','a') as _:
+                    # The main purpose of doing this is to
+                    # 1. Create a pack_icon.png as  \packs\topic\packid\
+                    # 2. Make no changes to \packs\topic\packid\pack_icon.png if it is already made/modified
+                    pass
+                if os.path.getsize(f'{cdir()}/packs/{pack_json["topic"].lower()}/{pack_json["packs"][i]["pack_id"]}/pack_icon.png') == 0:
+                    # Basically checks whether pack_icon.png is empty, and
+                    # if so, it copies the pack_icon.png to \packs\topic\packid
+                    copyfile(f'{cdir()}/pack_icons/missing_texture.png',
+                             f'{cdir()}/packs/{pack_json["topic"].lower()}/{pack_json["packs"][i]["pack_id"]}/pack_icon.png')
+                    if showerror != 0:
+                        clrprint('+ |----------> Made', '`pack_icon.png`', clr='g,w')
+                elif showerror == 2:
+                    # When length of pack_icon.png is larger than 0
+                    clrprint('- |---------->', '`pack_icon.png`', 'has been modified!', clr='m,w,m')
 
             for comp in pack_json["packs"][i]["compatibility"]:
                 # Pack Name Compatibilities Directory
@@ -100,13 +105,6 @@ def folder_creator():
             # Seperator
             print("\n", "=" * 40, "\n")
 
-    clrinput("Finished Successfully!\nPress Enter to exit.", clr="green")
-    clear()
-
 
 if __name__ == "__main__":
-    try:
-        folder_creator()
-    except Exception as e:
-        print(e)
-        input()
+    folder_creator()
