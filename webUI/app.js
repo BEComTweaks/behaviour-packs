@@ -2,6 +2,11 @@ function toggleSelection(element) {
   element.classList.toggle("selected");
   const checkbox = element.querySelector('input[type="checkbox"]');
   checkbox.checked = !checkbox.checked;
+  if (checkbox.checked) {
+    console.log("Selected tweak");
+  } else {
+    console.log("Unselected tweak");
+  }
   var selectedTweaks = [];
   const tweakElements = document.querySelectorAll(".tweak.selected");
   tweakElements.forEach((tweak) => {
@@ -26,7 +31,6 @@ function toggleSelection(element) {
     }
     document.getElementById("selected-tweaks").appendChild(tweakItem);
   });
-  console.log(selectedTweaks.length);
   if (selectedTweaks.length == 0) {
     const tweakItem = document.createElement("div");
     tweakItem.className = "tweak-list-pack";
@@ -78,6 +82,8 @@ function toggleCategory(label) {
 }
 
 function downloadSelectedTweaks() {
+  var mcVersion = document.getElementById("mev").value;
+  console.log(`Minimum Engine Version is set to ${mcVersion}`);
   var packName = document.getElementById("fileNameInput").value;
   if (!packName) {
     packName = `BTBP-${String(Math.floor(Math.random() * 1000000)).padStart(
@@ -135,16 +141,19 @@ function downloadSelectedTweaks() {
 
     raw: selectedTweaks.map((tweak) => tweak.name),
   };
-  fetchPack("https", jsonData, packName);
+
+  fetchPack("https", jsonData, packName, mcVersion);
 }
 const serverip = "localhost";
 
-function fetchPack(protocol, jsonData, packName) {
+function fetchPack(protocol, jsonData, packName, mcVersion) {
+  console.log("Fetching pack...");
   fetch(`${protocol}://${serverip}/exportBehaviourPack`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       packName: packName,
+      mcVersion: mcVersion,
     },
     body: JSON.stringify(jsonData),
   })
@@ -155,6 +164,7 @@ function fetchPack(protocol, jsonData, packName) {
       return response.blob();
     })
     .then((blob) => {
+      console.log("Received pack!");
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.style.display = "none";
@@ -167,7 +177,7 @@ function fetchPack(protocol, jsonData, packName) {
     .catch((error) => {
       if (protocol === "https") {
         console.error("HTTPS error, trying HTTP:", error);
-        fetchPack("http", jsonData, packName); // Retry with HTTP
+        fetchPack("http", jsonData, packName, mcVersion); // Retry with HTTP
       } else {
         console.error("Error:", error);
       }
