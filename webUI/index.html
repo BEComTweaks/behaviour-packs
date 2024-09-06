@@ -19,11 +19,7 @@
   </div>
   <script src="bg.js">
   </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js">
-  </script>
   <div class="half-dark">
-    <br>
-    <br>
    <div class="image-container">
     <img alt="Behaviour Packs" id="title" src="images/title.png"/>
    </div>
@@ -265,16 +261,17 @@
       </option>
      </select>
     </div>
-    <input id="zipInput" type="file">
-     <button class="download-selected-button" onclick="downloadSelectedTweaks()">
-      Download Selected Tweaks
-     </button>
-     <div id="selected-tweaks">
-      <div class="tweak-list-pack">
-       Select some packs and see them appear here!
-      </div>
+    <div class="zipinputcontainer">
+     <input id="zipInput" type="file"/>
+    </div>
+    <button class="download-selected-button" onclick="downloadSelectedTweaks()">
+     Download Selected Tweaks
+    </button>
+    <div id="selected-tweaks">
+     <div class="tweak-list-pack">
+      Select some packs and see them appear here!
      </div>
-    </input>
+    </div>
    </div>
    <script src="app.js">
    </script>
