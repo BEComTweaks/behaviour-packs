@@ -2,7 +2,5 @@
   "Anti Grief": [],
   "Drops": [],
   "Fun": [],
-  "Utility": [
-    "AFKDisplay"
-  ]
+  "Utility": ["AFKDisplay"]
 }

@@ -185,9 +185,11 @@ function fetchPack(protocol, jsonData, packName, mcVersion) {
 }
 
 // Extra code to trigger file input
-document.querySelector(".zipinputcontainer").addEventListener("click", function () {
-  document.getElementById("zipInput").click();
-});
+document
+  .querySelector(".zipinputcontainer")
+  .addEventListener("click", function () {
+    document.getElementById("zipInput").click();
+  });
 
 document
   .getElementById("zipInput")
