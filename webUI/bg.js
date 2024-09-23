@@ -19,12 +19,13 @@ function selectTexture() {
     }
   }
 }
+
 function createTiles() {
   const container = document.getElementById("background-container");
   const numColumns = Math.ceil(window.innerWidth / 100) + 2;
   const numRows = Math.ceil(window.innerHeight / 100) + 2;
-  container.innerHTML = "";
-  for (let i = 0; i < numColumns; i++) {
+
+  for (let i = container.children.length; i < numColumns; i++) {
     const rowDiv = document.createElement("div");
     rowDiv.className = "row";
     for (let j = 0; j < numRows; j++) {
@@ -35,9 +36,26 @@ function createTiles() {
     }
     container.appendChild(rowDiv);
   }
+
+  // Adjust existing rows and columns
+  for (let i = 0; i < container.children.length; i++) {
+    const rowDiv = container.children[i];
+    for (let j = rowDiv.children.length; j < numRows; j++) {
+      const tile = document.createElement("div");
+      tile.className = "tile";
+      tile.style.backgroundImage = `url("${selectTexture()}")`;
+      rowDiv.appendChild(tile);
+    }
+    while (rowDiv.children.length > numRows) {
+      rowDiv.removeChild(rowDiv.lastChild);
+    }
+  }
+
+  while (container.children.length > numColumns) {
+    container.removeChild(container.lastChild);
+  }
 }
+
 createTiles();
-window.addEventListener("resize", () => {
-  document.getElementById("background-container").innerHTML = "";
-  createTiles();
-});
+
+window.addEventListener("resize", createTiles);

@@ -1,11 +1,16 @@
+// I sleep now
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 function toggleSelection(element) {
   element.classList.toggle("selected");
   const checkbox = element.querySelector('input[type="checkbox"]');
   checkbox.checked = !checkbox.checked;
   if (checkbox.checked) {
-    console.log("Selected tweak");
+    console.log(`Selected ${element.dataset.name}`);
   } else {
-    console.log("Unselected tweak");
+    console.log(`Unselected ${element.dataset.name}`);
   }
   var selectedTweaks = [];
   const tweakElements = document.querySelectorAll(".tweak.selected");
@@ -91,6 +96,7 @@ function downloadSelectedTweaks() {
       "0",
     )}`;
   }
+  console.log(`Pack Name is set to ${packName}`);
   packName = packName.replaceAll("/", "-");
   const selectedTweaks = [];
   const tweakElements = document.querySelectorAll(".tweak.selected");
@@ -120,7 +126,7 @@ function downloadSelectedTweaks() {
     tweaksByCategory[tweak.category].push(tweak.name);
     indicesByCategory[tweak.category].push(tweak.index);
   });
-
+  console.log("Obtained!");
   const jsonData = {
     "Anti Grief": {
       packs: tweaksByCategory["Anti Grief"],
@@ -147,6 +153,21 @@ function downloadSelectedTweaks() {
 const serverip = "localhost";
 
 function fetchPack(protocol, jsonData, packName, mcVersion) {
+  var downloadbutton = document.getElementsByClassName(
+    "download-selected-button",
+  )[0];
+  // For people that spam the download button
+  downloadbutton.onclick = null;
+  // Change between border animations
+  if (protocol === "http") {
+    downloadbutton.classList.remove("s");
+    downloadbutton.innerText = "Retrying with HTTP...";
+  } else {
+    downloadbutton.classList.add("http");
+    downloadbutton.classList.add("s");
+    downloadbutton.innerText = "Fetching Pack...";
+  }
+
   console.log("Fetching pack...");
   fetch(`${protocol}://${serverip}/exportBehaviourPack`, {
     method: "POST",
@@ -163,8 +184,16 @@ function fetchPack(protocol, jsonData, packName, mcVersion) {
       }
       return response.blob();
     })
-    .then((blob) => {
+    .then(async (blob) => {
       console.log("Received pack!");
+      // Just exists lol, it doesnt change for some reason
+      downloadbutton.innerText = "Obtained pack!";
+      downloadbutton.classList.remove("http");
+      // When using https, remove the s class
+      if (downloadbutton.classList.contains("s")) {
+        downloadbutton.classList.remove("s");
+      }
+      // Download the file
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.style.display = "none";
@@ -173,13 +202,24 @@ function fetchPack(protocol, jsonData, packName, mcVersion) {
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
+      await sleep(1000);
+      downloadbutton.innerText = "Download Selected Tweaks";
+      downloadbutton.onclick = downloadSelectedTweaks;
     })
-    .catch((error) => {
+    .catch(async (error) => {
       if (protocol === "https") {
         console.error("HTTPS error, trying HTTP:", error);
         fetchPack("http", jsonData, packName, mcVersion); // Retry with HTTP
       } else {
         console.error("Error:", error);
+        downloadbutton.classList.remove("http");
+        downloadbutton.innerText =
+          "Couldn't fetch pack. Check console for error log.";
+        downloadbutton.classList.add("error");
+        await sleep(3000);
+        downloadbutton.classList.remove("error");
+        downloadbutton.innerText = "Download Selected Tweaks";
+        downloadbutton.onclick = downloadSelectedTweaks;
       }
     });
 }
