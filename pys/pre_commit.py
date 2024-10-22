@@ -18,23 +18,22 @@ check("markdown")
 from markdown import markdown
 check("bs4","beautifulsoup4")
 from bs4 import BeautifulSoup
+check("lzstring")
+from lzstring import LZString
 
-category_start = '<div class="category"><div class="category-label" onclick="toggleCategory(this)">topic_name</div><div class="category-controlled"><div class="tweaks">'
-subcategory_start = '<div class="subcategory"><div class="category-label" onclick="toggleCategory(this)">topic_name</div><div class="category-controlled"><div class="subcattweaks">'
+category_start = '<div class="category"><div class="category-label" onclick="toggleCategory(this)">topic_name</div><button class="category-label-selectall" onclick="selectAll(this)" data-allpacks="<all_packs>"><img src="images/select-all-button/chiseled_bookshelf_empty.png" class="category-label-selectall-img"><div class="category-label-selectall-hovertext">Select All</div></button><div class="category-controlled"><div class="tweaks">'
+subcategory_start = '<div class="subcategory"><div class="category-label" onclick="toggleCategory(this)">topic_name</div><button class="category-label-selectall sub" onclick="selectAll(this)" data-allpacks="<all_packs>"><img src="images/select-all-button/chiseled_bookshelf_empty.png" class="category-label-selectall-img"><div class="category-label-selectall-hovertext">Select All</div></button><div class="category-controlled"><div class="subcattweaks">'
 pack_start = '<div class="tweak" onclick="toggleSelection(this)" data-category="topic_name" data-name="pack_id" data-index="pack_index">'
 html_comp = '<div class="comp-hover-text">Incompatible with: <incompatible></div>'
-pack_mid = '<div class="tweak-info"><input type="checkbox" id="tweaknumber" name="tweak" value="tweaknumber"><img src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/relloctopackicon"style="width:82px; height:82px;" alt="pack_name"><br><label id="tweak" class="tweak-title">pack_name</label><div class="tweak-description">pack_description</div></div>'
+pack_mid = '<div class="tweak-info"><input type="checkbox" name="tweak"><img src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/relloctopackicon" style="width:82px; height:82px;" alt="pack_name" loading="lazy"><br><label id="tweak" class="tweak-title">pack_name</label><div class="tweak-description">pack_description</div></div>'
 html_conf = '<div class="conf-hover-text">Conflicts with: <conflicts></div>'
 pack_end = '</div>'
 category_end = '</div></div></div>'
 cat_end_w_subcat_no_end = '</div><div class="subcat<index>">'
 
-with open(f"{cdir()}/credits.md","r") as credits:
-    html_end = f'</div><div class="download-container"><div class="file-download"><input type="text" id="fileNameInput" placeholder="Enter Pack name"><br><select name="mev" id="mev"><option value="1.21.0">1.21</option><option value="1.20.0">1.20</option><option value="1.19.0">1.19</option><option value="1.18.0">1.18</option><option value="1.17.0">1.17</option><option value="1.16.0">1.16</option></select></div><div class="zipinputcontainer"><input type="file" id="zipInput"/></div><button class="download-selected-button" onclick="downloadSelectedTweaks()">Download Selected Tweaks</button><div id="selected-tweaks"><div class="tweak-list-pack">Select some packs and see them appear here!</div></div></div><script src="app.js"></script></div></body><footer class="footer-container"><div class="half-dark"><div class="credits-footer">{str(markdown(credits.read()))}<p><a href="https://github.com/BEComTweaks/behaviour-packs">GitHub</a></p></div></div></footer></html>'
-
-html = '<!DOCTYPE html><html lang="en"><head><meta content="Bedrock Edition Community Tweaks Behaviour Packs" name="author"><meta content="Behaviour Pack tweak selector. Unofficially updated by BEComTweaks on GitHub" name="description"><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><title>Behaviour Packs</title><style>@import url("https://becomtweaks.github.io/resource-packs/theme.css");</style><link href="images/icon.png" rel="icon" type="image/x-icon"></meta></meta></head><body><br><div id="background-container"></div><script src="bg.js"></script><div class="half-dark"><div class="image-container"><img alt="Behaviour Packs" id="title" src="images/title.png"></div><ul class="large-nav"><li><a class="nav-link" href="https://becomtweaks.github.io">Home</a></li><li><a class="nav-link" href="https://becomtweaks.github.io/docs">Docs</a></li><li style="float:right"><a class="nav-link" href="https://becomtweaks.github.io/crafting-tweaks">Crafting Tweaks</a></li><li style="float:right"><a class="nav-link" href="https://becomtweaks.github.io/behaviour-packs">Behaviour Packs</a></li><li style="float:right"><a class="nav-link" href="https://becomtweaks.github.io/resource-packs">Resource Packs</a></li></ul><ul class="small-nav"><li><a class="nav-link" href="https://becomtweaks.github.io">Home</a></li><li style="float:right"><a class="nav-link" href="https://becomtweaks.github.io/crafting-tweaks">CTs</a></li><li style="float:right"><a class="nav-link" href="https://becomtweaks.github.io/behaviour-packs">BPs</a></li><li style="float:right"><a class="nav-link" href="https://becomtweaks.github.io/resource-packs">RPs</a></li></ul><div class="container"><!-- Categories -->'
+html = ''
 stats = [0, 0]
-incomplete_packs = {"Anti Grief": [], "Drops": [], "Fun": [], "Utility": []}
+incomplete_packs = {}
 cstats = [0, 0]
 compatibilities = {}
 conflicts = {}
@@ -42,7 +41,7 @@ pkicstats = [0, 0]
 subcats = 0
 ignore = False
 subcat_list = []
-incomplete_pkics = {"Anti Grief": [], "Drops": [], "Fun": [], "Utility": []}
+incomplete_pkics = {}
 packs = -1
 pack_list = []
 name_to_json = {}
@@ -52,8 +51,8 @@ with open(f"{cdir()}/jsons/others/pack_order_list.txt","r") as pol:
         pack_list.append(i)
 
 parser = argparse.ArgumentParser(description='Run a massive script that updates Packs to-do, Icons to-do, Compatibilities to-do and the HTML')
-parser.add_argument('--format', action='store_true', help='Include flag to format files')
-parser.add_argument('--use-relative-location', action='store_true', help='Use relative location')
+parser.add_argument('--format', '-f', action='store_true', help='Include flag to format files')
+parser.add_argument('--use-relative-location', '-rl', action='store_true', help='Use relative location')
 args = parser.parse_args()
 
 # Counts Packs and Compatibilities
@@ -64,7 +63,11 @@ for j in pack_list:
             j = j[:-1]
         file = load_json(f"{cdir()}/jsons/packs/{j}")
         name_to_json[file["topic"]] = j
+        # Adds the categories automatically
+        incomplete_pkics[file["topic"]] = []
+        incomplete_packs[file["topic"]] = []
         html += category_start.replace("topic_name", file["topic"])
+        current_category_packs = { "raw": [] }
         # Runs through the packs
         for i in range(len(file["packs"])):
             # Updates Incomplete Packs
@@ -92,41 +95,50 @@ for j in pack_list:
                 else:
                     # When pack icon is complete
                     pkicstats[0] += 1
-            except:
-                if file["packs"][i]["details"]["icon"] != "png": # Assuming pack icon is done
-                    pkicstats[0] += 1
-                else:
-                    # When pack icon doesn't even exist
-                    incomplete_pkics[file["topic"]].append(file["packs"][i]["pack_id"])
-                    pkicstats[1] += 1
-            
-            # Updates Incomplete Pack Compatibilities
-            for comp in range(len(file["packs"][i]["compatibility"])):  # If it is empty, it just skips
-                # Looks at compatibility folders
+            except FileNotFoundError:
                 try:
-                    if os.listdir(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/{file["packs"][i]["compatibility"][comp]}') == []:
+                    if os.path.exists(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/pack_icon.{file["packs"][i]["icon"]}'):
+                        pkicstats[0] += 1
+                    else:
+                        # When pack icon doesn't even exist
+                        incomplete_pkics[file["topic"]].append(file["packs"][i]["pack_id"])
+                        pkicstats[1] += 1
+                except KeyError:
+                        incomplete_pkics[file["topic"]].append(file["packs"][i]["pack_id"])
+                        pkicstats[1] += 1
+            # Updates Incomplete Pack Compatibilities
+            try:
+                for comp in range(len(file["packs"][i]["compatibility"])):
+                    # Looks at compatibility folders
+                    try:
+                        if os.listdir(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/{file["packs"][i]["compatibility"][comp]}') == []:
+                            # Adds the packid to the list of incomplete compatibilities
+                            try:
+                                compatibilities[file["packs"][i]["pack_id"]].append(file["packs"][i]["compatibility"][comp])
+                            except KeyError:
+                                compatibilities[file["packs"][i]["pack_id"]] = [file["packs"][i]["compatibility"][comp]]
+                            cstats[1] += 1
+                        else:
+                            # When the compatibility directory has something inside
+                            cstats[0] += 1
+                    except FileNotFoundError:
+                        # When the compatibility folder isn't there
                         # Adds the packid to the list of incomplete compatibilities
                         try:
                             compatibilities[file["packs"][i]["pack_id"]].append(file["packs"][i]["compatibility"][comp])
                         except KeyError:
                             compatibilities[file["packs"][i]["pack_id"]] = [file["packs"][i]["compatibility"][comp]]
                         cstats[1] += 1
-                    else:
-                        # When the compatibility directory has something inside
-                        cstats[0] += 1
-                except FileNotFoundError:
-                    # When the compatibility folder isn't there
-                    # Adds the packid to the list of incomplete compatibilities
-                    try:
-                        compatibilities[file["packs"][i]["pack_id"]].append(file["packs"][i]["compatibility"][comp])
-                    except KeyError:
-                        compatibilities[file["packs"][i]["pack_id"]] = [file["packs"][i]["compatibility"][comp]]
-                    cstats[1] += 1
+            except KeyError:
+                pass # If it is empty, it just skips
             
             # Updates Pack Conflicts
             conflicts[file["packs"][i]["pack_id"]] = []
-            for conf in range(len(file["packs"][i]["conflict"])):  # If it is empty, it just skips
-                conflicts[file["packs"][i]["pack_id"]].append(file["packs"][i]["conflict"][conf])
+            try:
+                for conf in range(len(file["packs"][i]["conflict"])):
+                    conflicts[file["packs"][i]["pack_id"]].append(file["packs"][i]["conflict"][conf])
+            except KeyError:
+                pass # If it is empty, it just skips
             if conflicts[file["packs"][i]["pack_id"]] == []:
                 del conflicts[file["packs"][i]["pack_id"]]
             
@@ -161,25 +173,29 @@ for j in pack_list:
                 to_add_pack = to_add_pack.replace("pack_name", file["packs"][i]["pack_name"])
                 desc = file["packs"][i]["pack_description"]
                 try:
-                    if file["packs"][i]["details"]["message"][0] == "warn":
-                        desc += f'<p class="desc-warn">{file["packs"][i]["details"]["message"][1]}</p>'
-                    elif file["packs"][i]["details"]["message"][0] == "error":
-                        desc += f'<p class="desc-error">{file["packs"][i]["details"]["message"][1]}</p>'
-                    elif file["packs"][i]["details"]["message"][0] == "info":
-                        desc += f'<p class="desc-info">{file["packs"][i]["details"]["message"][1]}</p>'
+                    if file["packs"][i]["message"][0] == "warn":
+                        desc += f'<p class="desc-warn">{file["packs"][i]["message"][1]}</p>'
+                    elif file["packs"][i]["message"][0] == "error":
+                        desc += f'<p class="desc-error">{file["packs"][i]["message"][1]}</p>'
+                    elif file["packs"][i]["message"][0] == "info":
+                        desc += f'<p class="desc-info">{file["packs"][i]["message"][1]}</p>'
                 except KeyError:
                     pass
                 to_add_pack = to_add_pack.replace("pack_description", desc)
-                to_add_pack = to_add_pack.replace("tweaknumber", f"tweak{packs}")
                 to_add_pack = to_add_pack.replace("relloctopackicon", f'packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/pack_icon.png')
                 try:
-                    to_add_pack = to_add_pack.replace("png", file["packs"][i]["details"]["icon"])
+                    if os.path.exists(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/pack_icon.{file["packs"][i]["icon"]}'):
+                        # Because I can't make the html use a missing texture thing, so
+                        # it only replaces when it exists
+                        to_add_pack = to_add_pack.replace("png", file["packs"][i]["icon"])
                 except KeyError:
                     pass
                 # Uses relative location
                 if args.use_relative_location:
                     to_add_pack = to_add_pack.replace("https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/","../")
                 html += to_add_pack
+                current_category_packs["raw"].append(file["packs"][i]["pack_id"])
+    html = html.replace("<all_packs>", LZString.compressToEncodedURIComponent(dumps(current_category_packs)))
     try:
         if pack_list[pack_list.index(origj) + 1].startswith("\t"):
             html += cat_end_w_subcat_no_end
@@ -198,6 +214,7 @@ for j in pack_list:
             ignore = False
     except IndexError:
         html += category_end
+# Seperate loop for subcategories (I'm inefficient)
 for j in range(len(subcat_list)):
     pack_html = ""
     k = subcat_list[j]
@@ -207,7 +224,11 @@ for j in range(len(subcat_list)):
         k = k[1:]
     file = load_json(f"{cdir()}/jsons/packs/{k}")
     name_to_json[file["topic"]] = k
+    # Adds the categories automatically
+    incomplete_pkics[file["topic"]] = []
+    incomplete_packs[file["topic"]] = []
     pack_html += subcategory_start.replace("topic_name", f'{file["subcategory_of"]} > <b>{file["topic"]}</b>')
+    current_category_packs = { "raw": [] }
     for i in range(len(file["packs"])):
         # Updates Incomplete Packs
         try:
@@ -234,41 +255,51 @@ for j in range(len(subcat_list)):
             else:
                 # When pack icon is complete
                 pkicstats[0] += 1
-        except:
-            if file["packs"][i]["details"]["icon"] != "png": # Assuming pack_icon is done
-                pkicstats[0] += 1
-            else:
-                # When pack icon doesn't even exist
+        except FileNotFoundError:
+            try:
+                if os.path.exists(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/pack_icon.{file["packs"][i]["icon"]}'):
+                    pkicstats[0] += 1
+                else:
+                    # When pack icon doesn't even exist
+                    incomplete_pkics[file["topic"]].append(file["packs"][i]["pack_id"])
+                    pkicstats[1] += 1
+            except KeyError:
                 incomplete_pkics[file["topic"]].append(file["packs"][i]["pack_id"])
                 pkicstats[1] += 1
         
         # Updates Incomplete Pack Compatibilities
-        for comp in range(len(file["packs"][i]["compatibility"])):  # If it is empty, it just skips
-            # Looks at compatibility folders
-            try:
-                if os.listdir(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/{file["packs"][i]["compatibility"][comp]}') == []:
+        try:
+            for comp in range(len(file["packs"][i]["compatibility"])):
+                # Looks at compatibility folders
+                try:
+                    if os.listdir(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/{file["packs"][i]["compatibility"][comp]}') == []:
+                        # Adds the packid to the list of incomplete compatibilities
+                        try:
+                            compatibilities[file["packs"][i]["pack_id"]].append(file["packs"][i]["compatibility"][comp])
+                        except KeyError:
+                            compatibilities[file["packs"][i]["pack_id"]] = [file["packs"][i]["compatibility"][comp]]
+                        cstats[1] += 1
+                    else:
+                        # When the compatibility directory has something inside
+                        cstats[0] += 1
+                except FileNotFoundError:
+                    # When the compatibility folder isn't there
                     # Adds the packid to the list of incomplete compatibilities
                     try:
                         compatibilities[file["packs"][i]["pack_id"]].append(file["packs"][i]["compatibility"][comp])
                     except KeyError:
                         compatibilities[file["packs"][i]["pack_id"]] = [file["packs"][i]["compatibility"][comp]]
                     cstats[1] += 1
-                else:
-                    # When the compatibility directory has something inside
-                    cstats[0] += 1
-            except FileNotFoundError:
-                # When the compatibility folder isn't there
-                # Adds the packid to the list of incomplete compatibilities
-                try:
-                    compatibilities[file["packs"][i]["pack_id"]].append(file["packs"][i]["compatibility"][comp])
-                except KeyError:
-                    compatibilities[file["packs"][i]["pack_id"]] = [file["packs"][i]["compatibility"][comp]]
-                cstats[1] += 1
-        
+        except KeyError:
+            pass # If it is empty, it just skips
+
         # Updates Pack Conflicts
         conflicts[file["packs"][i]["pack_id"]] = []
-        for conf in range(len(file["packs"][i]["conflict"])):  # If it is empty, it just skips
-            conflicts[file["packs"][i]["pack_id"]].append(file["packs"][i]["conflict"][conf])
+        try:
+            for conf in range(len(file["packs"][i]["conflict"])):
+                conflicts[file["packs"][i]["pack_id"]].append(file["packs"][i]["conflict"][conf])
+        except KeyError:
+            pass # If it is empty, it just skips
         if conflicts[file["packs"][i]["pack_id"]] == []:
             del conflicts[file["packs"][i]["pack_id"]]
         
@@ -303,30 +334,38 @@ for j in range(len(subcat_list)):
             to_add_pack = to_add_pack.replace("pack_name", file["packs"][i]["pack_name"])
             desc = file["packs"][i]["pack_description"]
             try:
-                if file["packs"][i]["details"]["message"][0] == "warn":
-                    desc += f'<p class="desc-warn">{file["packs"][i]["details"]["message"][1]}</p>'
-                elif file["packs"][i]["details"]["message"][0] == "error":
-                    desc += f'<p class="desc-error">{file["packs"][i]["details"]["message"][1]}</p>'
-                elif file["packs"][i]["details"]["message"][0] == "info":
-                    desc += f'<p class="desc-info">{file["packs"][i]["details"]["message"][1]}</p>'
+                if file["packs"][i]["message"][0] == "warn":
+                    desc += f'<p class="desc-warn">{file["packs"][i]["message"][1]}</p>'
+                elif file["packs"][i]["message"][0] == "error":
+                    desc += f'<p class="desc-error">{file["packs"][i]["message"][1]}</p>'
+                elif file["packs"][i]["message"][0] == "info":
+                    desc += f'<p class="desc-info">{file["packs"][i]["message"][1]}</p>'
             except KeyError:
                 pass
             to_add_pack = to_add_pack.replace("pack_description", desc)
-            to_add_pack = to_add_pack.replace("tweaknumber", f"tweak{packs}")
             to_add_pack = to_add_pack.replace("relloctopackicon", f'packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/pack_icon.png')
             try:
-                to_add_pack = to_add_pack.replace("png", file["packs"][i]["details"]["icon"])
+                if os.path.exists(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/pack_icon.{file["packs"][i]["icon"]}'):
+                    # Because I can't make the html use a missing texture thing, some
+                    # it only replaces when it exists
+                    to_add_pack = to_add_pack.replace("png", file["packs"][i]["icon"])
             except KeyError:
                 pass
             if args.use_relative_location:
                 to_add_pack = to_add_pack.replace("https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/","../")
             pack_html += to_add_pack
+            current_category_packs["raw"].append(file["packs"][i]["pack_id"])
     pack_html += category_end
     html = html.replace(f'<div class="subcat{j}"></div>',pack_html)
+    html = html.replace("<all_packs>", LZString.compressToEncodedURIComponent(dumps(current_category_packs)))
 clrprint("Finished Counting!", clr="green")
 
 # HTML formatting
-html += html_end
+with open(f"{cdir()}/webUI/index.html.template", "r") as html_file:
+    real_html = html_file.read()
+html = real_html.replace("<!--Packs-->",html)
+with open(f"{cdir()}/credits.md", "r") as credits:
+    html = html.replace("<!--credits-->",str(markdown(credits.read())))
 soup = BeautifulSoup(html, 'html.parser')
 html = soup.prettify()
 html = html.replace("<br/>", "<br>")
@@ -369,5 +408,8 @@ clrprint("Updated a lot of files!", clr="green")
 if args.format:
     clrprint("Making files Prettier", clr="yellow")
     os.system(f"cd {cdir()}")
-    os.system('npx prettier --write "**/*.{js,ts,css,json}" --log-level silent')
+    try:
+        os.system('npx prettier --write "**/*.{js,ts,css,json}" --log-level silent')
+    except KeyboardInterrupt:
+        clrprint("You are a bit impatient...", clr="red")
     clrprint("Files are Prettier!", clr="green")

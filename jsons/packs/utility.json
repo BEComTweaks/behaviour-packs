@@ -4,16 +4,12 @@
     {
       "pack_id": "KillEmptyBoats",
       "pack_name": "Kill Empty Boats",
-      "pack_description": "Adds a QOL Command to delete all empty boats.",
-      "conflict": [],
-      "compatibility": []
+      "pack_description": "Adds a QOL Command to delete all empty boats."
     },
     {
       "pack_id": "AFKDisplay",
       "pack_name": "AFK Display",
-      "pack_description": "Marks players who are afk in the player screen.",
-      "conflict": [],
-      "compatibility": []
+      "pack_description": "Marks players who are afk in the player screen."
     }
   ]
 }
