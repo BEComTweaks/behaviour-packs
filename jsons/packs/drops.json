@@ -4,23 +4,17 @@
     {
       "pack_id": "Bat Membranes",
       "pack_name": "Bat Membranes",
-      "pack_description": "Makes Bats drop membranes.",
-      "conflict": [],
-      "compatibility": []
+      "pack_description": "Makes Bats drop membranes."
     },
     {
       "pack_id": "DoubleShulkerShells",
       "pack_name": "Double Shulker Shells",
-      "pack_description": "Makes Shulkers drop two shells instead of one.",
-      "conflict": [],
-      "compatibility": []
+      "pack_description": "Makes Shulkers drop two shells instead of one."
     },
     {
       "pack_id": "DragonDrops",
       "pack_name": "Dragon Drops",
-      "pack_description": "Makes the Ender Dragon drop an Elytra on defeat.",
-      "conflict": [],
-      "compatibility": []
+      "pack_description": "Makes the Ender Dragon drop an Elytra on defeat."
     }
   ]
 }
