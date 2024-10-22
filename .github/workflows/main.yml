@@ -90,4 +90,4 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.BOT_TOKEN }}" \
             https://api.github.com/repos/BEComTweaks/server-backend/actions/workflows/106751072/dispatches \
-            -d "{\"ref\":\"main\", \"inputs\":{\"title\":\"resource-packs: ${{ env.commit_title }}\"}}"
+            -d "{\"ref\":\"main\", \"inputs\":{\"title\":\"behaviour-packs: ${{ env.commit_title }}\"}}"
