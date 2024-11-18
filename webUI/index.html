@@ -8,318 +8,326 @@
   <title>
    Behaviour Packs
   </title>
-  <link href="https://becomtweaks.github.io/resource-packs/theme.css" rel="stylesheet"/>
   <link href="images/icon.png" rel="icon" type="image/x-icon"/>
  </head>
  <body>
   <div id="background-container">
   </div>
-  <script src="bg.js">
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js">
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js">
-  </script>
-  <div class="half-dark">
-   <br>
-   <br>
-   <div class="image-container">
-    <img alt="Behaviour Packs" id="title" src="images/title.png"/>
-   </div>
-   <ul class="large-nav">
-    <li>
-     <a class="nav-link" href="https://becomtweaks.github.io">
-      Home
-     </a>
-    </li>
-    <li>
-     <a class="nav-link" href="https://becomtweaks.github.io/docs">
-      Docs
-     </a>
-    </li>
-    <li style="float:right">
-     <a class="nav-link" href="https://becomtweaks.github.io/crafting-tweaks">
-      Crafting Tweaks
-     </a>
-    </li>
-    <li style="float:right">
-     <a class="nav-link" href="https://becomtweaks.github.io/behaviour-packs">
-      Behaviour Packs
-     </a>
-    </li>
-    <li style="float:right">
-     <a class="nav-link" href="https://becomtweaks.github.io/resource-packs">
-      Resource Packs
-     </a>
-    </li>
-   </ul>
-   <ul class="small-nav">
-    <li>
-     <a class="nav-link" href="https://becomtweaks.github.io">
-      Home
-     </a>
-    </li>
-    <li style="float:right">
-     <a class="nav-link" href="https://becomtweaks.github.io/crafting-tweaks">
-      CTs
-     </a>
-    </li>
-    <li style="float:right">
-     <a class="nav-link" href="https://becomtweaks.github.io/behaviour-packs">
-      BPs
-     </a>
-    </li>
-    <li style="float:right">
-     <a class="nav-link" href="https://becomtweaks.github.io/resource-packs">
-      RPs
-     </a>
-    </li>
-   </ul>
-   <div class="preselected">
-    Pre-selected Tweaks!
-    <div class="preselected-unselect" onclick="processJsonData(getSelectedTweaks(),'unselect'); this.parentElement.style.top = '-10vh'; this.parentElement.style.transform = 'translateX(-50%)'; this.parentElement.innerText = 'Unselected!';">
-     Unselect?
-    </div>
-   </div>
-   <div class="container">
-    <div class="category">
-     <div class="category-label" onclick="toggleCategory(this)">
-      Anti Grief
-     </div>
-     <button class="category-label-selectall" data-allpacks="N4IgTghg7iBcDaICCA7ALgSwMJgKa4AdcwBxMDXAMxABpl0MBRFAE2IFsIUyLq7VMJABYQAzmh5UQAXQC+QA" onclick="selectAll(this)">
-      <img class="category-label-selectall-img" src="images/select-all-button/chiseled_bookshelf_empty.png"/>
-      <div class="category-label-selectall-hovertext">
-       Select All
-      </div>
-     </button>
-     <div class="category-controlled">
-      <div class="tweaks">
-       <div class="tweak" data-category="Anti Grief" data-index="0" data-name="AntiCreeperGrief" onclick="toggleSelection(this)">
-        <div class="tweak-info">
-         <input name="tweak" type="checkbox"/>
-         <img alt="Anti Creeper Grief" loading="lazy" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/anti grief/AntiCreeperGrief/pack_icon.png" style="width:82px; height:82px;"/>
-         <br>
-         <label class="tweak-title" id="tweak">
-          Anti Creeper Grief
-         </label>
-         <div class="tweak-description">
-          Makes Creepers not destroy blocks when it explodes.
-         </div>
-        </div>
-       </div>
-       <div class="tweak" data-category="Anti Grief" data-index="1" data-name="AntiEndermanGrief" onclick="toggleSelection(this)">
-        <div class="tweak-info">
-         <input name="tweak" type="checkbox"/>
-         <img alt="Anti Enderman Grief" loading="lazy" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/anti grief/AntiEndermanGrief/pack_icon.png" style="width:82px; height:82px;"/>
-         <br>
-         <label class="tweak-title" id="tweak">
-          Anti Enderman Grief
-         </label>
-         <div class="tweak-description">
-          Makes Enderman not pick up blocks.
-         </div>
-        </div>
-       </div>
-       <div class="tweak" data-category="Anti Grief" data-index="2" data-name="AntiGhastGrief" onclick="toggleSelection(this)">
-        <div class="tweak-info">
-         <input name="tweak" type="checkbox"/>
-         <img alt="Anti Ghast Grief" loading="lazy" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/anti grief/AntiGhastGrief/pack_icon.png" style="width:82px; height:82px;"/>
-         <br>
-         <label class="tweak-title" id="tweak">
-          Anti Ghast Grief
-         </label>
-         <div class="tweak-description">
-          Makes Ghast fireballs not destroy blocks
-         </div>
-        </div>
-       </div>
-      </div>
-     </div>
-    </div>
-    <div class="category">
-     <div class="category-label" onclick="toggleCategory(this)">
-      Drops
-     </div>
-     <button class="category-label-selectall" data-allpacks="N4IgTghg7iBcDaIBCEAuACAsgUwLYCNIA7bAZxABoQARAewFd8AbbAZQAt6mBrbMD7Eybkq1SAHNaRMbQAO5ALoBfIA" onclick="selectAll(this)">
-      <img class="category-label-selectall-img" src="images/select-all-button/chiseled_bookshelf_empty.png"/>
-      <div class="category-label-selectall-hovertext">
-       Select All
-      </div>
-     </button>
-     <div class="category-controlled">
-      <div class="tweaks">
-       <div class="tweak" data-category="Drops" data-index="0" data-name="Bat Membranes" onclick="toggleSelection(this)">
-        <div class="tweak-info">
-         <input name="tweak" type="checkbox"/>
-         <img alt="Bat Membranes" loading="lazy" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/drops/Bat Membranes/pack_icon.png" style="width:82px; height:82px;"/>
-         <br>
-         <label class="tweak-title" id="tweak">
-          Bat Membranes
-         </label>
-         <div class="tweak-description">
-          Makes Bats drop membranes.
-         </div>
-        </div>
-       </div>
-       <div class="tweak" data-category="Drops" data-index="1" data-name="DoubleShulkerShells" onclick="toggleSelection(this)">
-        <div class="tweak-info">
-         <input name="tweak" type="checkbox"/>
-         <img alt="Double Shulker Shells" loading="lazy" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/drops/DoubleShulkerShells/pack_icon.png" style="width:82px; height:82px;"/>
-         <br>
-         <label class="tweak-title" id="tweak">
-          Double Shulker Shells
-         </label>
-         <div class="tweak-description">
-          Makes Shulkers drop two shells instead of one.
-         </div>
-        </div>
-       </div>
-       <div class="tweak" data-category="Drops" data-index="2" data-name="DragonDrops" onclick="toggleSelection(this)">
-        <div class="tweak-info">
-         <input name="tweak" type="checkbox"/>
-         <img alt="Dragon Drops" loading="lazy" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/drops/DragonDrops/pack_icon.png" style="width:82px; height:82px;"/>
-         <br>
-         <label class="tweak-title" id="tweak">
-          Dragon Drops
-         </label>
-         <div class="tweak-description">
-          Makes the Ender Dragon drop an Elytra on defeat.
-         </div>
-        </div>
-       </div>
-      </div>
-     </div>
-    </div>
-    <div class="category">
-     <div class="category-label" onclick="toggleCategory(this)">
-      Fun
-     </div>
-     <button class="category-label-selectall" data-allpacks="N4IgTghg7iBcDaIAyEwHMCmYAKALCAdgC4D2AtgM4gA0IAagJYA2TEmYAIhhEbgLIYKFNoJABdAL5A" onclick="selectAll(this)">
-      <img class="category-label-selectall-img" src="images/select-all-button/chiseled_bookshelf_empty.png"/>
-      <div class="category-label-selectall-hovertext">
-       Select All
-      </div>
-     </button>
-     <div class="category-controlled">
-      <div class="tweaks">
-       <div class="tweak" data-category="Fun" data-index="0" data-name="LargerPhantoms" onclick="toggleSelection(this)">
-        <div class="tweak-info">
-         <input name="tweak" type="checkbox"/>
-         <img alt="Larger Phantoms" loading="lazy" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/fun/LargerPhantoms/pack_icon.png" style="width:82px; height:82px;"/>
-         <br>
-         <label class="tweak-title" id="tweak">
-          Larger Phantoms
-         </label>
-         <div class="tweak-description">
-          Makes Phantoms larger, the longer you don't sleep.
-         </div>
-        </div>
-       </div>
-       <div class="tweak" data-category="Fun" data-index="1" data-name="VillagerDeathMessages" onclick="toggleSelection(this)">
-        <div class="tweak-info">
-         <input name="tweak" type="checkbox"/>
-         <img alt="Villager Death Messages" loading="lazy" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/fun/VillagerDeathMessages/pack_icon.png" style="width:82px; height:82px;"/>
-         <br>
-         <label class="tweak-title" id="tweak">
-          Villager Death Messages
-         </label>
-         <div class="tweak-description">
-          Makes a chat message when a villager is killed.
-         </div>
-        </div>
-       </div>
-      </div>
-     </div>
-    </div>
-    <div class="category">
-     <div class="category-label" onclick="toggleCategory(this)">
-      Utility
-     </div>
-     <button class="category-label-selectall" data-allpacks="N4IgTghg7iBcDaIDSBLANmgogWwA4BcBPAIQHsJ8BnEAGhAEEAxJAERUtzQkJAF0BfIA" onclick="selectAll(this)">
-      <img class="category-label-selectall-img" src="images/select-all-button/chiseled_bookshelf_empty.png"/>
-      <div class="category-label-selectall-hovertext">
-       Select All
-      </div>
-     </button>
-     <div class="category-controlled">
-      <div class="tweaks">
-       <div class="tweak" data-category="Utility" data-index="0" data-name="KillEmptyBoats" onclick="toggleSelection(this)">
-        <div class="tweak-info">
-         <input name="tweak" type="checkbox"/>
-         <img alt="Kill Empty Boats" loading="lazy" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/utility/KillEmptyBoats/pack_icon.png" style="width:82px; height:82px;"/>
-         <br>
-         <label class="tweak-title" id="tweak">
-          Kill Empty Boats
-         </label>
-         <div class="tweak-description">
-          Adds a QOL Command to delete all empty boats.
-         </div>
-        </div>
-       </div>
-       <div class="tweak" data-category="Utility" data-index="1" data-name="AFKDisplay" onclick="toggleSelection(this)">
-        <div class="tweak-info">
-         <input name="tweak" type="checkbox"/>
-         <img alt="AFK Display" loading="lazy" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/utility/AFKDisplay/pack_icon.png" style="width:82px; height:82px;"/>
-         <br>
-         <label class="tweak-title" id="tweak">
-          AFK Display
-         </label>
-         <div class="tweak-description">
-          Marks players who are afk in the player screen.
-         </div>
-        </div>
-       </div>
-      </div>
-     </div>
-    </div>
-   </div>
-   <div class="download-container">
-    <div class="file-download">
-     <input id="fileNameInput" placeholder="Enter Pack name" type="text"/>
-     <br>
-     <select id="mev" name="mev">
-      <option value="1.21.40">
-       1.21.40
-      </option>
-      <option value="1.21.0">
-       1.21
-      </option>
-      <option value="1.20.0">
-       1.20
-      </option>
-      <option value="1.19.0">
-       1.19
-      </option>
-      <option value="1.18.0">
-       1.18
-      </option>
-      <option value="1.17.0">
-       1.17
-      </option>
-      <option value="1.16.0">
-       1.16
-      </option>
-     </select>
-    </div>
-    <div class="zipinputcontainer">
-     <input id="zipInput" type="file"/>
-    </div>
-    <button class="download-selected-button" disabled="true" onclick="downloadSelectedTweaks()">
-     Download Selected Tweaks
-    </button>
-    <div id="selected-tweaks">
-     <div class="tweak-list-pack">
-      Select some packs and see them appear here!
-     </div>
-    </div>
-   </div>
-   <script src="app.js">
+  <link href="../oreui-html/src/oreui.css" rel="stylesheet"/>
+  <link href="https://becomtweaks.github.io/resource-packs/theme.css" rel="stylesheet">
+   <script src="bg.js">
    </script>
-  </div>
+   <script src="../oreui-html/src/oreui.js">
+   </script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js">
+   </script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js">
+   </script>
+   <div class="half-dark">
+    <br>
+    <br>
+    <div class="image-container">
+     <img alt="Behaviour Packs" id="title" src="images/title.png"/>
+    </div>
+    <ul class="large-nav">
+     <li>
+      <a class="nav-link" href="https://becomtweaks.github.io">
+       Home
+      </a>
+     </li>
+     <li>
+      <a class="nav-link" href="https://becomtweaks.github.io/docs">
+       Docs
+      </a>
+     </li>
+     <li style="float:right">
+      <a class="nav-link" href="https://becomtweaks.github.io/crafting-tweaks">
+       Crafting Tweaks
+      </a>
+     </li>
+     <li style="float:right">
+      <a class="nav-link" href="https://becomtweaks.github.io/behaviour-packs">
+       Behaviour Packs
+      </a>
+     </li>
+     <li style="float:right">
+      <a class="nav-link" href="https://becomtweaks.github.io/resource-packs">
+       Resource Packs
+      </a>
+     </li>
+    </ul>
+    <ul class="small-nav">
+     <li>
+      <a class="nav-link" href="https://becomtweaks.github.io">
+       Home
+      </a>
+     </li>
+     <li style="float:right">
+      <a class="nav-link" href="https://becomtweaks.github.io/crafting-tweaks">
+       CTs
+      </a>
+     </li>
+     <li style="float:right">
+      <a class="nav-link" href="https://becomtweaks.github.io/behaviour-packs">
+       BPs
+      </a>
+     </li>
+     <li style="float:right">
+      <a class="nav-link" href="https://becomtweaks.github.io/resource-packs">
+       RPs
+      </a>
+     </li>
+    </ul>
+    <div class="preselected" oreui-color="dark" oreui-type="general">
+     Pre-selected Tweaks!
+     <div class="preselected-unselect" onclick="processJsonData(getSelectedTweaks(),'unselect'); this.parentElement.style.top = '-20vh'; this.parentElement.innerText = 'Unselected!';">
+      Unselect?
+     </div>
+    </div>
+    <div class="container">
+     <div class="category">
+      <div class="category-label" onclick="OreUI.toggleActive(this);toggleCategory(this);" oreui-color="dark" oreui-type="button">
+       Anti Grief
+      </div>
+      <button class="category-label-selectall" data-allpacks="N4IgTghg7iBcDaICCA7ALgSwMJgKa4AdcwBxMDXAMxABpl0MBRFAE2IFsIUyLq7VMJABYQAzmh5UQAXQC+QA" onclick="selectAll(this)">
+       <img class="category-label-selectall-img" src="images/select-all-button/chiseled_bookshelf_empty.png"/>
+       <div class="category-label-selectall-hovertext">
+        Select All
+       </div>
+      </button>
+      <div class="category-controlled" oreui-color="dark" oreui-type="general">
+       <div class="tweaks">
+        <div class="tweak" data-category="Anti Grief" data-index="0" data-name="AntiCreeperGrief" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+         <div class="tweak-info">
+          <input name="tweak" type="checkbox"/>
+          <img alt="Anti Creeper Grief" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/anti grief/AntiCreeperGrief/pack_icon.png" style="width:82px; height:82px;"/>
+          <br>
+          <label class="tweak-title" id="tweak">
+           Anti Creeper Grief
+          </label>
+          <div class="tweak-description">
+           Makes Creepers not destroy blocks when it explodes.
+          </div>
+         </div>
+        </div>
+        <div class="tweak" data-category="Anti Grief" data-index="1" data-name="AntiEndermanGrief" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+         <div class="tweak-info">
+          <input name="tweak" type="checkbox"/>
+          <img alt="Anti Enderman Grief" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/anti grief/AntiEndermanGrief/pack_icon.png" style="width:82px; height:82px;"/>
+          <br>
+          <label class="tweak-title" id="tweak">
+           Anti Enderman Grief
+          </label>
+          <div class="tweak-description">
+           Makes Enderman not pick up blocks.
+          </div>
+         </div>
+        </div>
+        <div class="tweak" data-category="Anti Grief" data-index="2" data-name="AntiGhastGrief" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+         <div class="tweak-info">
+          <input name="tweak" type="checkbox"/>
+          <img alt="Anti Ghast Grief" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/anti grief/AntiGhastGrief/pack_icon.png" style="width:82px; height:82px;"/>
+          <br>
+          <label class="tweak-title" id="tweak">
+           Anti Ghast Grief
+          </label>
+          <div class="tweak-description">
+           Makes Ghast fireballs not destroy blocks
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="category">
+      <div class="category-label" onclick="OreUI.toggleActive(this);toggleCategory(this);" oreui-color="dark" oreui-type="button">
+       Drops
+      </div>
+      <button class="category-label-selectall" data-allpacks="N4IgTghg7iBcDaIBCEAuACAsgUwLYCNIA7bAZxABoQARAewFd8AbbAZQAt6mBrbMD7Eybkq1SAHNaRMbQAO5ALoBfIA" onclick="selectAll(this)">
+       <img class="category-label-selectall-img" src="images/select-all-button/chiseled_bookshelf_empty.png"/>
+       <div class="category-label-selectall-hovertext">
+        Select All
+       </div>
+      </button>
+      <div class="category-controlled" oreui-color="dark" oreui-type="general">
+       <div class="tweaks">
+        <div class="tweak" data-category="Drops" data-index="0" data-name="Bat Membranes" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+         <div class="tweak-info">
+          <input name="tweak" type="checkbox"/>
+          <img alt="Bat Membranes" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/drops/Bat Membranes/pack_icon.png" style="width:82px; height:82px;"/>
+          <br>
+          <label class="tweak-title" id="tweak">
+           Bat Membranes
+          </label>
+          <div class="tweak-description">
+           Makes Bats drop membranes.
+          </div>
+         </div>
+        </div>
+        <div class="tweak" data-category="Drops" data-index="1" data-name="DoubleShulkerShells" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+         <div class="tweak-info">
+          <input name="tweak" type="checkbox"/>
+          <img alt="Double Shulker Shells" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/drops/DoubleShulkerShells/pack_icon.png" style="width:82px; height:82px;"/>
+          <br>
+          <label class="tweak-title" id="tweak">
+           Double Shulker Shells
+          </label>
+          <div class="tweak-description">
+           Makes Shulkers drop two shells instead of one.
+          </div>
+         </div>
+        </div>
+        <div class="tweak" data-category="Drops" data-index="2" data-name="DragonDrops" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+         <div class="tweak-info">
+          <input name="tweak" type="checkbox"/>
+          <img alt="Dragon Drops" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/drops/DragonDrops/pack_icon.png" style="width:82px; height:82px;"/>
+          <br>
+          <label class="tweak-title" id="tweak">
+           Dragon Drops
+          </label>
+          <div class="tweak-description">
+           Makes the Ender Dragon drop an Elytra on defeat.
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="category">
+      <div class="category-label" onclick="OreUI.toggleActive(this);toggleCategory(this);" oreui-color="dark" oreui-type="button">
+       Fun
+      </div>
+      <button class="category-label-selectall" data-allpacks="N4IgTghg7iBcDaIAyEwHMCmYAKALCAdgC4D2AtgM4gA0IAagJYA2TEmYAIhhEbgLIYKFNoJABdAL5A" onclick="selectAll(this)">
+       <img class="category-label-selectall-img" src="images/select-all-button/chiseled_bookshelf_empty.png"/>
+       <div class="category-label-selectall-hovertext">
+        Select All
+       </div>
+      </button>
+      <div class="category-controlled" oreui-color="dark" oreui-type="general">
+       <div class="tweaks">
+        <div class="tweak" data-category="Fun" data-index="0" data-name="LargerPhantoms" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+         <div class="tweak-info">
+          <input name="tweak" type="checkbox"/>
+          <img alt="Larger Phantoms" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/fun/LargerPhantoms/pack_icon.png" style="width:82px; height:82px;"/>
+          <br>
+          <label class="tweak-title" id="tweak">
+           Larger Phantoms
+          </label>
+          <div class="tweak-description">
+           Makes Phantoms larger, the longer you don't sleep.
+          </div>
+         </div>
+        </div>
+        <div class="tweak" data-category="Fun" data-index="1" data-name="VillagerDeathMessages" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+         <div class="tweak-info">
+          <input name="tweak" type="checkbox"/>
+          <img alt="Villager Death Messages" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/fun/VillagerDeathMessages/pack_icon.png" style="width:82px; height:82px;"/>
+          <br>
+          <label class="tweak-title" id="tweak">
+           Villager Death Messages
+          </label>
+          <div class="tweak-description">
+           Makes a chat message when a villager is killed.
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="category">
+      <div class="category-label" onclick="OreUI.toggleActive(this);toggleCategory(this);" oreui-color="dark" oreui-type="button">
+       Utility
+      </div>
+      <button class="category-label-selectall" data-allpacks="N4IgTghg7iBcDaIDSBLANmgogWwA4BcBPAIQHsJ8BnEAGhAEEAxJAERUtzQkJAF0BfIA" onclick="selectAll(this)">
+       <img class="category-label-selectall-img" src="images/select-all-button/chiseled_bookshelf_empty.png"/>
+       <div class="category-label-selectall-hovertext">
+        Select All
+       </div>
+      </button>
+      <div class="category-controlled" oreui-color="dark" oreui-type="general">
+       <div class="tweaks">
+        <div class="tweak" data-category="Utility" data-index="0" data-name="KillEmptyBoats" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+         <div class="tweak-info">
+          <input name="tweak" type="checkbox"/>
+          <img alt="Kill Empty Boats" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/utility/KillEmptyBoats/pack_icon.png" style="width:82px; height:82px;"/>
+          <br>
+          <label class="tweak-title" id="tweak">
+           Kill Empty Boats
+          </label>
+          <div class="tweak-description">
+           Adds a QOL Command to delete all empty boats.
+          </div>
+         </div>
+        </div>
+        <div class="tweak" data-category="Utility" data-index="1" data-name="AFKDisplay" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+         <div class="tweak-info">
+          <input name="tweak" type="checkbox"/>
+          <img alt="AFK Display" src="https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/packs/utility/AFKDisplay/pack_icon.png" style="width:82px; height:82px;"/>
+          <br>
+          <label class="tweak-title" id="tweak">
+           AFK Display
+          </label>
+          <div class="tweak-description">
+           Marks players who are afk in the player screen.
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="download-container">
+     <div class="file-download">
+      <input id="fileNameInput" oreui-color="dark" oreui-type="input" placeholder="Enter Pack name" type="text"/>
+      <br>
+      <select id="mev" name="mev" oreui-color="dark" oreui-type="general">
+       <option value="1.21.40">
+        1.21.40
+       </option>
+       <option value="1.21.0">
+        1.21
+       </option>
+       <option value="1.20.0">
+        1.20
+       </option>
+       <option value="1.19.0">
+        1.19
+       </option>
+       <option value="1.18.0">
+        1.18
+       </option>
+       <option value="1.17.0">
+        1.17
+       </option>
+       <option value="1.16.0">
+        1.16
+       </option>
+      </select>
+     </div>
+     <div class="zipinputcontainer" oreui-color="purple" oreui-type="button">
+      <input id="zipInput" type="file">
+       <span class="selectedFile">
+        Upload Pack
+       </span>
+      </input>
+     </div>
+     <button class="download-selected-button" disabled="" onclick="downloadSelectedTweaks()" oreui-color="dark" oreui-type="button">
+      Download Selected Tweaks
+     </button>
+     <div id="selected-tweaks" oreui-color="dark" oreui-type="general">
+      <div class="tweak-list-pack">
+       Select some packs and see them appear here!
+      </div>
+     </div>
+    </div>
+    <script src="app.js">
+    </script>
+   </div>
+  </link>
  </body>
  <footer class="footer-container">
   <div class="half-dark">
-   <div class="credits-footer">
+   <div class="credits-footer" oreui-color="dark" oreui-type="general">
     <h2>
      This would not have been possible if not for the following
     </h2>
