@@ -541,3 +541,63 @@ function updateCategoryHeight() {
 }
 
 window.addEventListener("resize", updateCategoryHeight);
+function filterPacks() {
+  const query = document.getElementById("searchBar").value.toLowerCase().trim();
+  const resultsDiv = document.getElementById("searchResults");
+
+  if (query === "") {
+    resultsDiv.style.display = "none";
+    resultsDiv.innerHTML = "";
+    return;
+  }
+
+  const packs = document.querySelectorAll(".tweak");
+  let matches = [];
+
+  packs.forEach((pack, index) => {
+    const title = pack.querySelector(".tweak-title").textContent.toLowerCase();
+    const description = pack.querySelector(".tweak-description").textContent.toLowerCase();
+    const icon = pack.querySelector("img").src;
+
+    if (title.includes(query) || description.includes(query)) {
+      matches.push({
+        title,
+        description,
+        icon,
+        packIndex: index, // Keep track of the original pack's index
+      });
+    }
+  });
+
+  if (matches.length === 0) {
+    resultsDiv.style.display = "none";
+    resultsDiv.innerHTML = "";
+  } else {
+    resultsDiv.style.display = "block";
+    resultsDiv.innerHTML = matches
+      .map(
+        (match) => `
+      <div
+        class="search-result-item"
+        onclick="triggerPackClick(${match.packIndex})"
+        style="cursor: pointer;"
+      >
+        <img src="${match.icon}" alt="${match.title}" style="width: 50px; height: 50px;" />
+        <div>
+          <strong>${match.title}</strong>
+          <p>${match.description}</p>
+        </div>
+      </div>
+    `
+      )
+      .join("");
+  }
+}
+
+function triggerPackClick(index) {
+  // Simulate a click on the corresponding pack
+  const packs = document.querySelectorAll(".tweak");
+  if (packs[index]) {
+    packs[index].click();
+  }
+}
