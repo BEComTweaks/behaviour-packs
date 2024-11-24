@@ -80,7 +80,7 @@
      <div class="search-container">
       <input id="searchBar" oninput="filterPacks()" oreui-color="dark" oreui-type="input" placeholder="Search for a pack..." type="text"/>
      </div>
-     <div class="search-results" id="searchResults" oreui-color="dark" style="display: none;">
+     <div class="search-results" id="searchResults" oreui-color="dark" style="display: none;"></div>
     <!--Packs-->
    </div>
    <div class="download-container">
