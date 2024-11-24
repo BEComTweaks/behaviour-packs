@@ -556,7 +556,9 @@ function filterPacks() {
 
   packs.forEach((pack, index) => {
     const title = pack.querySelector(".tweak-title").textContent.toLowerCase();
-    const description = pack.querySelector(".tweak-description").textContent.toLowerCase();
+    const description = pack
+      .querySelector(".tweak-description")
+      .textContent.toLowerCase();
     const icon = pack.querySelector("img").src;
 
     if (title.includes(query) || description.includes(query)) {
@@ -588,7 +590,7 @@ function filterPacks() {
           <p>${match.description}</p>
         </div>
       </div>
-    `
+    `,
       )
       .join("");
   }
