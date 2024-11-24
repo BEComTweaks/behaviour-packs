@@ -541,6 +541,7 @@ function updateCategoryHeight() {
 }
 
 window.addEventListener("resize", updateCategoryHeight);
+document.addEventListener("click", filterPacks);
 function filterPacks() {
   const query = document.getElementById("searchBar").value.toLowerCase().trim();
   const resultsDiv = document.getElementById("searchResults");
@@ -560,12 +561,14 @@ function filterPacks() {
       .querySelector(".tweak-description")
       .textContent.toLowerCase();
     const icon = pack.querySelector("img").src;
+    const isSelected = pack.querySelector("input[type='checkbox']").checked; // Check selection state
 
     if (title.includes(query) || description.includes(query)) {
       matches.push({
         title,
         description,
         icon,
+        isSelected, // Track selection state
         packIndex: index, // Keep track of the original pack's index
       });
     }
@@ -575,11 +578,13 @@ function filterPacks() {
     resultsDiv.style.display = "none";
     resultsDiv.innerHTML = "";
   } else {
+    if (matches.length > 5) matches = matches.slice(0, 5);
     resultsDiv.style.display = "block";
     resultsDiv.innerHTML = matches
       .map(
         (match) => `
       <div
+        ${match.isSelected ? 'oreui-color="green"' : ""}
         class="search-result-item"
         onclick="triggerPackClick(${match.packIndex})"
         style="cursor: pointer;"

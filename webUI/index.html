@@ -14,7 +14,8 @@
   <div id="background-container">
   </div>
   <link href="../oreui-html/src/oreui.css" rel="stylesheet"/>
-  <link href="https://becomtweaks.github.io/resource-packs/theme.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+   <link href="https://becomtweaks.github.io/resource-packs/theme.css" rel="stylesheet"/>
    <script src="bg.js">
    </script>
    <script src="../oreui-html/src/oreui.js">
@@ -85,6 +86,11 @@
      </div>
     </div>
     <div class="container">
+     <div class="search-container">
+      <input id="searchBar" oninput="filterPacks()" oreui-color="dark" oreui-type="input" placeholder="Search for a pack..." type="text"/>
+     </div>
+     <div class="search-results" id="searchResults" oreui-color="dark" style="display: none;">
+     </div>
      <div class="category">
       <div class="category-label" onclick="OreUI.toggleActive(this);toggleCategory(this);" oreui-color="dark" oreui-type="button">
        Anti Grief
