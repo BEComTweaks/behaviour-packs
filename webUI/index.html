@@ -88,8 +88,8 @@
     <div class="container">
      <div class="search-container">
       <input id="searchBar" oninput="filterPacks()" oreui-color="dark" oreui-type="input" placeholder="Search for a pack..." type="text"/>
-     </div>
-     <div class="search-results" id="searchResults" oreui-color="dark" style="display: none;">
+      <div class="search-results" id="searchResults" oreui-color="dark" oreui-type="general">
+      </div>
      </div>
      <div class="category">
       <div class="category-label" onclick="OreUI.toggleActive(this);toggleCategory(this);" oreui-color="dark" oreui-type="button">
@@ -326,6 +326,8 @@
       </div>
      </div>
     </div>
+    <script src="searchbar.js">
+    </script>
     <script src="app.js">
     </script>
    </div>

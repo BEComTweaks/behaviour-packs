@@ -79,8 +79,8 @@
    <div class="container">
      <div class="search-container">
       <input id="searchBar" oninput="filterPacks()" oreui-color="dark" oreui-type="input" placeholder="Search for a pack..." type="text"/>
+      <div class="search-results" id="searchResults" oreui-color="dark" oreui-type="general"></div>
      </div>
-     <div class="search-results" id="searchResults" oreui-color="dark" style="display: none;"></div>
     <!--Packs-->
    </div>
    <div class="download-container">
@@ -124,8 +124,8 @@
      </div>
     </div>
    </div>
-   <script src="app.js">
-   </script>
+   <script src="searchbar.js"></script>
+   <script src="app.js"></script>
   </div>
  </body>
  <footer class="footer-container">
