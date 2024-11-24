@@ -13,7 +13,7 @@
   left: 0;
   right: 0;
   z-index: 100;
-  &[hasmatches=true] {
+  &[hasmatches="true"] {
     display: block;
   }
   &:not(:hover) {
@@ -25,7 +25,7 @@
   width: 95%;
   padding: 10px;
   font-size: 16px;
-  &:focus + div[hasmatches=true] {
+  &:focus + div[hasmatches="true"] {
     display: block;
   }
 }
@@ -36,7 +36,7 @@
   gap: 10px;
   margin-bottom: 10px;
   div {
-    text-align: left
+    text-align: left;
   }
   p {
     margin: 0;
