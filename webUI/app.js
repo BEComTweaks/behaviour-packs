@@ -750,14 +750,28 @@ function fetchPack(jsonData, packName, mcVersion) {
 
   let fetchPromises = [];
 
+  fetch(`${root_url}/../jsons/others/manifest.json`)
+    .then((response) => {
+      if (!response.ok) {
+        console.error("Failed to fetch manifest.json")
+      }
+      return response.json();
+    })
+    .then((json) => {
+      json.header.name = packName;
+      json.header.min_engine_version = mcVersion;
+      files.push("manifest.json");
+      file_content.push(JSON.stringify(json));
+      console.log("[%cfetch%c] Fetched manifest.json");
+      console.log(json);
+    })
   listofcategories.forEach((cats) => {
     jsonData[cats]["packs"].forEach((pack) => {
       fetchPromises.push(
         fetch(`${root_url}/${cats.toLowerCase()}/${pack}/list.json`)
           .then((response) => {
             if (!response.ok) {
-              console.error("Failed to fetch list.json");
-              return;
+              console.error("Failed to fetch list.json")
             }
             return response.json();
           })
@@ -776,6 +790,7 @@ function fetchPack(jsonData, packName, mcVersion) {
                 .then((text) => {
                   files.push(fileloc);
                   file_content.push(text);
+                  console.log(`[%cfetch%c]\n${fileloc}`, "color: blue", "color: initial");
                 });
             });
             return Promise.all(fileFetchPromises);
@@ -790,6 +805,7 @@ function fetchPack(jsonData, packName, mcVersion) {
     });
 
     zip.generateAsync({ type: "blob" }).then(function (blob) {
+      console.log("[%cfetch%c]\nFinished fetches", "color: blue", "color: initial")
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.style.display = "none";
