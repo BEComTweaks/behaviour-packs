@@ -1,5 +1,3 @@
 {
-  "default": [
-    "functions/kill_empty_boats.mcfunction"
-  ]
+  "default": ["functions/kill_empty_boats.mcfunction"]
 }

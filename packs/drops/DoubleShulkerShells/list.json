@@ -1,5 +1,3 @@
 {
-  "default": [
-    "loot_tables/entities/shulker.json"
-  ]
+  "default": ["loot_tables/entities/shulker.json"]
 }

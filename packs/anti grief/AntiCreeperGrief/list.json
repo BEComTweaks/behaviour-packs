@@ -1,5 +1,3 @@
 {
-  "default": [
-    "entities/creeper.json"
-  ]
+  "default": ["entities/creeper.json"]
 }

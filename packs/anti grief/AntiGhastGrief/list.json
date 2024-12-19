@@ -1,5 +1,3 @@
 {
-  "default": [
-    "entities/fireball.json"
-  ]
+  "default": ["entities/fireball.json"]
 }

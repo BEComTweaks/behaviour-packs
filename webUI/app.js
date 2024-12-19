@@ -763,7 +763,9 @@ function fetchPack(jsonData, packName, mcVersion) {
           })
           .then((json) => {
             let fileFetchPromises = json.default.map((fileloc) => {
-              return fetch(`${root_url}/${cats.toLowerCase()}/${pack}/default/${fileloc}`)
+              return fetch(
+                `${root_url}/${cats.toLowerCase()}/${pack}/default/${fileloc}`,
+              )
                 .then((response) => {
                   if (!response.ok) {
                     console.error("Failed to fetch file:", fileloc);
@@ -777,7 +779,7 @@ function fetchPack(jsonData, packName, mcVersion) {
                 });
             });
             return Promise.all(fileFetchPromises);
-          })
+          }),
       );
     });
   });
