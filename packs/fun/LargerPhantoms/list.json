@@ -1,0 +1,8 @@
+{
+  "default": [
+    "animations/phantom_sizing_anim.json",
+    "animation_controllers/phantom_sizing.animation_controller.json",
+    "entities/phantom.json",
+    "entities/player.json"
+  ]
+}

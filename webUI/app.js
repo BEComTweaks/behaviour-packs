@@ -708,3 +708,94 @@ function updateCategoryHeight() {
 }
 
 window.addEventListener("resize", updateCategoryHeight);
+
+/* test */
+function downloadSelectedTweaks() {
+  // set min_engine_version
+  var mcVersion = document.getElementById("mev").value;
+  console.log(
+    `[%cdownload%c]\nMinimum Engine Version is set to ${mcVersion}`,
+    "color: cyan",
+    "color: initial",
+  );
+  // set pack name
+  var packName = document.getElementById("fileNameInput").value;
+  if (!packName) {
+    packName = `BTBP-${String(Math.floor(Math.random() * 1000000)).padStart(
+      6,
+      "0",
+    )}`;
+  }
+  packName = packName.replaceAll("/", "-");
+  console.log(
+    `[%cdownload%c]\nPack Name is set to ${packName}`,
+    "color: cyan",
+    "color: initial",
+  );
+  // get selected tweaks
+  jsonData = getSelectedTweaks();
+  // fetch
+  fetchPack(jsonData, packName, mcVersion);
+}
+
+const root_url = "../packs";
+const listofcategories = ["Anti Grief", "Drops", "Fun", "Utility"];
+
+function fetchPack(jsonData, packName, mcVersion) {
+  console.log("[%cfetch%c]\nMaking pack...", "color: blue", "color: initial");
+
+  var zip = new JSZip();
+  var files = [];
+  var file_content = [];
+
+  let fetchPromises = [];
+
+  listofcategories.forEach((cats) => {
+    jsonData[cats]["packs"].forEach((pack) => {
+      fetchPromises.push(
+        fetch(`${root_url}/${cats.toLowerCase()}/${pack}/list.json`)
+          .then((response) => {
+            if (!response.ok) {
+              console.error("Failed to fetch list.json");
+              return;
+            }
+            return response.json();
+          })
+          .then((json) => {
+            let fileFetchPromises = json.default.map((fileloc) => {
+              return fetch(`${root_url}/${cats.toLowerCase()}/${pack}/default/${fileloc}`)
+                .then((response) => {
+                  if (!response.ok) {
+                    console.error("Failed to fetch file:", fileloc);
+                    return;
+                  }
+                  return response.text();
+                })
+                .then((text) => {
+                  files.push(fileloc);
+                  file_content.push(text);
+                });
+            });
+            return Promise.all(fileFetchPromises);
+          })
+      );
+    });
+  });
+
+  Promise.all(fetchPromises).then(() => {
+    files.forEach((file, index) => {
+      zip.file(file, file_content[index]);
+    });
+
+    zip.generateAsync({ type: "blob" }).then(function (blob) {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = url;
+      a.download = `${packName}.mcpack`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
+  });
+}
