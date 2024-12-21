@@ -194,18 +194,19 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
                         pass
                     html += to_add_pack
                     current_category_packs["raw"].append(file["packs"][i]["pack_id"])
-                    listjson = {}
-                    for root, _, files in os.walk(f"{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}"):
-                        for lsfile in files:
-                            filepath = os.path.relpath(os.path.join(root, lsfile),f"{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}")
-                            if len(filepath.split(os.path.sep)) == 1:
-                                continue
-                            else:
-                                try:
-                                    listjson[filepath.split(os.path.sep)[0]].append("/".join(filepath.split(os.path.sep)[1:]))
-                                except KeyError:
-                                    listjson[filepath.split(os.path.sep)[0]] = ["/".join(filepath.split(os.path.sep)[1:])]
-                    dump_json(f"{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/list.json", listjson)
+                    if not args.only_update_html:
+                        listjson = {}
+                        for root, _, files in os.walk(f"{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}"):
+                            for lsfile in files:
+                                filepath = os.path.relpath(os.path.join(root, lsfile),f"{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}")
+                                if len(filepath.split(os.path.sep)) == 1:
+                                    continue
+                                else:
+                                    try:
+                                        listjson[filepath.split(os.path.sep)[0]].append("/".join(filepath.split(os.path.sep)[1:]))
+                                    except KeyError:
+                                        listjson[filepath.split(os.path.sep)[0]] = ["/".join(filepath.split(os.path.sep)[1:])]
+                        dump_json(f"{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/list.json", listjson)
         html = html.replace("<all_packs>", LZString.compressToEncodedURIComponent(dumps(current_category_packs)))
         try:
             if pack_list[pack_list.index(origj) + 1].startswith("\t"):
