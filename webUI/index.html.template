@@ -10,6 +10,7 @@
   <link href="theme.css" rel="stylesheet"/>
   <script src="extras/jszip.min.js"></script>
   <script src="extras/lz-string.min.js"></script>
+  <script src="extras/uuid.min.js"></script>
  </head>
  <body>
   <ul class="large-nav">

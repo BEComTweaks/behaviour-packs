@@ -738,19 +738,16 @@ function downloadSelectedTweaks() {
   fetchPack(jsonData, packName, mcVersion);
 }
 
-const root_url = "../packs";
+const root_url = "../";
 const listofcategories = ["Anti Grief", "Drops", "Fun", "Utility"];
 
 function fetchPack(jsonData, packName, mcVersion) {
   console.log("[%cfetch%c]\nMaking pack...", "color: blue", "color: initial");
 
   var zip = new JSZip();
-  var files = [];
-  var file_content = [];
-
   let fetchPromises = [];
 
-  fetch(`${root_url}/../jsons/others/manifest.json`)
+  fetch(`${root_url}/jsons/others/manifest.json`)
     .then((response) => {
       if (!response.ok) {
         console.error("Failed to fetch manifest.json");
@@ -760,15 +757,17 @@ function fetchPack(jsonData, packName, mcVersion) {
     .then((json) => {
       json.header.name = packName;
       json.header.min_engine_version = mcVersion;
-      files.push("manifest.json");
-      file_content.push(JSON.stringify(json));
+      json.header.uuid = uuid.v4();
+      json.modules[0].uuid = uuid.v4;
+      zip.file("manifest.json", JSON.stringify(json));
       console.log("[%cfetch%c] Fetched manifest.json");
       console.log(json);
     });
+  zip.file("selected_packs.json", JSON.stringify(jsonData, null, 2));
   listofcategories.forEach((cats) => {
     jsonData[cats]["packs"].forEach((pack) => {
       fetchPromises.push(
-        fetch(`${root_url}/${cats.toLowerCase()}/${pack}/list.json`)
+        fetch(`${root_url}/packs/${cats.toLowerCase()}/${pack}/list.json`)
           .then((response) => {
             if (!response.ok) {
               console.error("Failed to fetch list.json");
@@ -778,7 +777,7 @@ function fetchPack(jsonData, packName, mcVersion) {
           .then((json) => {
             let fileFetchPromises = json.default.map((fileloc) => {
               return fetch(
-                `${root_url}/${cats.toLowerCase()}/${pack}/default/${fileloc}`,
+                `${root_url}/packs/${cats.toLowerCase()}/${pack}/default/${fileloc}`,
               )
                 .then((response) => {
                   if (!response.ok) {
@@ -788,8 +787,7 @@ function fetchPack(jsonData, packName, mcVersion) {
                   return response.text();
                 })
                 .then((text) => {
-                  files.push(fileloc);
-                  file_content.push(text);
+                  zip.file(fileloc, text);
                   console.log(
                     `[%cfetch%c]\n${fileloc}`,
                     "color: blue",
@@ -804,10 +802,6 @@ function fetchPack(jsonData, packName, mcVersion) {
   });
 
   Promise.all(fetchPromises).then(() => {
-    files.forEach((file, index) => {
-      zip.file(file, file_content[index]);
-    });
-
     zip.generateAsync({ type: "blob" }).then(function (blob) {
       console.log(
         "[%cfetch%c]\nFinished fetches",

@@ -1,8 +1,8 @@
 {
   "default": [
+    "entities/bat.json",
     "functions/tick.json",
     "functions/bat_membranes/tick.mcfunction",
-    "loot_tables/entities/bat.json",
-    "entities/bat.json"
+    "loot_tables/entities/bat.json"
   ]
 }
