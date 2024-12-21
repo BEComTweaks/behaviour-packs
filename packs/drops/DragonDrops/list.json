@@ -1,6 +1,6 @@
 {
   "default": [
-    "entities/ender_dragon.json",
-    "loot_tables/entities/ender_dragon.json"
+    "loot_tables/entities/ender_dragon.json",
+    "entities/ender_dragon.json"
   ]
 }

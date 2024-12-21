@@ -1,8 +1,8 @@
 {
   "default": [
-    "animations/phantom_sizing_anim.json",
-    "animation_controllers/phantom_sizing.animation_controller.json",
+    "entities/player.json",
     "entities/phantom.json",
-    "entities/player.json"
+    "animations/phantom_sizing_anim.json",
+    "animation_controllers/phantom_sizing.animation_controller.json"
   ]
 }
