@@ -756,7 +756,11 @@ function fetchPack(jsonData, packName, mcVersion) {
     })
     .then((json) => {
       const idToName = json;
-      console.log("[%cfetch%c] Fetched id_to_name.json", "color: blue", "color: initial");
+      console.log(
+        "[%cfetch%c] Fetched id_to_name.json",
+        "color: blue",
+        "color: initial",
+      );
       fetch(`${root_url}/jsons/others/manifest.json`)
         .then((response) => {
           if (!response.ok) {
@@ -780,7 +784,11 @@ function fetchPack(jsonData, packName, mcVersion) {
           });
           json.header.description = description.trim();
           zip.file("manifest.json", JSON.stringify(json));
-          console.log("[%cfetch%c] Fetched manifest.json", "color: blue", "color: initial");
+          console.log(
+            "[%cfetch%c] Fetched manifest.json",
+            "color: blue",
+            "color: initial",
+          );
           console.log(json);
         });
     });
@@ -793,7 +801,11 @@ function fetchPack(jsonData, packName, mcVersion) {
     })
     .then((blob) => {
       zip.file("pack_icon.png", blob);
-      console.log("[%cfetch%c] Fetched pack_icon.png", "color: blue", "color: initial");
+      console.log(
+        "[%cfetch%c] Fetched pack_icon.png",
+        "color: blue",
+        "color: initial",
+      );
     });
 
   zip.file("selected_packs.json", JSON.stringify(jsonData, null, 2));

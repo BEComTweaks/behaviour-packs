@@ -207,6 +207,7 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
                                         listjson[filepath.split(os.path.sep)[0]].append("/".join(filepath.split(os.path.sep)[1:]))
                                     except KeyError:
                                         listjson[filepath.split(os.path.sep)[0]] = ["/".join(filepath.split(os.path.sep)[1:])]
+                                listjson[filepath.split(os.path.sep)[0]].sort()
                         dump_json(f"{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/list.json", listjson)
                     id_to_name[file["packs"][i]["pack_id"]] = file["packs"][i]["pack_name"]
         html = html.replace("<all_packs>", LZString.compressToEncodedURIComponent(dumps(current_category_packs)))
