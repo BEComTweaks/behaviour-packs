@@ -747,22 +747,55 @@ function fetchPack(jsonData, packName, mcVersion) {
   var zip = new JSZip();
   let fetchPromises = [];
 
-  fetch(`${root_url}/jsons/others/manifest.json`)
+  fetch(`${root_url}/jsons/others/id_to_name.json`)
     .then((response) => {
       if (!response.ok) {
-        console.error("Failed to fetch manifest.json");
+        console.error("Failed to fetch id_to_name.json");
       }
       return response.json();
     })
     .then((json) => {
-      json.header.name = packName;
-      json.header.min_engine_version = mcVersion;
-      json.header.uuid = uuid.v4();
-      json.modules[0].uuid = uuid.v4;
-      zip.file("manifest.json", JSON.stringify(json));
-      console.log("[%cfetch%c] Fetched manifest.json");
-      console.log(json);
+      const idToName = json;
+      console.log("[%cfetch%c] Fetched id_to_name.json", "color: blue", "color: initial");
+      fetch(`${root_url}/jsons/others/manifest.json`)
+        .then((response) => {
+          if (!response.ok) {
+            console.error("Failed to fetch manifest.json");
+          }
+          return response.json();
+        })
+        .then((json) => {
+          json.header.name = packName;
+          json.header.min_engine_version = mcVersion.split(".").map(Number);
+          json.header.uuid = uuid.v4();
+          json.modules[0].uuid = uuid.v4;
+          let description = "Selected Packs:\n";
+          listofcategories.forEach((category) => {
+            if (jsonData[category] && jsonData[category].packs.length > 0) {
+              description += ` - ${category}\n`;
+              jsonData[category].packs.forEach((pack) => {
+                description += `\t - ${idToName[pack]}\n`;
+              });
+            }
+          });
+          json.header.description = description.trim();
+          zip.file("manifest.json", JSON.stringify(json));
+          console.log("[%cfetch%c] Fetched manifest.json", "color: blue", "color: initial");
+          console.log(json);
+        });
     });
+  fetch(`${root_url}/jsons/others/pack_icon.png`)
+    .then((response) => {
+      if (!response.ok) {
+        console.error("Failed to fetch pack_icon.png");
+      }
+      return response.blob();
+    })
+    .then((blob) => {
+      zip.file("pack_icon.png", blob);
+      console.log("[%cfetch%c] Fetched pack_icon.png", "color: blue", "color: initial");
+    });
+
   zip.file("selected_packs.json", JSON.stringify(jsonData, null, 2));
   listofcategories.forEach((cats) => {
     jsonData[cats]["packs"].forEach((pack) => {

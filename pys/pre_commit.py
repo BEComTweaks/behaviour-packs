@@ -58,6 +58,7 @@ args = parser.parse_args()
 # Counts Packs and Compatibilities
 if not args.build or (args.build and (args.only_update_html or args.only_update_jsons or args.format)):
     clrprint("Going through Packs...", clr="yellow")
+    id_to_name = {}
     for j in pack_list:
         origj = j
         if not ignore:
@@ -207,6 +208,7 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
                                     except KeyError:
                                         listjson[filepath.split(os.path.sep)[0]] = ["/".join(filepath.split(os.path.sep)[1:])]
                         dump_json(f"{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/list.json", listjson)
+                    id_to_name[file["packs"][i]["pack_id"]] = file["packs"][i]["pack_name"]
         html = html.replace("<all_packs>", LZString.compressToEncodedURIComponent(dumps(current_category_packs)))
         try:
             if pack_list[pack_list.index(origj) + 1].startswith("\t"):
@@ -388,6 +390,7 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
         dump_json(f"{cdir()}/jsons/others/incomplete_compatibilities.json", compatibilities)
         dump_json(f"{cdir()}/jsons/others/incomplete_pack_icons.json", incomplete_pkics)
         dump_json(f"{cdir()}/jsons/others/name_to_json.json", name_to_json)
+        dump_json(f"{cdir()}/jsons/others/id_to_name.json", id_to_name)
     if not args.only_update_jsons:
         with open(f"{cdir()}/webUI/index.html", "w") as html_file:
             html_file.write(html)

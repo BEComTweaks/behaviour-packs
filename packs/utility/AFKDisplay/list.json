@@ -1,8 +1,8 @@
 {
   "default": [
-    "entities/player.json",
-    "entities/player.bak",
     "animations/afk_display.animation.json",
-    "animation_controllers/afk_display.animation_controllers.json"
+    "animation_controllers/afk_display.animation_controllers.json",
+    "entities/player.bak",
+    "entities/player.json"
   ]
 }
