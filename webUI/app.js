@@ -783,7 +783,7 @@ function fetchPack(jsonData, packName, mcVersion) {
             }
           });
           json.header.description = description.trim();
-          zip.file("manifest.json", JSON.stringify(json));
+          zip.file("bp/manifest.json", JSON.stringify(json));
           console.log(
             "[%cfetch%c] Fetched manifest.json",
             "color: blue",
@@ -800,7 +800,7 @@ function fetchPack(jsonData, packName, mcVersion) {
       return response.blob();
     })
     .then((blob) => {
-      zip.file("pack_icon.png", blob);
+      zip.file("bp/pack_icon.png", blob);
       console.log(
         "[%cfetch%c] Fetched pack_icon.png",
         "color: blue",

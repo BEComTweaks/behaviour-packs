@@ -1,3 +1,3 @@
 {
-  "default": ["entities/enderman.json"]
+  "default": ["bp/entities/enderman.json"]
 }
