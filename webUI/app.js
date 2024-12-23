@@ -738,7 +738,7 @@ function downloadSelectedTweaks() {
   fetchPack(jsonData, packName, mcVersion);
 }
 
-const root_url = "../";
+const root_url = "..";
 const listofcategories = ["Anti Grief", "Drops", "Fun", "Utility"];
 
 function fetchPack(jsonData, packName, mcVersion) {
@@ -746,8 +746,10 @@ function fetchPack(jsonData, packName, mcVersion) {
 
   var zip = new JSZip();
   let fetchPromises = [];
+  var files = [];
+  var file_content = [];
 
-  fetch(`${root_url}/jsons/others/id_to_name.json`)
+  fetch(`${root_url}/jsons/map/id_to_name.json`)
     .then((response) => {
       if (!response.ok) {
         console.error("Failed to fetch id_to_name.json");
@@ -761,7 +763,7 @@ function fetchPack(jsonData, packName, mcVersion) {
         "color: blue",
         "color: initial",
       );
-      fetch(`${root_url}/jsons/others/manifest.json`)
+      fetch(`${root_url}/jsons/others/bpmanifest.json`)
         .then((response) => {
           if (!response.ok) {
             console.error("Failed to fetch manifest.json");
@@ -783,7 +785,8 @@ function fetchPack(jsonData, packName, mcVersion) {
             }
           });
           json.header.description = description.trim();
-          zip.file("bp/manifest.json", JSON.stringify(json));
+          files.push("bp/manifest.json");
+          file_content.push(JSON.stringify(json, null, 2));
           console.log(
             "[%cfetch%c] Fetched manifest.json",
             "color: blue",
@@ -792,7 +795,7 @@ function fetchPack(jsonData, packName, mcVersion) {
           console.log(json);
         });
     });
-  fetch(`${root_url}/jsons/others/pack_icon.png`)
+  fetch(`${root_url}/pack_icons/pack_icon.png`)
     .then((response) => {
       if (!response.ok) {
         console.error("Failed to fetch pack_icon.png");
@@ -808,7 +811,8 @@ function fetchPack(jsonData, packName, mcVersion) {
       );
     });
 
-  zip.file("selected_packs.json", JSON.stringify(jsonData, null, 2));
+  files.push("bp/selected_packs.json");
+  file_content.push(JSON.stringify(jsonData, null, 2));
   listofcategories.forEach((cats) => {
     jsonData[cats]["packs"].forEach((pack) => {
       fetchPromises.push(
@@ -832,7 +836,8 @@ function fetchPack(jsonData, packName, mcVersion) {
                   return response.text();
                 })
                 .then((text) => {
-                  zip.file(fileloc, text);
+                  files.push(fileloc);
+                  file_content.push(text);
                   console.log(
                     `[%cfetch%c]\n${fileloc}`,
                     "color: blue",
@@ -847,6 +852,10 @@ function fetchPack(jsonData, packName, mcVersion) {
   });
 
   Promise.all(fetchPromises).then(() => {
+    console.log(files);
+    files.forEach((file, index) => {
+      zip.file(file, file_content[index]);
+    });
     zip.generateAsync({ type: "blob" }).then(function (blob) {
       console.log(
         "[%cfetch%c]\nFinished fetches",
@@ -857,7 +866,7 @@ function fetchPack(jsonData, packName, mcVersion) {
       const a = document.createElement("a");
       a.style.display = "none";
       a.href = url;
-      a.download = `${packName}.mcpack`;
+      a.download = `${packName}.zip`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);

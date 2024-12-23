@@ -390,8 +390,8 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
         dump_json(f"{cdir()}/jsons/others/incomplete_packs.json", incomplete_packs)
         dump_json(f"{cdir()}/jsons/others/incomplete_compatibilities.json", compatibilities)
         dump_json(f"{cdir()}/jsons/others/incomplete_pack_icons.json", incomplete_pkics)
-        dump_json(f"{cdir()}/jsons/others/name_to_json.json", name_to_json)
-        dump_json(f"{cdir()}/jsons/others/id_to_name.json", id_to_name)
+        dump_json(f"{cdir()}/jsons/map/name_to_json.json", name_to_json)
+        dump_json(f"{cdir()}/jsons/map/id_to_name.json", id_to_name)
     if not args.only_update_jsons:
         with open(f"{cdir()}/webUI/index.html", "w") as html_file:
             html_file.write(html)
