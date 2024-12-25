@@ -749,6 +749,8 @@ function fetchPack(jsonData, packName, mcVersion) {
   var files = [];
   var file_content = [];
   var rploc = {};
+  var rpmf = {};
+
   fetch(`${root_url}/jsons/map/id_to_name.json`)
     .then((response) => {
       if (!response.ok) {
