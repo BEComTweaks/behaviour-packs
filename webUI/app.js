@@ -871,10 +871,9 @@ function fetchPack(jsonData, packName, mcVersion) {
     if (needsrp) {
       zip.folder("rp").file("manifest.json", JSON.stringify(rpmf, null, 2));
       zip.folder("rp").file("pack_icon.png", file_content[rploc["pack_icon"]]);
-      zip.folder("rp").file(
-        "selected_packs.json",
-        file_content[rploc["selected_packs"]],
-      );
+      zip
+        .folder("rp")
+        .file("selected_packs.json", file_content[rploc["selected_packs"]]);
     }
     zip.generateAsync({ type: "blob" }).then(function (blob) {
       console.log(
