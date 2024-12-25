@@ -748,7 +748,7 @@ function fetchPack(jsonData, packName, mcVersion) {
   let fetchPromises = [];
   var files = [];
   var file_content = [];
-
+  var rploc = {};
   fetch(`${root_url}/jsons/map/id_to_name.json`)
     .then((response) => {
       if (!response.ok) {
@@ -793,6 +793,10 @@ function fetchPack(jsonData, packName, mcVersion) {
             "color: initial",
           );
           console.log(json);
+          rpmf = json;
+          rpmf.modules[0].type = "resources";
+          rpmf.modules[0].uuid = uuid.v4();
+          rpmf.header.uuid = uuid.v4();
         });
     });
   fetch(`${root_url}/pack_icons/pack_icon.png`)
@@ -803,7 +807,10 @@ function fetchPack(jsonData, packName, mcVersion) {
       return response.blob();
     })
     .then((blob) => {
-      zip.file("bp/pack_icon.png", blob);
+      zip.folder("bp").file("pack_icon.png", blob);
+      files.push("bp/pack_icon.png");
+      file_content.push(blob);
+      rploc["pack_icon"] = file_content.indexOf(blob);
       console.log(
         "[%cfetch%c] Fetched pack_icon.png",
         "color: blue",
@@ -813,6 +820,7 @@ function fetchPack(jsonData, packName, mcVersion) {
 
   files.push("bp/selected_packs.json");
   file_content.push(JSON.stringify(jsonData, null, 2));
+  rploc["selected_packs"] = files.indexOf("bp/selected_packs.json");
   listofcategories.forEach((cats) => {
     jsonData[cats]["packs"].forEach((pack) => {
       fetchPromises.push(
@@ -853,9 +861,21 @@ function fetchPack(jsonData, packName, mcVersion) {
 
   Promise.all(fetchPromises).then(() => {
     console.log(files);
+    let needsrp = false;
     files.forEach((file, index) => {
+      if (file.startsWith("rp")) {
+        needsrp = true;
+      }
       zip.file(file, file_content[index]);
     });
+    if (needsrp) {
+      zip.folder("rp").file("manifest.json", JSON.stringify(rpmf, null, 2));
+      zip.folder("rp").file("pack_icon.png", file_content[rploc["pack_icon"]]);
+      zip.folder("rp").file(
+        "selected_packs.json",
+        file_content[rploc["selected_packs"]],
+      );
+    }
     zip.generateAsync({ type: "blob" }).then(function (blob) {
       console.log(
         "[%cfetch%c]\nFinished fetches",
