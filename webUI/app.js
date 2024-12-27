@@ -165,7 +165,16 @@ function triggerPackClick(index) {
 /******************\
 | Custom functions |
 \******************/
-// I sleep now
+const lodash = _.noConflict();
+function deepMerge(dict1, dict2) {
+  return lodash.mergeWith(dict1, dict2, (dict1Value, dict2Value) => {
+    if (lodash.isArray(dict1Value) && lodash.isArray(dict2Value)) {
+      const mergedList = [...dict1Value, ...dict2Value];
+      return lodash.uniqWith(mergedList, lodash.isEqual);
+    }
+  });
+}
+
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -781,7 +790,6 @@ function fetchPack(jsonData, packName, mcVersion) {
           json.header.name = packName;
           json.header.min_engine_version = mcVersion.split(".").map(Number);
           json.header.uuid = uuid.v4();
-          json.modules[0].uuid = uuid.v4;
           let description = "Selected Packs:\n";
           listofcategories.forEach((category) => {
             if (jsonData[category] && jsonData[category].packs.length > 0) {
@@ -800,7 +808,6 @@ function fetchPack(jsonData, packName, mcVersion) {
             "color: initial",
           );
           downloadbutton.innerText = "manifest.json";
-          console.log(json);
           rpmf = json;
           rpmf.modules[0].type = "resources";
           rpmf.modules[0].uuid = uuid.v4();
@@ -856,8 +863,34 @@ function fetchPack(jsonData, packName, mcVersion) {
                   return response.text();
                 })
                 .then((text) => {
-                  files.push(fileloc);
-                  file_content.push(text);
+                  console.log(pack);
+                  if (files.indexOf(fileloc) === -1) {
+                    files.push(fileloc);
+                    file_content.push(text);
+                  } else if (fileloc.endsWith(".json")) {
+                    const existingContent = JSON.parse(
+                      file_content[files.indexOf(fileloc)],
+                    );
+                    console.log(existingContent);
+                    const newContent = JSON.parse(text);
+                    console.log(newContent);
+                    const mergedContent = deepMerge(
+                      newContent,
+                      existingContent,
+                    );
+                    console.log(mergedContent);
+                    file_content[files.indexOf(fileloc)] = JSON.stringify(
+                      mergedContent,
+                      null,
+                      2,
+                    );
+                  } else if (
+                    fileloc.endsWith(".mcfunction") ||
+                    fileloc.endsWith(".lang") ||
+                    fileloc.endsWith(".js")
+                  ) {
+                    file_content[files.indexOf(fileloc)] += text;
+                  }
                   console.log(
                     `[%cfetch%c]\n${fileloc}`,
                     "color: blue",
@@ -876,12 +909,22 @@ function fetchPack(jsonData, packName, mcVersion) {
     console.log(files);
     let needsrp = false;
     downloadbutton.innerText = "Zipping Up";
+    var manifest = {};
     files.forEach((file, index) => {
       if (file.startsWith("rp")) {
         needsrp = true;
       }
-      zip.file(file, file_content[index]);
+      if (file === "bp/manifest.json") {
+        ismanifest = deepMerge(manifest, JSON.parse(file_content[index]));
+      } else {
+        zip.file(file, file_content[index]);
+      }
     });
+    manifest.modules.forEach((module, index) => {
+      module.uuid = uuid.v4();
+    });
+    zip.file("bp/manifest.json", JSON.stringify(manifest, null, 2));
+    console.log(manifest);
     if (needsrp) {
       zip.folder("rp").file("manifest.json", JSON.stringify(rpmf, null, 2));
       downloadbutton.innerText = "manifest.json";
