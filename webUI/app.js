@@ -743,7 +743,12 @@ const listofcategories = ["Anti Grief", "Drops", "Fun", "Utility"];
 
 function fetchPack(jsonData, packName, mcVersion) {
   console.log("[%cfetch%c]\nMaking pack...", "color: blue", "color: initial");
-
+  const downloadbutton = document.getElementsByClassName(
+    "download-selected-button",
+  )[0];
+  downloadbutton.onclick = null;
+  downloadbutton.innerText = "Fetching Pack...";
+  OreUI.becomeActive(downloadbutton);
   var zip = new JSZip();
   let fetchPromises = [];
   var files = [];
@@ -794,6 +799,7 @@ function fetchPack(jsonData, packName, mcVersion) {
             "color: blue",
             "color: initial",
           );
+          downloadbutton.innerText = "manifest.json"
           console.log(json);
           rpmf = json;
           rpmf.modules[0].type = "resources";
@@ -801,6 +807,7 @@ function fetchPack(jsonData, packName, mcVersion) {
           rpmf.header.uuid = uuid.v4();
         });
     });
+
   fetch(`${root_url}/pack_icons/pack_icon.png`)
     .then((response) => {
       if (!response.ok) {
@@ -818,11 +825,14 @@ function fetchPack(jsonData, packName, mcVersion) {
         "color: blue",
         "color: initial",
       );
+      downloadbutton.innerText = "pack_icon.png"
     });
 
   files.push("bp/selected_packs.json");
   file_content.push(JSON.stringify(jsonData, null, 2));
   rploc["selected_packs"] = files.indexOf("bp/selected_packs.json");
+  downloadbutton.innerText = "selected_packs.json"
+
   listofcategories.forEach((cats) => {
     jsonData[cats]["packs"].forEach((pack) => {
       fetchPromises.push(
@@ -853,6 +863,7 @@ function fetchPack(jsonData, packName, mcVersion) {
                     "color: blue",
                     "color: initial",
                   );
+                  downloadbutton.innerText = fileloc.split("/").pop()
                 });
             });
             return Promise.all(fileFetchPromises);
@@ -864,6 +875,7 @@ function fetchPack(jsonData, packName, mcVersion) {
   Promise.all(fetchPromises).then(() => {
     console.log(files);
     let needsrp = false;
+    downloadbutton.innerText = "Zipping Up";
     files.forEach((file, index) => {
       if (file.startsWith("rp")) {
         needsrp = true;
@@ -872,10 +884,13 @@ function fetchPack(jsonData, packName, mcVersion) {
     });
     if (needsrp) {
       zip.folder("rp").file("manifest.json", JSON.stringify(rpmf, null, 2));
+      downloadbutton.innerText = "manifest.json"
       zip.folder("rp").file("pack_icon.png", file_content[rploc["pack_icon"]]);
+      downloadbutton.innerText = "pack_icon.png"
       zip
         .folder("rp")
         .file("selected_packs.json", file_content[rploc["selected_packs"]]);
+      downloadbutton.innerText = "selected_packs.json"
     }
     zip.generateAsync({ type: "blob" }).then(function (blob) {
       console.log(
@@ -891,6 +906,10 @@ function fetchPack(jsonData, packName, mcVersion) {
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      downloadbutton.innerText = "Download Selected Tweaks";
+      downloadbutton.onclick = downloadSelectedTweaks;
+      OreUI.becomeInactive(downloadbutton);
     });
   });
 }
