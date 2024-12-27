@@ -799,7 +799,7 @@ function fetchPack(jsonData, packName, mcVersion) {
             "color: blue",
             "color: initial",
           );
-          downloadbutton.innerText = "manifest.json"
+          downloadbutton.innerText = "manifest.json";
           console.log(json);
           rpmf = json;
           rpmf.modules[0].type = "resources";
@@ -825,13 +825,13 @@ function fetchPack(jsonData, packName, mcVersion) {
         "color: blue",
         "color: initial",
       );
-      downloadbutton.innerText = "pack_icon.png"
+      downloadbutton.innerText = "pack_icon.png";
     });
 
   files.push("bp/selected_packs.json");
   file_content.push(JSON.stringify(jsonData, null, 2));
   rploc["selected_packs"] = files.indexOf("bp/selected_packs.json");
-  downloadbutton.innerText = "selected_packs.json"
+  downloadbutton.innerText = "selected_packs.json";
 
   listofcategories.forEach((cats) => {
     jsonData[cats]["packs"].forEach((pack) => {
@@ -863,7 +863,7 @@ function fetchPack(jsonData, packName, mcVersion) {
                     "color: blue",
                     "color: initial",
                   );
-                  downloadbutton.innerText = fileloc.split("/").pop()
+                  downloadbutton.innerText = fileloc.split("/").pop();
                 });
             });
             return Promise.all(fileFetchPromises);
@@ -884,13 +884,13 @@ function fetchPack(jsonData, packName, mcVersion) {
     });
     if (needsrp) {
       zip.folder("rp").file("manifest.json", JSON.stringify(rpmf, null, 2));
-      downloadbutton.innerText = "manifest.json"
+      downloadbutton.innerText = "manifest.json";
       zip.folder("rp").file("pack_icon.png", file_content[rploc["pack_icon"]]);
-      downloadbutton.innerText = "pack_icon.png"
+      downloadbutton.innerText = "pack_icon.png";
       zip
         .folder("rp")
         .file("selected_packs.json", file_content[rploc["selected_packs"]]);
-      downloadbutton.innerText = "selected_packs.json"
+      downloadbutton.innerText = "selected_packs.json";
     }
     zip.generateAsync({ type: "blob" }).then(function (blob) {
       console.log(
