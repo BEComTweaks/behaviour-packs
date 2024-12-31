@@ -428,7 +428,7 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
         response = requests.get("https://becomtweaks.github.io/resource-packs/theme.css")
         if response.status_code == 200:
           with open(f"{cdir()}/webUI/theme.css","w") as theme:
-            theme.write(response.text())
+            theme.write(response.text)
           clrprint("Updated theme.css!", clr="green")
     except requests.exceptions.ConnectionError:
       clrprint("Get a working internet connection before rerunning with `-ut`/`--update-theme`", clr="red")
