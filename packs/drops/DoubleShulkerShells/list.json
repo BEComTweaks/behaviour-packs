@@ -1,3 +1,1 @@
-{
-  "default": ["bp/loot_tables/entities/shulker.json"]
-}
+["bp/loot_tables/entities/shulker.json"]

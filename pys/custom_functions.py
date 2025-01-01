@@ -1,27 +1,18 @@
-import os
-import importlib
-import pip
-from pip import main
-import time
-import traceback
+import os, time, traceback, sys
+from subprocess import run
+from importlib import import_module
 
 
 # If I need a module that isn't installed
 def check(module, module_name=""):
     try:
-        importlib.import_module(module)
+        import_module(module)
     except ModuleNotFoundError:
         print(f"{module} is not installed!")
         if module_name == "":
-            # Using pip instead of subprocess as calling
-            # with terminal results in an error
-            pip.main(["install", module])
+            run([sys.executable, "-m", "pip", "install", module, "--quiet"])
         else:
-            # Using pip instead of subprocess as calling
-            # with terminal results in an error
-            pip.main(["install", module_name])
-        time.sleep(1)
-
+            run([sys.executable, "-m", "pip", "install", module_name, "--quiet"])
 
 check("clrprint")
 from clrprint import clrprint
@@ -39,7 +30,7 @@ if currentdir[-3:] == "pys":
 
 # Yeah...
 def cdir():
-    return currentdir
+    return str(currentdir)
 
 
 # Clears terminal screen

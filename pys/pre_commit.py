@@ -32,8 +32,8 @@ cat_end_w_subcat_no_end = '</div><div class="subcat<index>">'
 html = ''
 stats = [0, 0]
 incomplete_packs = {}
-cstats = [0, 0]
-compatibilities = {}
+comp_stats = [0, 0]
+comps = {}
 conflicts = {}
 pkicstats = [0, 0]
 subcats = 0
@@ -53,6 +53,7 @@ parser.add_argument('--only-update-html', '-ouh', action='store_true', help='Onl
 parser.add_argument('--only-update-jsons', '-ouj', action='store_true', help='Only update the JSONs')
 parser.add_argument('--build', '-b', action='store_true', help='Builds the website for production')
 parser.add_argument('--update-theme', '-ut', action='store_true', help='Pulls the theme used for the website from the resource-packs repository')
+parser.add_argument('--log-error', '-el', action='store_true', help='Prints out errors')
 args = parser.parse_args()
 
 # Counts Packs and Compatibilities
@@ -75,17 +76,20 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
             for i in range(len(file["packs"])):
                 # Updates Incomplete Packs
                 try:
-                    if os.listdir(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/default') == []:
+                    if os.listdir(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/files') == []:
                         # Adds the packid to the topic list
                         incomplete_packs[file["topic"]].append(file["packs"][i]["pack_id"])
                         stats[1] += 1
+                        if args.log_error:
+                            clrprint("[packs]", "Incomplete Pack:", file["packs"][i]["pack_id"], clr="r,w,y")
                     else:
                         # When the packid directory has stuff inside
                         stats[0] += 1
                 except FileNotFoundError:
-                    # If the packs have not updated with the new directory type
+                    # If the packs don't even exist
                     stats[1] += 1
-                    incomplete_packs[file["topic"]].append(file["packs"][i]["pack_id"])
+                    if args.log_error:
+                        clrprint("[packs]", "Incomplete Pack:", file["packs"][i]["pack_id"], clr="r,w,y")
 
                 # Updates Incomplete pack_icon.png
                 try:
@@ -106,36 +110,14 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
                             # When pack icon doesn't even exist
                             incomplete_pkics[file["topic"]].append(file["packs"][i]["pack_id"])
                             pkicstats[1] += 1
+                            if args.log_error:
+                                clrprint("[packs]", "[icon]", "Incomplete Pack:", file["packs"][i]["pack_id"], clr="r,b,w,y")
                     except KeyError:
                             incomplete_pkics[file["topic"]].append(file["packs"][i]["pack_id"])
                             pkicstats[1] += 1
-                # Updates Incomplete Pack Compatibilities
-                try:
-                    for comp in range(len(file["packs"][i]["compatibility"])):
-                        # Looks at compatibility folders
-                        try:
-                            if os.listdir(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/{file["packs"][i]["compatibility"][comp]}') == []:
-                                # Adds the packid to the list of incomplete compatibilities
-                                try:
-                                    compatibilities[file["packs"][i]["pack_id"]].append(file["packs"][i]["compatibility"][comp])
-                                except KeyError:
-                                    compatibilities[file["packs"][i]["pack_id"]] = [file["packs"][i]["compatibility"][comp]]
-                                cstats[1] += 1
-                            else:
-                                # When the compatibility directory has something inside
-                                cstats[0] += 1
-                        except FileNotFoundError:
-                            # When the compatibility folder isn't there
-                            # Adds the packid to the list of incomplete compatibilities
-                            try:
-                                compatibilities[file["packs"][i]["pack_id"]].append(file["packs"][i]["compatibility"][comp])
-                            except KeyError:
-                                compatibilities[file["packs"][i]["pack_id"]] = [file["packs"][i]["compatibility"][comp]]
-                            cstats[1] += 1
-                except KeyError:
-                    pass # If it is empty, it just skips
-                
-                # Updates Pack Conflicts
+                            if args.log_error:
+                                clrprint("[packs]", "[icon]", "Incomplete Pack:", file["packs"][i]["pack_id"], clr="r,b,w,y")
+                # Adds Pack Conflicts
                 conflicts[file["packs"][i]["pack_id"]] = []
                 try:
                     for conf in range(len(file["packs"][i]["conflict"])):
@@ -146,19 +128,10 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
                     del conflicts[file["packs"][i]["pack_id"]]
                 
                 # Adds respective HTML
-                compats = ""
                 confs = ""
                 if file["packs"][i]["pack_id"] not in incomplete_packs[file["topic"]]:
                     packs += 1
                     to_add_pack = pack_start
-                    try:
-                        c = ""
-                        for c in compatibilities[file["packs"][i]["pack_id"]]:
-                            compats += c
-                            compats += ", "
-                        to_add_pack += html_comp.replace('<incompatible>',compats[:-2])
-                    except KeyError:
-                        pass
                     to_add_pack += pack_mid
                     try:
                         c = ""
@@ -196,18 +169,15 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
                     html += to_add_pack
                     current_category_packs["raw"].append(file["packs"][i]["pack_id"])
                     if not args.only_update_html:
-                        listjson = {}
+                        listjson = []
                         for root, _, files in os.walk(f"{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}"):
                             for lsfile in files:
                                 filepath = os.path.relpath(os.path.join(root, lsfile),f"{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}")
                                 if len(filepath.split(os.path.sep)) == 1:
                                     continue
                                 else:
-                                    try:
-                                        listjson[filepath.split(os.path.sep)[0]].append("/".join(filepath.split(os.path.sep)[1:]))
-                                    except KeyError:
-                                        listjson[filepath.split(os.path.sep)[0]] = ["/".join(filepath.split(os.path.sep)[1:])]
-                                listjson[filepath.split(os.path.sep)[0]].sort()
+                                    listjson.append("/".join(filepath.split(os.path.sep)[1:]))
+                                listjson.sort()
                         dump_json(f"{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/list.json", listjson)
                     id_to_name[file["packs"][i]["pack_id"]] = file["packs"][i]["pack_name"]
         html = html.replace("<all_packs>", LZString.compressToEncodedURIComponent(dumps(current_category_packs)))
@@ -248,7 +218,7 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
         for i in range(len(file["packs"])):
             # Updates Incomplete Packs
             try:
-                if os.listdir(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/default') == []:
+                if os.listdir(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/files') == []:
                     # Adds the packid to the topic list
                     incomplete_packs[file["topic"]].append(file["packs"][i]["pack_id"])
                     stats[1] += 1
@@ -283,32 +253,6 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
                     incomplete_pkics[file["topic"]].append(file["packs"][i]["pack_id"])
                     pkicstats[1] += 1
             
-            # Updates Incomplete Pack Compatibilities
-            try:
-                for comp in range(len(file["packs"][i]["compatibility"])):
-                    # Looks at compatibility folders
-                    try:
-                        if os.listdir(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/{file["packs"][i]["compatibility"][comp]}') == []:
-                            # Adds the packid to the list of incomplete compatibilities
-                            try:
-                                compatibilities[file["packs"][i]["pack_id"]].append(file["packs"][i]["compatibility"][comp])
-                            except KeyError:
-                                compatibilities[file["packs"][i]["pack_id"]] = [file["packs"][i]["compatibility"][comp]]
-                            cstats[1] += 1
-                        else:
-                            # When the compatibility directory has something inside
-                            cstats[0] += 1
-                    except FileNotFoundError:
-                        # When the compatibility folder isn't there
-                        # Adds the packid to the list of incomplete compatibilities
-                        try:
-                            compatibilities[file["packs"][i]["pack_id"]].append(file["packs"][i]["compatibility"][comp])
-                        except KeyError:
-                            compatibilities[file["packs"][i]["pack_id"]] = [file["packs"][i]["compatibility"][comp]]
-                        cstats[1] += 1
-            except KeyError:
-                pass # If it is empty, it just skips
-
             # Updates Pack Conflicts
             conflicts[file["packs"][i]["pack_id"]] = []
             try:
@@ -320,19 +264,10 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
                 del conflicts[file["packs"][i]["pack_id"]]
             
             # Adds respective HTML
-            compats = ""
             confs = ""
             if file["packs"][i]["pack_id"] not in incomplete_packs[file["topic"]]:
                 packs += 1
                 to_add_pack = pack_start
-                try:
-                    c = ""
-                    for c in compatibilities[file["packs"][i]["pack_id"]]:
-                        compats += c
-                        compats += ", "
-                    to_add_pack += html_comp.replace('<incompatible>',compats[:-2])
-                except KeyError:
-                    pass
                 to_add_pack += pack_mid
                 try:
                     c = ""
@@ -373,6 +308,32 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
         html = html.replace(f'<div class="subcat{j}"></div>',pack_html)
         html = html.replace("<all_packs>", LZString.compressToEncodedURIComponent(dumps(current_category_packs)))
     """
+    compatibilities = load_json(f"{cdir()}/jsons/packs/compatibilities.json")
+    for ways in range(compatibilities["maxway"],1,-1):
+        for location in compatibilities[f"{ways}way"]["locations"]:
+            listjson = []
+            try:
+                for root, _, files in os.walk(f"{cdir()}/packs/{location}/files"):
+                    for lsfile in files:
+                        filepath = os.path.relpath(os.path.join(root, lsfile),f"{cdir()}/packs/{location}")
+                        if len(filepath.split(os.path.sep)) == 1:
+                            continue
+                        else:
+                            listjson.append("/".join(filepath.split(os.path.sep)[1:]))
+                        listjson.sort()
+                if len(listjson) == 0:
+                    raise FileNotFoundError
+                dump_json(f"{cdir()}/packs/{location}/list.json", listjson)
+                comp_stats[0] += 1
+            except FileNotFoundError:
+                if args.log_error:
+                    clrprint("[compatibilities]", "Incomplete Compatibility:", location, clr="r,w,y")
+                comp_stats[1] += 1
+                try:
+                    comps[f"{ways}way"].append(location)
+                except KeyError:
+                    comps[f"{ways}way"] = [location]
+                
     clrprint("Finished Counting!", clr="green")
 
     # HTML formatting
@@ -388,7 +349,7 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
     clrprint("Updating files...", clr="yellow")
     if not args.only_update_html:
         dump_json(f"{cdir()}/jsons/others/incomplete_packs.json", incomplete_packs)
-        dump_json(f"{cdir()}/jsons/others/incomplete_compatibilities.json", compatibilities)
+        dump_json(f"{cdir()}/jsons/others/incomplete_compatibilities.json", comps)
         dump_json(f"{cdir()}/jsons/others/incomplete_pack_icons.json", incomplete_pkics)
         dump_json(f"{cdir()}/jsons/map/name_to_json.json", name_to_json)
         dump_json(f"{cdir()}/jsons/map/id_to_name.json", id_to_name)
@@ -410,7 +371,7 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
             # Replace the links using regex
             new_pack_url = f"{pack_match.group(1)}{stats[0]}%2F{stats[0] + stats[1]}{pack_match.group(3)}"
             updated_content = content.replace(pack_match.group(0), new_pack_url)
-            new_comp_url = f"{comp_match.group(1)}{int(cstats[0] / 2)}%2F{int(cstats[0] / 2 + cstats[1] / 2)}{comp_match.group(3)}"
+            new_comp_url = f"{comp_match.group(1)}{comp_stats[0]}%2F{comp_stats[0] + comp_stats[1]}{comp_match.group(3)}"
             updated_content = updated_content.replace(comp_match.group(0), new_comp_url)
             new_pkic_url = f"{pkic_match.group(1)}{pkicstats[0]}%2F{pkicstats[0] + pkicstats[1]}{pkic_match.group(3)}"
             updated_content = updated_content.replace(pkic_match.group(0), new_pkic_url)

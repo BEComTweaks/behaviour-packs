@@ -166,14 +166,6 @@ function triggerPackClick(index) {
 | Custom functions |
 \******************/
 const lodash = _.noConflict();
-function deepMerge(dict1, dict2) {
-  return lodash.mergeWith(dict1, dict2, (dict1Value, dict2Value) => {
-    if (lodash.isArray(dict1Value) && lodash.isArray(dict2Value)) {
-      const mergedList = [...dict1Value, ...dict2Value];
-      return lodash.uniqWith(mergedList, lodash.isEqual);
-    }
-  });
-}
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -213,10 +205,10 @@ function toggleSelection(element) {
     element.parentElement.parentElement.parentElement.querySelector(
       ".category-label-selectall",
     );
-  if (selectedTweaks[dataCategory]["packs"].length == 0) {
+  if (selectedTweaks[dataCategory].length == 0) {
     unselectAll(selectAllElement);
   } else if (
-    selectedTweaks[dataCategory]["packs"].length ==
+    selectedTweaks[dataCategory].length ==
     element.parentElement.querySelectorAll(".tweak").length
   ) {
     selectAll(selectAllElement);
@@ -275,7 +267,7 @@ function updateSelectedTweaks() {
 function updateURL(st) {
   for (var key in st) {
     try {
-      if (st[key].packs) {
+      if (key !== "raw") {
         // remove categories
         delete st[key];
       }
@@ -541,48 +533,23 @@ function getSelectedTweaks() {
     });
   });
   // yza should explain this
-  const tweaksByCategory = {
+  const jsonData = {
     "Anti Grief": [],
     Drops: [],
     Fun: [],
     Utility: [],
   };
 
-  const indicesByCategory = {
-    "Anti Grief": [],
-    Drops: [],
-    Fun: [],
-    Utility: [],
-  };
   console.log(
     "[%cget%c]\nObtaining selected tweaks...",
     "color: purple",
     "color: initial",
   );
   selectedTweaks.forEach((tweak) => {
-    tweaksByCategory[tweak.category].push(tweak.name);
-    indicesByCategory[tweak.category].push(tweak.index);
+    jsonData[tweak.category].push(tweak.name);
   });
   console.log("[%cget%c]\nObtained!", "color: purple", "color: initial");
-  const jsonData = {
-    "Anti Grief": {
-      packs: tweaksByCategory["Anti Grief"],
-      index: indicesByCategory["Anti Grief"],
-    },
-    Drops: {
-      packs: tweaksByCategory["Drops"],
-      index: indicesByCategory["Drops"],
-    },
-    Fun: {
-      packs: tweaksByCategory["Fun"],
-      index: indicesByCategory["Fun"],
-    },
-    Utility: {
-      packs: tweaksByCategory["Utility"],
-      index: indicesByCategory["Utility"],
-    },
-    raw: selectedTweaks.map((tweak) => tweak.name),
-  };
+  jsonData.raw = selectedTweaks.map((tweak) => tweak.name);
   return jsonData;
 }
 // Extra code to trigger file input
@@ -750,7 +717,7 @@ function downloadSelectedTweaks() {
 const root_url = "..";
 const listofcategories = ["Anti Grief", "Drops", "Fun", "Utility"];
 
-function fetchPack(jsonData, packName, mcVersion) {
+async function fetchPack(jsonData, packName, mcVersion) {
   console.log("[%cfetch%c]\nMaking pack...", "color: blue", "color: initial");
   const downloadbutton = document.getElementsByClassName(
     "download-selected-button",
@@ -758,173 +725,259 @@ function fetchPack(jsonData, packName, mcVersion) {
   downloadbutton.onclick = null;
   downloadbutton.innerText = "Fetching Pack...";
   OreUI.becomeActive(downloadbutton);
-  var zip = new JSZip();
-  let fetchPromises = [];
-  var files = [];
-  var file_content = [];
-  var rploc = {};
-  var rpmf = {};
+  const zip = new JSZip();
+  const files = [];
+  const file_content = [];
+  const rploc = {};
+  let rpmf = {};
 
-  fetch(`${root_url}/jsons/map/id_to_name.json`)
-    .then((response) => {
-      if (!response.ok) {
-        console.error("Failed to fetch id_to_name.json");
+  try {
+    const idToNameResponse = await fetch(
+      `${root_url}/jsons/map/id_to_name.json`,
+    );
+    if (!idToNameResponse.ok) {
+      throw new Error("Failed to fetch id_to_name.json");
+    }
+    const idToName = await idToNameResponse.json();
+    console.log(
+      "[%cfetch%c] Fetched id_to_name.json",
+      "color: blue",
+      "color: initial",
+    );
+
+    const bpmanifestResponse = await fetch(
+      `${root_url}/jsons/others/bpmanifest.json`,
+    );
+    if (!bpmanifestResponse.ok) {
+      throw new Error("Failed to fetch bpmanifest.json");
+    }
+    var bpmanifest = await bpmanifestResponse.json();
+    bpmanifest.header.name = packName;
+    bpmanifest.header.min_engine_version = mcVersion.split(".").map(Number);
+    bpmanifest.header.uuid = uuid.v4();
+    let description = "Selected Packs:\n";
+    listofcategories.forEach((category) => {
+      if (jsonData[category] && jsonData[category].length > 0) {
+        description += ` - ${category}\n`;
+        jsonData[category].forEach((pack) => {
+          description += `\t - ${idToName[pack]}\n`;
+        });
       }
-      return response.json();
-    })
-    .then((json) => {
-      const idToName = json;
-      console.log(
-        "[%cfetch%c] Fetched id_to_name.json",
-        "color: blue",
-        "color: initial",
-      );
-      fetch(`${root_url}/jsons/others/bpmanifest.json`)
-        .then((response) => {
-          if (!response.ok) {
-            console.error("Failed to fetch manifest.json");
-          }
-          return response.json();
-        })
-        .then((json) => {
-          json.header.name = packName;
-          json.header.min_engine_version = mcVersion.split(".").map(Number);
-          json.header.uuid = uuid.v4();
-          let description = "Selected Packs:\n";
-          listofcategories.forEach((category) => {
-            if (jsonData[category] && jsonData[category].packs.length > 0) {
-              description += ` - ${category}\n`;
-              jsonData[category].packs.forEach((pack) => {
-                description += `\t - ${idToName[pack]}\n`;
-              });
+    });
+    bpmanifest.header.description = description.trim();
+    files.push("bp/manifest.json");
+    file_content.push(JSON.stringify(bpmanifest, null, 2));
+    console.log(
+      "[%cfetch%c] Fetched bpmanifest.json",
+      "color: blue",
+      "color: initial",
+    );
+    downloadbutton.innerText = "bpmanifest.json";
+    rpmf = bpmanifest;
+    rpmf.modules[0].type = "resources";
+    rpmf.modules[0].uuid = uuid.v4();
+    rpmf.header.uuid = uuid.v4();
+
+    const packIconResponse = await fetch(
+      `${root_url}/pack_icons/pack_icon.png`,
+    );
+    if (!packIconResponse.ok) {
+      throw new Error("Failed to fetch pack_icon.png");
+    }
+    const packIconBlob = await packIconResponse.blob();
+    zip.folder("bp").file("pack_icon.png", packIconBlob);
+    files.push("bp/pack_icon.png");
+    file_content.push(packIconBlob);
+    rploc["pack_icon"] = file_content.indexOf(packIconBlob);
+    console.log(
+      "[%cfetch%c] Fetched pack_icon.png",
+      "color: blue",
+      "color: initial",
+    );
+    downloadbutton.innerText = "pack_icon.png";
+
+    files.push("bp/selected_packs.json");
+    file_content.push(JSON.stringify(jsonData, null, 2));
+    rploc["selected_packs"] = files.indexOf("bp/selected_packs.json");
+    downloadbutton.innerText = "selected_packs.json";
+
+    const compatibilitiesResponse = await fetch(
+      `${root_url}/jsons/packs/compatibilities.json`,
+    );
+    if (!compatibilitiesResponse.ok) {
+      throw new Error("Failed to fetch compatibilities.json");
+    }
+    const compatibilities = await compatibilitiesResponse.json();
+    const incompleteCompatibilitiesResponse = await fetch(
+      `${root_url}/jsons/others/incomplete_compatibilities.json`,
+    );
+    if (!incompleteCompatibilitiesResponse.ok) {
+      throw new Error("Failed to fetch incomplete_compatibilities.json");
+    }
+    const inComp = await incompleteCompatibilitiesResponse.json();
+    const compatloc = [];
+    let i = compatibilities.maxway + 1;
+    while (i > 2) {
+      i = i - 1;
+      compatibilities[`${i}way`].compatibilities.forEach(
+        (listofcompatibilities, index) => {
+          let doesnthave = false;
+          listofcompatibilities.forEach((pack) => {
+            if (jsonData["raw"].indexOf(pack) == -1) {
+              doesnthave = true;
             }
           });
-          json.header.description = description.trim();
-          files.push("bp/manifest.json");
-          file_content.push(JSON.stringify(json, null, 2));
-          console.log(
-            "[%cfetch%c] Fetched manifest.json",
-            "color: blue",
-            "color: initial",
-          );
-          downloadbutton.innerText = "manifest.json";
-          rpmf = json;
-          rpmf.modules[0].type = "resources";
-          rpmf.modules[0].uuid = uuid.v4();
-          rpmf.header.uuid = uuid.v4();
-        });
-    });
-
-  fetch(`${root_url}/pack_icons/pack_icon.png`)
-    .then((response) => {
-      if (!response.ok) {
-        console.error("Failed to fetch pack_icon.png");
-      }
-      return response.blob();
-    })
-    .then((blob) => {
-      zip.folder("bp").file("pack_icon.png", blob);
-      files.push("bp/pack_icon.png");
-      file_content.push(blob);
-      rploc["pack_icon"] = file_content.indexOf(blob);
-      console.log(
-        "[%cfetch%c] Fetched pack_icon.png",
-        "color: blue",
-        "color: initial",
-      );
-      downloadbutton.innerText = "pack_icon.png";
-    });
-
-  files.push("bp/selected_packs.json");
-  file_content.push(JSON.stringify(jsonData, null, 2));
-  rploc["selected_packs"] = files.indexOf("bp/selected_packs.json");
-  downloadbutton.innerText = "selected_packs.json";
-
-  listofcategories.forEach((cats) => {
-    jsonData[cats]["packs"].forEach((pack) => {
-      fetchPromises.push(
-        fetch(`${root_url}/packs/${cats.toLowerCase()}/${pack}/list.json`)
-          .then((response) => {
-            if (!response.ok) {
-              console.error("Failed to fetch list.json");
+          const location = compatibilities[`${i}way`].locations[index];
+          console.log(location);
+          if (inComp[`${i}way`] !== undefined) {
+            console.log("inside by one");
+            if (!doesnthave && inComp[`${i}way`].indexOf(location) == -1) {
+              compatloc.push(location);
+              listofcompatibilities.forEach((pack) => {
+                jsonData["raw"].splice(jsonData["raw"].indexOf(pack), 1);
+              });
+              console.log(
+                `[%cfetch%c]\nAdded ${i}way compatibility for ${listofcompatibilities}`,
+                "color: blue",
+                "color: initial",
+              );
             }
-            return response.json();
-          })
-          .then((json) => {
-            let fileFetchPromises = json.default.map((fileloc) => {
-              return fetch(
-                `${root_url}/packs/${cats.toLowerCase()}/${pack}/default/${fileloc}`,
-              )
-                .then((response) => {
-                  if (!response.ok) {
-                    console.error("Failed to fetch file:", fileloc);
-                    return;
-                  }
-                  return response.text();
-                })
-                .then((text) => {
-                  console.log(pack);
-                  if (files.indexOf(fileloc) === -1) {
-                    files.push(fileloc);
-                    file_content.push(text);
-                  } else if (fileloc.endsWith(".json")) {
-                    const existingContent = JSON.parse(
-                      file_content[files.indexOf(fileloc)],
-                    );
-                    console.log(existingContent);
-                    const newContent = JSON.parse(text);
-                    console.log(newContent);
-                    const mergedContent = deepMerge(
-                      newContent,
-                      existingContent,
-                    );
-                    console.log(mergedContent);
-                    file_content[files.indexOf(fileloc)] = JSON.stringify(
-                      mergedContent,
-                      null,
-                      2,
-                    );
-                  } else if (
-                    fileloc.endsWith(".mcfunction") ||
-                    fileloc.endsWith(".lang") ||
-                    fileloc.endsWith(".js")
-                  ) {
-                    file_content[files.indexOf(fileloc)] += text;
-                  }
-                  console.log(
-                    `[%cfetch%c]\n${fileloc}`,
-                    "color: blue",
-                    "color: initial",
-                  );
-                  downloadbutton.innerText = fileloc.split("/").pop();
-                });
+          } else if (!doesnthave) {
+            compatloc.push(location);
+            listofcompatibilities.forEach((pack) => {
+              jsonData["raw"].splice(jsonData["raw"].indexOf(pack), 1);
             });
-            return Promise.all(fileFetchPromises);
-          }),
+            console.log(
+              `[%cfetch%c]\nAdded ${i}way compatibility for ${listofcompatibilities}`,
+              "color: blue",
+              "color: initial",
+            );
+          }
+        },
       );
-    });
-  });
+    }
+    var fetchPromises = [];
+    for (const cats of listofcategories) {
+      for (const pack of jsonData[cats]) {
+        if (jsonData["raw"].indexOf(pack) !== -1) {
+          fetchPromises.push(
+            (async () => {
+              console.log(
+                `${root_url}/packs/${cats.toLowerCase()}/${pack}/list.json`,
+              );
+              const listResponse = await fetch(
+                `${root_url}/packs/${cats.toLowerCase()}/${pack}/list.json`,
+              );
+              if (!listResponse.ok) {
+                throw new Error("Failed to fetch list.json");
+              }
+              const listJson = await listResponse.json();
+              const fileFetchPromises = listJson.map(async (fileloc) => {
+                const fileResponse = await fetch(
+                  `${root_url}/packs/${cats.toLowerCase()}/${pack}/files/${fileloc}`,
+                );
+                if (!fileResponse.ok) {
+                  throw new Error(`Failed to fetch file: ${fileloc}`);
+                }
+                const text = await fileResponse.text();
+                files.push(fileloc);
+                file_content.push(text);
+                console.log(
+                  `[%cfetch%c]\n${fileloc}`,
+                  "color: blue",
+                  "color: initial",
+                );
+                downloadbutton.innerText = fileloc.split("/").pop();
+              });
+              await Promise.all(fileFetchPromises);
+            })(),
+          );
+        }
+      }
+    }
+    await Promise.all(fetchPromises);
 
-  Promise.all(fetchPromises).then(() => {
+    var compatFetchPromises = [];
+    for (const loc of compatloc) {
+      compatFetchPromises.push(
+        (async () => {
+          const listResponse = await fetch(
+            `${root_url}/packs/${loc}/list.json`,
+          );
+          if (!listResponse.ok) {
+            throw new Error("Failed to fetch list.json");
+          }
+          const listJson = await listResponse.json();
+          const fileFetchPromises = listJson.map(async (fileloc) => {
+            const fileResponse = await fetch(
+              `${root_url}/packs/${loc}/files/${fileloc}`,
+            );
+            if (!fileResponse.ok) {
+              throw new Error(`Failed to fetch file: ${fileloc}`);
+            }
+            const text = await fileResponse.text();
+            files.push(fileloc);
+            file_content.push(text);
+            console.log(
+              `[%cfetch%c]\n${fileloc}`,
+              "color: blue",
+              "color: initial",
+            );
+            downloadbutton.innerText = fileloc.split("/").pop();
+          });
+          await Promise.all(fileFetchPromises);
+        })(),
+      );
+    }
+    await Promise.all(compatFetchPromises);
+
     console.log(files);
     let needsrp = false;
     downloadbutton.innerText = "Zipping Up";
-    var manifest = {};
+    var completedFiles = [];
+    var completedFilesContent = [];
+    let manifestfromfiles = {};
+    /* duplicate checker */
     files.forEach((file, index) => {
-      if (file.startsWith("rp")) {
-        needsrp = true;
-      }
-      if (file === "bp/manifest.json") {
-        ismanifest = deepMerge(manifest, JSON.parse(file_content[index]));
+      if (completedFiles.indexOf(file) === -1) {
+        completedFiles.push(file);
+        completedFilesContent.push(file_content[index]);
+      } else if (file.endsWith(".json")) {
+        const addedFileIndex = completedFiles.indexOf(file);
+        const addedJSON = JSON.parse(completedFilesContent[addedFileIndex]);
+        const toAddJSON = JSON.parse(file_content[index]);
+        const mergedJSON = lodash.merge(addedJSON, toAddJSON);
+        completedFilesContent[addedFileIndex] = JSON.stringify(
+          mergedJSON,
+          null,
+          2,
+        );
+      } else if (
+        file.includes(".mc") ||
+        file.endsWith(".js") ||
+        file.endsWith(".bak") ||
+        file.endsWith(".txt") ||
+        file.endsWith(".lang")
+      ) {
+        const addedFileIndex = completedFiles.indexOf(file);
+        completedFilesContent[addedFileIndex] += file_content[index];
       } else {
-        zip.file(file, file_content[index]);
+        //idk man, wait for priority
       }
     });
-    manifest.modules.forEach((module, index) => {
+    console.log(completedFiles);
+    /* add the files to zip now */
+    completedFiles.forEach((file, index) => {
+      if (file === "bp/manifest.json") {
+        manifestfromfiles = JSON.parse(completedFilesContent[index]);
+      }
+      zip.file(file, completedFilesContent[index]);
+    });
+    bpmanifest = lodash.merge(bpmanifest, manifestfromfiles);
+    bpmanifest.modules.forEach((module) => {
       module.uuid = uuid.v4();
     });
-    zip.file("bp/manifest.json", JSON.stringify(manifest, null, 2));
-    console.log(manifest);
+    zip.file("bp/manifest.json", JSON.stringify(bpmanifest, null, 2));
     if (needsrp) {
       zip.folder("rp").file("manifest.json", JSON.stringify(rpmf, null, 2));
       downloadbutton.innerText = "manifest.json";
@@ -935,24 +988,25 @@ function fetchPack(jsonData, packName, mcVersion) {
         .file("selected_packs.json", file_content[rploc["selected_packs"]]);
       downloadbutton.innerText = "selected_packs.json";
     }
-    zip.generateAsync({ type: "blob" }).then(function (blob) {
-      console.log(
-        "[%cfetch%c]\nFinished fetches",
-        "color: blue",
-        "color: initial",
-      );
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.style.display = "none";
-      a.href = url;
-      a.download = `${packName}.zip`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-      downloadbutton.innerText = "Download Selected Tweaks";
-      downloadbutton.onclick = downloadSelectedTweaks;
-      OreUI.becomeInactive(downloadbutton);
-    });
-  });
+    const blob = await zip.generateAsync({ type: "blob" });
+    console.log(
+      "[%cfetch%c]\nFinished fetches",
+      "color: blue",
+      "color: initial",
+    );
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    a.download = `${packName}.zip`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    downloadbutton.innerText = "Download Selected Tweaks";
+    downloadbutton.onclick = downloadSelectedTweaks;
+    OreUI.becomeInactive(downloadbutton);
+  } catch (error) {
+    console.error("Error during fetch or processing:", error);
+  }
 }
