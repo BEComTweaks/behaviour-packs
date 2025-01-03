@@ -24,7 +24,7 @@
    <li><a class="nav-link" href="https://becomtweaks.github.io">Home</a></li>
    <li style="float:right"><a class="nav-link" href="https://becomtweaks.github.io/crafting-tweaks">CTs</a></li>
    <li style="float:right"><a class="nav-link" href="https://becomtweaks.github.io/behaviour-packs">BPs</a></li>
-   <li style="float:right"><a class="nav-link" href="https://becomtweaks.github.io/-packs">RPs</a></li>
+   <li style="float:right"><a class="nav-link" href="https://becomtweaks.github.io/resource-packs">RPs</a></li>
   </ul>
   <div id="background-container"></div>
   <script src="bg.js"></script>
