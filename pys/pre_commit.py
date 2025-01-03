@@ -418,7 +418,7 @@ if args.build:
         with open(f"{cdir()}/build/index.html", "r") as file:
             content = file.read()
         with open(f"{cdir()}/build/index.html", "w") as file:
-            file.write(content.replace("../", "https://raw.githubusercontent.com/BEComTweaks/resource-packs/main/"))
+            file.write(content.replace("../", "https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/"))
         clrprint("Build success!", clr="g")
     except Exception as e:
         clrprint("Build failed!", clr="r")
