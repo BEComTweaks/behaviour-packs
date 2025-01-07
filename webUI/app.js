@@ -896,7 +896,9 @@ async function fetchPack(jsonData, packName, mcVersion) {
                 downloadbutton.innerText = fileloc.split("/").pop();
                 console.log(fileResponse.headers.get("content-type"));
                 if (
-                  fileResponse.headers.get("content-type").includes("application") ||
+                  fileResponse.headers
+                    .get("content-type")
+                    .includes("application") ||
                   fileResponse.headers.get("content-type").includes("text")
                 ) {
                   const text = await fileResponse.text();
@@ -914,7 +916,9 @@ async function fetchPack(jsonData, packName, mcVersion) {
                   zip.remove(fileloc);
                   zip.file(fileloc, await fileResponse.blob());
                   filePriorities[files.indexOf(fileloc)] = priorityMap[pack];
-                  console.log(`Priority of ${fileloc} updated to ${priorityMap[pack]}`);
+                  console.log(
+                    `Priority of ${fileloc} updated to ${priorityMap[pack]}`,
+                  );
                 }
               }
             }
@@ -947,7 +951,9 @@ async function fetchPack(jsonData, packName, mcVersion) {
             );
             downloadbutton.innerText = fileloc.split("/").pop();
             if (
-              fileResponse.headers.get("content-type").includes("application") ||
+              fileResponse.headers
+                .get("content-type")
+                .includes("application") ||
               fileResponse.headers.get("content-type").includes("text")
             ) {
               const text = await fileResponse.text();
