@@ -54,7 +54,14 @@ parser.add_argument('--only-update-jsons', '-ouj', action='store_true', help='On
 parser.add_argument('--build', '-b', action='store_true', help='Builds the website for production')
 parser.add_argument('--update-theme', '-ut', action='store_true', help='Pulls the theme used for the website from the resource-packs repository')
 parser.add_argument('--log-error', '-el', action='store_true', help='Prints out errors')
+parser.add_argument('--no-stash', '-ns', action='store_true', help='Does not stash changes')
 args = parser.parse_args()
+
+if not args.no_stash:
+    clrprint("Stashing changes...", clr="yellow")
+    os.system('git stash --quiet --include-untracked --message "Stashed changes before pre-commit"')
+    os.system('git stash apply --quiet')
+    clrprint("Stashed changes!", clr="green")
 
 # Counts Packs and Compatibilities
 if not args.build or (args.build and (args.only_update_html or args.only_update_jsons or args.format)):
