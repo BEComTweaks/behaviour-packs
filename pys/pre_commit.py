@@ -43,6 +43,8 @@ incomplete_pkics = {}
 packs = -1
 pack_list = []
 name_to_json = {}
+priority = {}
+
 with open(f"{cdir()}/jsons/others/pack_order_list.txt","r") as pol:
     for i in pol:
         pack_list.append(i)
@@ -124,6 +126,7 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
                             pkicstats[1] += 1
                             if args.log_error:
                                 clrprint("[packs]", "[icon]", "Incomplete Pack:", file["packs"][i]["pack_id"], clr="r,b,w,y")
+
                 # Adds Pack Conflicts
                 conflicts[file["packs"][i]["pack_id"]] = []
                 try:
@@ -133,7 +136,13 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
                     pass # If it is empty, it just skips
                 if conflicts[file["packs"][i]["pack_id"]] == []:
                     del conflicts[file["packs"][i]["pack_id"]]
-                
+
+                # Add priority map
+                try:
+                    priority[file["packs"][i]["pack_id"]] = file["packs"][i]["priority"]
+                except KeyError:
+                    priority[file["packs"][i]["pack_id"]] = 0
+
                 # Adds respective HTML
                 confs = ""
                 if file["packs"][i]["pack_id"] not in incomplete_packs[file["topic"]]:
@@ -340,7 +349,7 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
                     comps[f"{ways}way"].append(location)
                 except KeyError:
                     comps[f"{ways}way"] = [location]
-                
+
     clrprint("Finished Counting!", clr="green")
 
     # HTML formatting
@@ -360,6 +369,7 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
         dump_json(f"{cdir()}/jsons/others/incomplete_pack_icons.json", incomplete_pkics)
         dump_json(f"{cdir()}/jsons/map/name_to_json.json", name_to_json)
         dump_json(f"{cdir()}/jsons/map/id_to_name.json", id_to_name)
+        dump_json(f"{cdir()}/jsons/map/priority.json", priority)
     if not args.only_update_jsons:
         with open(f"{cdir()}/webUI/index.html", "w") as html_file:
             html_file.write(html)

@@ -728,6 +728,7 @@ async function fetchPack(jsonData, packName, mcVersion) {
   const zip = new JSZip();
   const files = [];
   const file_content = [];
+  const filePriorities = [];
   const rploc = {};
   let rpmf = {};
 
@@ -767,6 +768,7 @@ async function fetchPack(jsonData, packName, mcVersion) {
     bpmanifest.header.description = description.trim();
     files.push("bp/manifest.json");
     file_content.push(JSON.stringify(bpmanifest, null, 2));
+    filePriorities.push(999);
     console.log(
       "[%cfetch%c] Fetched bpmanifest.json",
       "color: blue",
@@ -787,7 +789,8 @@ async function fetchPack(jsonData, packName, mcVersion) {
     const packIconBlob = await packIconResponse.blob();
     zip.folder("bp").file("pack_icon.png", packIconBlob);
     files.push("bp/pack_icon.png");
-    file_content.push(packIconBlob);
+    file_content.push(undefined);
+    filePriorities.push(999);
     rploc["pack_icon"] = file_content.indexOf(packIconBlob);
     console.log(
       "[%cfetch%c] Fetched pack_icon.png",
@@ -799,6 +802,7 @@ async function fetchPack(jsonData, packName, mcVersion) {
     files.push("bp/selected_packs.json");
     file_content.push(JSON.stringify(jsonData, null, 2));
     rploc["selected_packs"] = files.indexOf("bp/selected_packs.json");
+    filePriorities.push(999);
     downloadbutton.innerText = "selected_packs.json";
 
     const compatibilitiesResponse = await fetch(
@@ -856,12 +860,17 @@ async function fetchPack(jsonData, packName, mcVersion) {
         },
       );
     }
-    var fetchPromises = [];
+    const priorityResponse = await fetch(`${root_url}/jsons/map/priority.json`);
+    if (!priorityResponse.ok) {
+      throw new Error("Failed to fetch priority.json");
+    }
+    const priorityMap = await priorityResponse.json();
+
     for (const cats of listofcategories) {
       for (const pack of jsonData[cats]) {
         if (jsonData["raw"].indexOf(pack) !== -1) {
-          fetchPromises.push(
-            (async () => {
+          for (const pack of jsonData[cats]) {
+            if (jsonData["raw"].indexOf(pack) !== -1) {
               console.log(
                 `${root_url}/packs/${cats.toLowerCase()}/${pack}/list.json`,
               );
@@ -872,31 +881,47 @@ async function fetchPack(jsonData, packName, mcVersion) {
                 throw new Error("Failed to fetch list.json");
               }
               const listJson = await listResponse.json();
-              const fileFetchPromises = listJson.map(async (fileloc) => {
+              for (const fileloc of listJson) {
                 const fileResponse = await fetch(
                   `${root_url}/packs/${cats.toLowerCase()}/${pack}/files/${fileloc}`,
                 );
                 if (!fileResponse.ok) {
                   throw new Error(`Failed to fetch file: ${fileloc}`);
                 }
-                const text = await fileResponse.text();
-                files.push(fileloc);
-                file_content.push(text);
                 console.log(
                   `[%cfetch%c]\n${fileloc}`,
                   "color: blue",
                   "color: initial",
                 );
                 downloadbutton.innerText = fileloc.split("/").pop();
-              });
-              await Promise.all(fileFetchPromises);
-            })(),
-          );
+                console.log(fileResponse.headers.get("content-type"));
+                if (
+                  fileResponse.headers.get("content-type").includes("application") ||
+                  fileResponse.headers.get("content-type").includes("text")
+                ) {
+                  const text = await fileResponse.text();
+                  files.push(fileloc);
+                  file_content.push(text);
+                  filePriorities.push(priorityMap[pack]);
+                } else if (files.indexOf(fileloc) === -1) {
+                  files.push(fileloc);
+                  zip.file(fileloc, await fileResponse.blob());
+                  file_content.push(undefined);
+                  filePriorities.push(priorityMap[pack]);
+                } else if (
+                  priorityMap[pack] > filePriorities[files.indexOf(fileloc)]
+                ) {
+                  zip.remove(fileloc);
+                  zip.file(fileloc, await fileResponse.blob());
+                  filePriorities[files.indexOf(fileloc)] = priorityMap[pack];
+                  console.log(`Priority of ${fileloc} updated to ${priorityMap[pack]}`);
+                }
+              }
+            }
+          }
         }
       }
     }
-    await Promise.all(fetchPromises);
-
     var compatFetchPromises = [];
     for (const loc of compatloc) {
       compatFetchPromises.push(
@@ -915,15 +940,30 @@ async function fetchPack(jsonData, packName, mcVersion) {
             if (!fileResponse.ok) {
               throw new Error(`Failed to fetch file: ${fileloc}`);
             }
-            const text = await fileResponse.text();
-            files.push(fileloc);
-            file_content.push(text);
             console.log(
               `[%cfetch%c]\n${fileloc}`,
               "color: blue",
               "color: initial",
             );
             downloadbutton.innerText = fileloc.split("/").pop();
+            if (
+              fileResponse.headers.get("content-type").includes("application") ||
+              fileResponse.headers.get("content-type").includes("text")
+            ) {
+              const text = await fileResponse.text();
+              files.push(fileloc);
+              file_content.push(text);
+              filePriorities.push(priorityMap[loc]);
+            } else {
+              zip.file(fileloc, await fileResponse.blob());
+              if (files.indexOf(fileloc) == -1) {
+                files.push(fileloc);
+                file_content.push(undefined);
+                filePriorities.push(999); // its compatibilities anyways, so highest priority
+              } else {
+                filePriorities[files.indexOf(fileloc)] = 999;
+              }
+            }
           });
           await Promise.all(fileFetchPromises);
         })(),
@@ -939,7 +979,12 @@ async function fetchPack(jsonData, packName, mcVersion) {
     let manifestfromfiles = {};
     /* duplicate checker */
     files.forEach((file, index) => {
-      if (completedFiles.indexOf(file) === -1) {
+      console.log(file);
+      console.log(file_content[index]);
+      if (file_content[index] === undefined) {
+        console.log("nah not today");
+        return; // its added already wdym
+      } else if (completedFiles.indexOf(file) === -1) {
         completedFiles.push(file);
         completedFilesContent.push(file_content[index]);
       } else if (file.endsWith(".json")) {
@@ -960,9 +1005,7 @@ async function fetchPack(jsonData, packName, mcVersion) {
         file.endsWith(".lang")
       ) {
         const addedFileIndex = completedFiles.indexOf(file);
-        completedFilesContent[addedFileIndex] += file_content[index];
-      } else {
-        //idk man, wait for priority
+        completedFilesContent[addedFileIndex] += "\n" + file_content[index];
       }
     });
     console.log(completedFiles);
