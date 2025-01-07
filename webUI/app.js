@@ -348,342 +348,6 @@ function toggleCategory(label) {
     }
   }
 }
-// i wonder what this is for
-function downloadSelectedTweaks() {
-  // set min_engine_version
-  var mcVersion = document.getElementById("mev").value;
-  console.log(
-    `[%cdownload%c]\nMinimum Engine Version is set to ${mcVersion}`,
-    "color: cyan",
-    "color: initial",
-  );
-  // set pack name
-  var packName = document.getElementById("fileNameInput").value;
-  if (!packName) {
-    packName = `BTBP-${String(Math.floor(Math.random() * 1000000)).padStart(
-      6,
-      "0",
-    )}`;
-  }
-  packName = packName.replaceAll("/", "-");
-  console.log(
-    `[%cdownload%c]\nPack Name is set to ${packName}`,
-    "color: cyan",
-    "color: initial",
-  );
-  // get selected tweaks
-  jsonData = getSelectedTweaks();
-  // fetch
-  fetchPack("https", jsonData, packName, mcVersion);
-}
-const serverip = "localhost";
-
-function fetchPack(protocol, jsonData, packName, mcVersion) {
-  // get download button
-  var downloadbutton = document.getElementsByClassName(
-    "download-selected-button",
-  )[0];
-  // For people that spam the download button
-  downloadbutton.onclick = null;
-  // set proper colors
-  if (protocol === "http") {
-    // when attempting through http
-    OreUI.setActiveColor(downloadbutton, "pink");
-    downloadbutton.innerText = "Retrying with HTTP...";
-  } else {
-    // when attempting through https
-    OreUI.setActiveColor(downloadbutton, "green");
-    downloadbutton.innerText = "Fetching Pack...";
-  }
-  // become active
-  OreUI.becomeActive(downloadbutton);
-  console.log("[%cfetch%c]\nFetching pack...", "color: blue", "color: initial");
-  // fetch
-  fetch(`${protocol}://${serverip}/exportBehaviourPack`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      packName: packName,
-      mcVersion: mcVersion,
-    },
-    body: JSON.stringify(jsonData),
-  })
-    .then((response) => {
-      // when the response doesnt feel good
-      if (!response.ok) {
-        console.log(
-          "[%cerror%c]\nNetwork response was not ok",
-          "color: red",
-          "color: initial",
-        );
-      }
-      return response.blob();
-    })
-    .then(async (blob) => {
-      // pack received
-      console.log(
-        "[%cfetch%c]\nReceived pack!",
-        "color: blue",
-        "color: initial",
-      );
-      downloadbutton.innerText = "Obtained pack!";
-      // Download the file
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.style.display = "none";
-      a.href = url;
-      a.download = `${packName}.mcpack`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      // reset button text
-      await sleep(1000);
-      OreUI.becomeInactive(downloadbutton);
-      OreUI.setActiveColor(downloadbutton, "dark");
-      downloadbutton.innerText = "Download Selected Tweaks";
-      downloadbutton.onclick = downloadSelectedTweaks;
-    })
-    .catch(async (error) => {
-      // when the response doesnt send
-      if (protocol === "https") {
-        console.log(
-          `[%cerror%c]\nHTTPS error, trying HTTP: %c${error}`,
-          "color: red",
-          "color: initial",
-          "color: red",
-        );
-        fetchPack("http", jsonData, packName, mcVersion); // Retry with HTTP
-      } else {
-        console.log(
-          `[%cerror%c] Error: %c${error}`,
-          "color: red",
-          "color: initial",
-          "color: red",
-        );
-        downloadbutton.innerText =
-          "Couldn't fetch pack. Check console for error log.";
-        OreUI.setActiveColor(downloadbutton, "red");
-        await sleep(3000);
-        OreUI.setActiveColor(downloadbutton, "dark");
-        downloadbutton.innerText = "Download Selected Tweaks";
-        downloadbutton.onclick = downloadSelectedTweaks;
-        OreUI.becomeInactive(downloadbutton);
-      }
-    });
-}
-
-// process json data from url/json
-function processJsonData(jsonData, dowhat) {
-  const rawPacks = jsonData.raw;
-
-  if (Array.isArray(rawPacks)) {
-    rawPacks.forEach(function (pack) {
-      const div = document.querySelector(`div.tweak[data-name="${pack}"]`);
-      if (div) {
-        if (dowhat == "select") {
-          if (!div.querySelector('input[type="checkbox"]').checked) {
-            enableSelection(div, div.querySelector('input[type="checkbox"]'));
-            console.log(
-              `[%cmass%c]\nSelected ${pack}`,
-              "color: green",
-              "color: initial",
-            );
-          }
-        } else if (dowhat == "unselect") {
-          if (div.querySelector('input[type="checkbox"]').checked) {
-            disableSelection(div, div.querySelector('input[type="checkbox"]'));
-            console.log(
-              `[%cmass%c]\nUnselected ${pack}`,
-              "color: green",
-              "color: initial",
-            );
-          }
-        }
-      } else {
-        console.log(
-          `[%cerror%c]\nDiv with data-name="${pack}" not found.`,
-          "color: red",
-          "color: initial",
-        );
-      }
-    });
-  } else {
-    console.log(
-      "[%cerror%c]\n%cThe 'raw' field in selected_packs.json is not an array.",
-      "color: red",
-      "color: initial",
-    );
-  }
-  updateSelectedTweaks();
-  const st = getSelectedTweaks();
-  updateURL(st);
-  updateDownloadButton(st);
-}
-// get selected tweaks
-function getSelectedTweaks() {
-  const selectedTweaks = [];
-  const tweakElements = document.querySelectorAll(
-    ".tweak[oreui-state='active']",
-  );
-  tweakElements.forEach((tweak) => {
-    selectedTweaks.push({
-      category: tweak.dataset.category,
-      name: tweak.dataset.name,
-      index: parseInt(tweak.dataset.index),
-    });
-  });
-  // yza should explain this
-  const jsonData = {
-    "Anti Grief": [],
-    Drops: [],
-    Fun: [],
-    Utility: [],
-  };
-
-  console.log(
-    "[%cget%c]\nObtaining selected tweaks...",
-    "color: purple",
-    "color: initial",
-  );
-  selectedTweaks.forEach((tweak) => {
-    jsonData[tweak.category].push(tweak.name);
-  });
-  console.log("[%cget%c]\nObtained!", "color: purple", "color: initial");
-  jsonData.raw = selectedTweaks.map((tweak) => tweak.name);
-  return jsonData;
-}
-// Extra code to trigger file input
-document
-  .querySelector(".zipinputcontainer")
-  .addEventListener("click", function () {
-    document.getElementById("zipInput").click();
-  });
-// upload pack
-const zipInput = document.getElementById("zipInput");
-const selectedFile = document.querySelector(".selectedFile");
-zipInput.addEventListener("change", function (event) {
-  const file = event.target.files[0];
-  if (zipInput.files.length > 0) {
-    selectedFile.innerText = zipInput.files[0].name;
-  }
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      JSZip.loadAsync(e.target.result)
-        .then(function (zip) {
-          let fileFound = false;
-
-          zip.forEach(function (relativePath, zipEntry) {
-            if (relativePath.endsWith("selected_packs.json")) {
-              fileFound = true;
-              zipEntry
-                .async("string")
-                .then(function (content) {
-                  try {
-                    const jsonData = JSON.parse(content);
-                    processJsonData(jsonData, "select");
-                    document.querySelector(
-                      ".download-selected-button",
-                    ).disabled = false;
-                  } catch (error) {
-                    console.log(
-                      `[%cerror%c]\nError parsing JSON: %c${error}`,
-                      "color: red",
-                      "color: initial",
-                      "color: red",
-                    );
-                    selectedFile.innerText = "Invalid JSON in pack";
-                    sleep(3000).then(() => {
-                      selectedFile.innerText = "Upload pack";
-                    });
-                  }
-                })
-                .catch(function (error) {
-                  console.log(
-                    `[%cerror%c]\nError extracting selected_packs.json: %c${error}`,
-                    "color: red",
-                    "color: initial",
-                    "color: red",
-                  );
-                  selectedFile.innerText = "Invalid pack";
-                  sleep(3000).then(() => {
-                    selectedFile.innerText = "Upload pack";
-                  });
-                });
-            }
-          });
-
-          if (!fileFound) {
-            console.log(
-              `[%cerror%c]\nselected_packs.json not found in any folder within the ZIP file.`,
-              "color: red",
-              "color: initial",
-            );
-            selectedFile.innerText = "Invalid pack";
-            sleep(3000).then(() => {
-              selectedFile.innerText = "Upload pack";
-            });
-          }
-        })
-        .catch(function (error) {
-          console.log(
-            `[%cerror%c]\nError reading ZIP file: %c${error}`,
-            "color: red",
-            "color: initial",
-            "color: red",
-          );
-          selectedFile.innerText = "Invalid file";
-          sleep(3000).then(() => {
-            selectedFile.innerText = "Upload pack";
-          });
-        });
-    };
-    reader.readAsArrayBuffer(file);
-  } else {
-    console.log(
-      `[%cerror%c]\nNo file selected.`,
-      "color: red",
-      "color: initial",
-    );
-  }
-});
-
-function selectAll(element) {
-  const st = JSON.parse(
-    LZString.decompressFromEncodedURIComponent(element.dataset.allpacks),
-  );
-  processJsonData(st, "select");
-  element.onclick = new Function(`unselectAll(this);`);
-  element.innerHTML =
-    '<img src="images/select-all-button/chiseled_bookshelf_occupied.png" class="category-label-selectall-img"><div class="category-label-selectall-hovertext">Unselect All</div>';
-}
-
-function partialSelected(element) {
-  element.innerHTML =
-    '<img src="images/select-all-button/chiseled_bookshelf_has_selected.png" class="category-label-selectall-img"><div class="category-label-selectall-hovertext">Select All</div>';
-  element.onclick = new Function(`selectAll(this);`);
-}
-
-function unselectAll(element) {
-  const st = JSON.parse(
-    LZString.decompressFromEncodedURIComponent(element.dataset.allpacks),
-  );
-  processJsonData(st, "unselect");
-  element.onclick = new Function(`selectAll(this);`);
-  element.innerHTML =
-    '<img src="images/select-all-button/chiseled_bookshelf_empty.png" class="category-label-selectall-img"><div class="category-label-selectall-hovertext">Select All</div>';
-}
-
-function updateCategoryHeight() {
-  const categoryControlled = document.querySelectorAll(".category-controlled");
-  categoryControlled.forEach((element) => {
-    if (element.style.maxHeight) {
-      element.style.maxHeight = element.scrollHeight + "px";
-    }
-  });
-}
-
-window.addEventListener("resize", updateCategoryHeight);
 
 /* test */
 function downloadSelectedTweaks() {
@@ -1059,3 +723,216 @@ async function fetchPack(jsonData, packName, mcVersion) {
     console.error("Error during fetch or processing:", error);
   }
 }
+
+// process json data from url/json
+function processJsonData(jsonData, dowhat) {
+  const rawPacks = jsonData.raw;
+
+  if (Array.isArray(rawPacks)) {
+    rawPacks.forEach(function (pack) {
+      const div = document.querySelector(`div.tweak[data-name="${pack}"]`);
+      if (div) {
+        if (dowhat == "select") {
+          if (!div.querySelector('input[type="checkbox"]').checked) {
+            enableSelection(div, div.querySelector('input[type="checkbox"]'));
+            console.log(
+              `[%cmass%c]\nSelected ${pack}`,
+              "color: green",
+              "color: initial",
+            );
+          }
+        } else if (dowhat == "unselect") {
+          if (div.querySelector('input[type="checkbox"]').checked) {
+            disableSelection(div, div.querySelector('input[type="checkbox"]'));
+            console.log(
+              `[%cmass%c]\nUnselected ${pack}`,
+              "color: green",
+              "color: initial",
+            );
+          }
+        }
+      } else {
+        console.log(
+          `[%cerror%c]\nDiv with data-name="${pack}" not found.`,
+          "color: red",
+          "color: initial",
+        );
+      }
+    });
+  } else {
+    console.log(
+      "[%cerror%c]\n%cThe 'raw' field in selected_packs.json is not an array.",
+      "color: red",
+      "color: initial",
+    );
+  }
+  updateSelectedTweaks();
+  const st = getSelectedTweaks();
+  updateURL(st);
+  updateDownloadButton(st);
+}
+// get selected tweaks
+function getSelectedTweaks() {
+  const selectedTweaks = [];
+  const tweakElements = document.querySelectorAll(
+    ".tweak[oreui-state='active']",
+  );
+  tweakElements.forEach((tweak) => {
+    selectedTweaks.push({
+      category: tweak.dataset.category,
+      name: tweak.dataset.name,
+      index: parseInt(tweak.dataset.index),
+    });
+  });
+  // yza should explain this
+  const jsonData = {
+    "Anti Grief": [],
+    Drops: [],
+    Fun: [],
+    Utility: [],
+  };
+
+  console.log(
+    "[%cget%c]\nObtaining selected tweaks...",
+    "color: purple",
+    "color: initial",
+  );
+  selectedTweaks.forEach((tweak) => {
+    jsonData[tweak.category].push(tweak.name);
+  });
+  console.log("[%cget%c]\nObtained!", "color: purple", "color: initial");
+  jsonData.raw = selectedTweaks.map((tweak) => tweak.name);
+  return jsonData;
+}
+// Extra code to trigger file input
+document
+  .querySelector(".zipinputcontainer")
+  .addEventListener("click", function () {
+    document.getElementById("zipInput").click();
+  });
+// upload pack
+const zipInput = document.getElementById("zipInput");
+const selectedFile = document.querySelector(".selectedFile");
+zipInput.addEventListener("change", function (event) {
+  const file = event.target.files[0];
+  if (zipInput.files.length > 0) {
+    selectedFile.innerText = zipInput.files[0].name;
+  }
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      JSZip.loadAsync(e.target.result)
+        .then(function (zip) {
+          let fileFound = false;
+
+          zip.forEach(function (relativePath, zipEntry) {
+            if (relativePath.endsWith("selected_packs.json")) {
+              fileFound = true;
+              zipEntry
+                .async("string")
+                .then(function (content) {
+                  try {
+                    const jsonData = JSON.parse(content);
+                    processJsonData(jsonData, "select");
+                    document.querySelector(
+                      ".download-selected-button",
+                    ).disabled = false;
+                  } catch (error) {
+                    console.log(
+                      `[%cerror%c]\nError parsing JSON: %c${error}`,
+                      "color: red",
+                      "color: initial",
+                      "color: red",
+                    );
+                    selectedFile.innerText = "Invalid JSON in pack";
+                    sleep(3000).then(() => {
+                      selectedFile.innerText = "Upload pack";
+                    });
+                  }
+                })
+                .catch(function (error) {
+                  console.log(
+                    `[%cerror%c]\nError extracting selected_packs.json: %c${error}`,
+                    "color: red",
+                    "color: initial",
+                    "color: red",
+                  );
+                  selectedFile.innerText = "Invalid pack";
+                  sleep(3000).then(() => {
+                    selectedFile.innerText = "Upload pack";
+                  });
+                });
+            }
+          });
+
+          if (!fileFound) {
+            console.log(
+              `[%cerror%c]\nselected_packs.json not found in any folder within the ZIP file.`,
+              "color: red",
+              "color: initial",
+            );
+            selectedFile.innerText = "Invalid pack";
+            sleep(3000).then(() => {
+              selectedFile.innerText = "Upload pack";
+            });
+          }
+        })
+        .catch(function (error) {
+          console.log(
+            `[%cerror%c]\nError reading ZIP file: %c${error}`,
+            "color: red",
+            "color: initial",
+            "color: red",
+          );
+          selectedFile.innerText = "Invalid file";
+          sleep(3000).then(() => {
+            selectedFile.innerText = "Upload pack";
+          });
+        });
+    };
+    reader.readAsArrayBuffer(file);
+  } else {
+    console.log(
+      `[%cerror%c]\nNo file selected.`,
+      "color: red",
+      "color: initial",
+    );
+  }
+});
+
+function selectAll(element) {
+  const st = JSON.parse(
+    LZString.decompressFromEncodedURIComponent(element.dataset.allpacks),
+  );
+  processJsonData(st, "select");
+  element.onclick = new Function(`unselectAll(this);`);
+  element.innerHTML =
+    '<img src="images/select-all-button/chiseled_bookshelf_occupied.png" class="category-label-selectall-img"><div class="category-label-selectall-hovertext">Unselect All</div>';
+}
+
+function partialSelected(element) {
+  element.innerHTML =
+    '<img src="images/select-all-button/chiseled_bookshelf_has_selected.png" class="category-label-selectall-img"><div class="category-label-selectall-hovertext">Select All</div>';
+  element.onclick = new Function(`selectAll(this);`);
+}
+
+function unselectAll(element) {
+  const st = JSON.parse(
+    LZString.decompressFromEncodedURIComponent(element.dataset.allpacks),
+  );
+  processJsonData(st, "unselect");
+  element.onclick = new Function(`selectAll(this);`);
+  element.innerHTML =
+    '<img src="images/select-all-button/chiseled_bookshelf_empty.png" class="category-label-selectall-img"><div class="category-label-selectall-hovertext">Select All</div>';
+}
+
+function updateCategoryHeight() {
+  const categoryControlled = document.querySelectorAll(".category-controlled");
+  categoryControlled.forEach((element) => {
+    if (element.style.maxHeight) {
+      element.style.maxHeight = element.scrollHeight + "px";
+    }
+  });
+}
+
+window.addEventListener("resize", updateCategoryHeight);
