@@ -215,24 +215,36 @@ function updateDownloadButton(st) {
 }
 
 function updateSelectAllButton(st) {
-  document.querySelectorAll(".category-label-selectall").forEach((selectallbutton) => {
-    const imgElement = selectallbutton.querySelector(".category-label-selectall-img");
-    const hoverTextElement = selectallbutton.querySelector(".category-label-selectall-hovertext");
-    const category = selectallbutton.dataset.category;
-    if (st[category].length == 0) {
-      imgElement.src = "images/select-all-button/chiseled_bookshelf_empty.png";
-      hoverTextElement.textContent = "Select All";
-      selectallbutton.onclick = new Function(`selectAll(this);`);
-    } else if (st[category].length == selectallbutton.parentElement.querySelectorAll(".tweak").length) {
-      imgElement.src = "images/select-all-button/chiseled_bookshelf_occupied.png";
-      hoverTextElement.textContent = "Unselect All";
-      selectallbutton.onclick = new Function(`unselectAll(this);`);
-    } else {
-      imgElement.src = "images/select-all-button/chiseled_bookshelf_has_selected.png";
-      hoverTextElement.textContent = "Select All";
-      selectallbutton.onclick = new Function(`selectAll(this);`);
-    }
-  })
+  document
+    .querySelectorAll(".category-label-selectall")
+    .forEach((selectallbutton) => {
+      const imgElement = selectallbutton.querySelector(
+        ".category-label-selectall-img",
+      );
+      const hoverTextElement = selectallbutton.querySelector(
+        ".category-label-selectall-hovertext",
+      );
+      const category = selectallbutton.dataset.category;
+      if (st[category].length == 0) {
+        imgElement.src =
+          "images/select-all-button/chiseled_bookshelf_empty.png";
+        hoverTextElement.textContent = "Select All";
+        selectallbutton.onclick = new Function(`selectAll(this);`);
+      } else if (
+        st[category].length ==
+        selectallbutton.parentElement.querySelectorAll(".tweak").length
+      ) {
+        imgElement.src =
+          "images/select-all-button/chiseled_bookshelf_occupied.png";
+        hoverTextElement.textContent = "Unselect All";
+        selectallbutton.onclick = new Function(`unselectAll(this);`);
+      } else {
+        imgElement.src =
+          "images/select-all-button/chiseled_bookshelf_has_selected.png";
+        hoverTextElement.textContent = "Select All";
+        selectallbutton.onclick = new Function(`selectAll(this);`);
+      }
+    });
 }
 
 function updateSelectedTweaks() {
@@ -802,7 +814,11 @@ function getSelectedTweaks() {
     jsonData[tweak.category].push(tweak.name);
   });
   jsonData.raw = selectedTweaks.map((tweak) => tweak.name);
-  console.log("[%cget%c]\nObtained selected tweaks!", "color: purple", "color: initial");
+  console.log(
+    "[%cget%c]\nObtained selected tweaks!",
+    "color: purple",
+    "color: initial",
+  );
   return jsonData;
 }
 // Extra code to trigger file input
