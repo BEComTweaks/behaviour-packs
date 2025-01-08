@@ -200,21 +200,7 @@ function toggleSelection(element) {
   }
   updateSelectedTweaks();
   var selectedTweaks = getSelectedTweaks();
-  var dataCategory = element.dataset.category;
-  const selectAllElement =
-    element.parentElement.parentElement.parentElement.querySelector(
-      ".category-label-selectall",
-    );
-  if (selectedTweaks[dataCategory].length == 0) {
-    unselectAll(selectAllElement);
-  } else if (
-    selectedTweaks[dataCategory].length ==
-    element.parentElement.querySelectorAll(".tweak").length
-  ) {
-    selectAll(selectAllElement);
-  } else {
-    partialSelected(selectAllElement);
-  }
+  updateSelectAllButton(selectedTweaks);
   updateURL(selectedTweaks);
   updateDownloadButton(selectedTweaks);
 }
@@ -226,6 +212,27 @@ function updateDownloadButton(st) {
   } else {
     downloadButton.disabled = false;
   }
+}
+
+function updateSelectAllButton(st) {
+  document.querySelectorAll(".category-label-selectall").forEach((selectallbutton) => {
+    const imgElement = selectallbutton.querySelector(".category-label-selectall-img");
+    const hoverTextElement = selectallbutton.querySelector(".category-label-selectall-hovertext");
+    const category = selectallbutton.dataset.category;
+    if (st[category].length == 0) {
+      imgElement.src = "images/select-all-button/chiseled_bookshelf_empty.png";
+      hoverTextElement.textContent = "Select All";
+      selectallbutton.onclick = new Function(`selectAll(this);`);
+    } else if (st[category].length == selectallbutton.parentElement.querySelectorAll(".tweak").length) {
+      imgElement.src = "images/select-all-button/chiseled_bookshelf_occupied.png";
+      hoverTextElement.textContent = "Unselect All";
+      selectallbutton.onclick = new Function(`unselectAll(this);`);
+    } else {
+      imgElement.src = "images/select-all-button/chiseled_bookshelf_has_selected.png";
+      hoverTextElement.textContent = "Select All";
+      selectallbutton.onclick = new Function(`selectAll(this);`);
+    }
+  })
 }
 
 function updateSelectedTweaks() {
@@ -768,6 +775,7 @@ function processJsonData(jsonData, dowhat) {
   }
   updateSelectedTweaks();
   const st = getSelectedTweaks();
+  updateSelectAllButton(st);
   updateURL(st);
   updateDownloadButton(st);
 }
@@ -784,24 +792,17 @@ function getSelectedTweaks() {
       index: parseInt(tweak.dataset.index),
     });
   });
-  // yza should explain this
   const jsonData = {
     "Anti Grief": [],
     Drops: [],
     Fun: [],
     Utility: [],
   };
-
-  console.log(
-    "[%cget%c]\nObtaining selected tweaks...",
-    "color: purple",
-    "color: initial",
-  );
   selectedTweaks.forEach((tweak) => {
     jsonData[tweak.category].push(tweak.name);
   });
-  console.log("[%cget%c]\nObtained!", "color: purple", "color: initial");
   jsonData.raw = selectedTweaks.map((tweak) => tweak.name);
+  console.log("[%cget%c]\nObtained selected tweaks!", "color: purple", "color: initial");
   return jsonData;
 }
 // Extra code to trigger file input
@@ -905,15 +906,7 @@ function selectAll(element) {
     LZString.decompressFromEncodedURIComponent(element.dataset.allpacks),
   );
   processJsonData(st, "select");
-  element.onclick = new Function(`unselectAll(this);`);
-  element.innerHTML =
-    '<img src="images/select-all-button/chiseled_bookshelf_occupied.png" class="category-label-selectall-img"><div class="category-label-selectall-hovertext">Unselect All</div>';
-}
-
-function partialSelected(element) {
-  element.innerHTML =
-    '<img src="images/select-all-button/chiseled_bookshelf_has_selected.png" class="category-label-selectall-img"><div class="category-label-selectall-hovertext">Select All</div>';
-  element.onclick = new Function(`selectAll(this);`);
+  updateSelectAllButton(getSelectedTweaks());
 }
 
 function unselectAll(element) {
@@ -921,9 +914,7 @@ function unselectAll(element) {
     LZString.decompressFromEncodedURIComponent(element.dataset.allpacks),
   );
   processJsonData(st, "unselect");
-  element.onclick = new Function(`selectAll(this);`);
-  element.innerHTML =
-    '<img src="images/select-all-button/chiseled_bookshelf_empty.png" class="category-label-selectall-img"><div class="category-label-selectall-hovertext">Select All</div>';
+  updateSelectAllButton(getSelectedTweaks());
 }
 
 function updateCategoryHeight() {
