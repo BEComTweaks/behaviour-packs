@@ -8,7 +8,12 @@
       "pack_description": "description of pack",
       "conflict": ["packid of conflicting pack"],
       "message": ["warn (red)/error (orange)/info (cyan)", "message for it"],
-      "icon": "extension of pack icon like gif or jpg (no '.')"
+      "icon": "extension of pack icon like gif or jpg (no '.')",
+      "priority": "priority of pack as an integer(1-10)",
+      "build": {
+        "with": "<language>",
+        "script": "<script name>"
+      }
     }
   ]
 }

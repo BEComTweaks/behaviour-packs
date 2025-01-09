@@ -53,7 +53,7 @@ parser = argparse.ArgumentParser(description='Run a massive script that updates 
 parser.add_argument('--format', '-f', action='store_true', help='Include flag to format files')
 parser.add_argument('--only-update-html', '-ouh', action='store_true', help='Only update the HTML')
 parser.add_argument('--only-update-jsons', '-ouj', action='store_true', help='Only update the JSONs')
-parser.add_argument('--build', '-b', action='store_true', help='Builds the website for production')
+parser.add_argument('--build', '-b', help='Builds stuff')
 parser.add_argument('--update-theme', '-ut', action='store_true', help='Pulls the theme used for the website from the resource-packs repository')
 parser.add_argument('--log-error', '-el', action='store_true', help='Prints out errors')
 parser.add_argument('--no-stash', '-ns', action='store_true', help='Does not stash changes')
@@ -66,7 +66,7 @@ if not args.no_stash:
     clrprint("Stashed changes!", clr="green")
 
 # Counts Packs and Compatibilities
-if not args.build or (args.build and (args.only_update_html or args.only_update_jsons or args.format)):
+if not "site" in args.build or (args.build and (args.only_update_html or args.only_update_jsons or args.format)):
     clrprint("Going through Packs...", clr="yellow")
     id_to_name = {}
     for j in pack_list:
@@ -83,7 +83,15 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
             current_category_packs = { "raw": [] }
             # Runs through the packs
             for i in range(len(file["packs"])):
-                # Updates Incomplete Packs
+                # Build if neccessary
+                if "pack" in args.build:
+                    try:
+                        clrprint("Building", file["packs"][i]["pack_id"], "with", file["packs"][i]["build"]["with"], clr="y,b,y,b")
+                        os.chdir(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/')
+                        os.system(f'{file["packs"][i]["build"]["with"]} {file["packs"][i]["build"]["script"]}')
+                    except KeyError:
+                        pass # no need to build
+                    # Updates Incomplete Packs
                 try:
                     if os.listdir(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/files') == []:
                         # Adds the packid to the topic list
@@ -350,7 +358,7 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
                 except KeyError:
                     comps[f"{ways}way"] = [location]
 
-    clrprint("Finished Counting!", clr="green")
+    clrprint("Did a lot of stuff", clr="green")
 
     # HTML formatting
     with open(f"{cdir()}/webUI/index.html.template", "r") as html_file:
@@ -423,7 +431,7 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
     elif not args.only_update_html:
         clrprint("Remember to format the files!", clr="y")
 
-if args.build:
+if "site" in args.build:
     clrprint("Make sure you built the HTML!", clr="y")
     try:
         shutil.rmtree(f"{cdir()}/build")

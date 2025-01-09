@@ -3,10 +3,10 @@ name: Checks
 on:
   push:
     branches:
-      - '**'
+      - "**"
   workflow_dispatch:
 # BOT_TOKEN is what I want to use most of the times,
-# But deploy hates is for no reason, so I use 
+# But deploy hates is for no reason, so I use
 # GITHUB_TOKEN just for the deploy job
 jobs:
   format_repo:
@@ -24,7 +24,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: "3.x"
 
       - name: Create Virtual Environment
         run: python -m venv venv
@@ -33,7 +33,7 @@ jobs:
         run: source venv/bin/activate
 
       - name: Run pre_commit.py
-        run: python pys/pre_commit.py --format --no-stash
+        run: python pys/pre_commit.py --format --no-stash --build "packs"
 
       - name: Commit changes
         run: |
@@ -68,7 +68,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: "3.x"
 
       - name: Create Virtual Environment
         run: python -m venv venv
@@ -77,7 +77,7 @@ jobs:
         run: source venv/bin/activate
 
       - name: Build
-        run: python pys/pre_commit.py --build --no-stash
+        run: python pys/pre_commit.py --build "website" --no-stash
 
       - name: Replace server IP in JavaScript
         run: |
@@ -105,25 +105,3 @@ jobs:
         run: |
           curl -X DELETE -H "Authorization: token ${{ secrets.BOT_TOKEN }}" \
           https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id
-
-  update_server:
-    needs: format_repo
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'skip-update') && contains(github.event.head_commit.message, 'pack')
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Get latest commit title
-        id: get_commit
-        run: |
-          echo "commit_title=$(git log -1 --pretty=%s)" >> $GITHUB_ENV
-
-      - name: Trigger server-backend workflow
-        run: |
-          curl -X POST \
-            -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${{ secrets.BOT_TOKEN }}" \
-            https://api.github.com/repos/BEComTweaks/server-backend/actions/workflows/106751072/dispatches \
-            -d "{\"ref\":\"main\", \"inputs\":{\"title\":\"behaviour-packs: ${{ env.commit_title }}\"}}"
