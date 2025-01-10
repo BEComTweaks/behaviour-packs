@@ -670,6 +670,9 @@ async function fetchPack(jsonData, packName, mcVersion) {
     files.forEach((file, index) => {
       console.log(file);
       console.log(file_content[index]);
+      if (file.startsWith("rp")) {
+		  needsrp = true;
+	  }
       if (file_content[index] === undefined) {
         console.log("nah not today");
         return; // its added already wdym
