@@ -1,0 +1,6 @@
+[
+  "bp/entities/bat.json",
+  "bp/functions/bat_membranes/tick.mcfunction",
+  "bp/functions/tick.json",
+  "bp/loot_tables/entities/bat.json"
+]

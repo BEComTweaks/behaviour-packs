@@ -2,7 +2,7 @@
   "topic": "Drops",
   "packs": [
     {
-      "pack_id": "Bat Membranes",
+      "pack_id": "BatMembranes",
       "pack_name": "Bat Membranes",
       "pack_description": "Makes Bats drop membranes."
     },
