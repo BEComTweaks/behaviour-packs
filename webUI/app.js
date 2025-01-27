@@ -452,7 +452,7 @@ function fetchPack(protocol, jsonData, packName, mcVersion) {
       const a = document.createElement("a");
       a.style.display = "none";
       a.href = url;
-      a.download = `${packName}.mcpack`;
+      a.download = `${packName}.mcaddon`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
