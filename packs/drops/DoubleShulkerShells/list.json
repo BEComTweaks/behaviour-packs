@@ -1,1 +1,9 @@
-["bp/loot_tables/entities/shulker.json"]
+[
+  "BP/loot_tables/entities/shulker.json",
+  "BP/manifest.json",
+  "BP/pack_icon.png",
+  "RP/.gitkeep",
+  "data/.gitkeep",
+  "extensions.json",
+  "settings.json"
+]

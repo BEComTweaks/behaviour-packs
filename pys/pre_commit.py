@@ -10,8 +10,9 @@ if str(os.getcwd()).endswith("system32"):
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 from custom_functions import *
-check("clrprint")
-from clrprint import clrprint
+check("colorama")
+from colorama import *
+init(autoreset=True)
 check("markdown")
 from markdown import markdown
 check("bs4","beautifulsoup4")
@@ -52,25 +53,24 @@ with open(f"{cdir()}/jsons/others/pack_order_list.txt","r") as pol:
 
 parser = argparse.ArgumentParser(description='Run a massive script that updates Packs to-do, Icons to-do, Compatibilities to-do and the HTML')
 parser.add_argument('--format', '-f', action='store_true', help='Include flag to format files')
-parser.add_argument('--only-update-html', '-ouh', action='store_true', help='Only update the HTML')
-parser.add_argument('--only-update-jsons', '-ouj', action='store_true', help='Only update the JSONs')
-parser.add_argument('--build', '-b', help='Builds stuff')
-parser.add_argument('--update-theme', '-ut', action='store_true', help='Pulls the theme used for the website from the resource-packs repository')
-parser.add_argument('--log-error', '-el', action='store_true', help='Prints out errors')
+parser.add_argument('--only-update-html', '-html', action='store_true', help='Only update the HTML')
+parser.add_argument('--only-update-jsons', '-json', action='store_true', help='Only update the JSONs')
+parser.add_argument('--build', '-b', help='Builds stuff based on specification. Can be "pack" and/or "site"')
+parser.add_argument('--update-theme', '-u', action='store_true', help='Pulls the theme used for the website from the resource-packs repository')
 parser.add_argument('--no-stash', '-ns', action='store_true', help='Does not stash changes')
 args = parser.parse_args()
 if args.build == None:
     args.build = ""
 
 if not args.no_stash:
-    clrprint("Stashing changes...", clr="yellow")
-    os.system('git stash --quiet --include-untracked --message "Stashed changes before pre-commit"')
-    os.system('git stash apply --quiet')
-    clrprint("Stashed changes!", clr="green")
+    print(f"{Fore.YELLOW}Stashing changes...")
+    run('git stash --quiet --include-untracked --message "Stashed changes before pre-commit"', capture_output=True)
+    run('git stash apply --quiet', capture_output=True)
+    print(f"{Fore.GREEN}Stashed changes!")
 
 # Counts Packs and Compatibilities
-if not "site" in args.build or (args.build and (args.only_update_html or args.only_update_jsons or args.format)):
-    clrprint("Going through Packs...", clr="yellow")
+if (not "site" in args.build or ("all" in args.build or "pack" in args.build or "all" in args.build)) or (args.build and (args.only_update_html or args.only_update_jsons or args.format)):
+    print(f"{Fore.YELLOW}Going through packs...")
     id_to_name = {}
     for j in cat_list:
         origj = j
@@ -85,11 +85,10 @@ if not "site" in args.build or (args.build and (args.only_update_html or args.on
             # Runs through the packs
             for i in range(len(file["packs"])):
                 # Build if neccessary
-                if "pack" in args.build:
+                if "all" in args.build or "pack" in args.build:
                     try:
-                        clrprint("Building", file["packs"][i]["pack_id"], "with", file["packs"][i]["build"]["with"], clr="y,b,y,b")
-                        os.chdir(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/')
-                        os.system(f'{file["packs"][i]["build"]["with"]} {file["packs"][i]["build"]["script"]}')
+                        # in progress
+                        raise UnimplementedError
                     except KeyError:
                         pass # no need to build
                     # Updates Incomplete Packs
@@ -98,16 +97,14 @@ if not "site" in args.build or (args.build and (args.only_update_html or args.on
                         # Adds the packid to the topic list
                         incomplete_packs[file["topic"]].append(file["packs"][i]["pack_id"])
                         stats[1] += 1
-                        if args.log_error:
-                            clrprint("[packs]", "Incomplete Pack:", file["packs"][i]["pack_id"], clr="r,w,y")
+                        print(f"{Fore.RED}[packs] {Fore.WHITE}Incomplete Pack: {Fore.YELLOW}{file['packs'][i]['pack_id']}")
                     else:
                         # When the packid directory has stuff inside
                         stats[0] += 1
                 except FileNotFoundError:
                     # If the packs don't even exist
                     stats[1] += 1
-                    if args.log_error:
-                        clrprint("[packs]", "Incomplete Pack:", file["packs"][i]["pack_id"], clr="r,w,y")
+                    print(f"{Fore.RED}[packs] {Fore.WHITE}Incomplete Pack: {Fore.YELLOW}{file['packs'][i]['pack_id']}")
 
                 # Updates Incomplete pack_icon.png
                 try:
@@ -126,15 +123,11 @@ if not "site" in args.build or (args.build and (args.only_update_html or args.on
                             pkicstats[0] += 1
                         else:
                             # When pack icon doesn't even exist
-                            incomplete_pkics[file["topic"]].append(file["packs"][i]["pack_id"])
-                            pkicstats[1] += 1
-                            if args.log_error:
-                                clrprint("[packs]", "[icon]", "Incomplete Pack:", file["packs"][i]["pack_id"], clr="r,b,w,y")
+                            raise KeyError # who cares
                     except KeyError:
                             incomplete_pkics[file["topic"]].append(file["packs"][i]["pack_id"])
                             pkicstats[1] += 1
-                            if args.log_error:
-                                clrprint("[packs]", "[icon]", "Incomplete Pack:", file["packs"][i]["pack_id"], clr="r,b,w,y")
+                            print(f"{Fore.RED}[packs] {Fore.LIGHTBLUE_EX}[icon] {Fore.WHITE}Incomplete Pack: {Fore.YELLOW}{file['packs'][i]['pack_id']}")
 
                 # Adds Pack Conflicts
                 conflicts[file["packs"][i]["pack_id"]] = []
@@ -151,6 +144,8 @@ if not "site" in args.build or (args.build and (args.only_update_html or args.on
                     priority[file["packs"][i]["pack_id"]] = file["packs"][i]["priority"]
                 except KeyError:
                     priority[file["packs"][i]["pack_id"]] = 0
+
+                # Build
 
                 # Adds respective HTML
                 confs = ""
@@ -243,11 +238,9 @@ if not "site" in args.build or (args.build and (args.only_update_html or args.on
         # Runs through the packs
         for i in range(len(file["packs"])):
             # Build if neccessary
-            if "pack" in args.build:
+            if "all" in args.build or "pack" in args.build:
                 try:
-                    clrprint("Building", file["packs"][i]["pack_id"], "with", file["packs"][i]["build"]["with"], clr="y,b,y,b")
-                    os.chdir(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/')
-                    os.system(f'{file["packs"][i]["build"]["with"]} {file["packs"][i]["build"]["script"]}')
+                    raise UnimplementedError
                 except KeyError:
                     pass # no need to build
                 # Updates Incomplete Packs
@@ -256,16 +249,14 @@ if not "site" in args.build or (args.build and (args.only_update_html or args.on
                     # Adds the packid to the topic list
                     incomplete_packs[file["topic"]].append(file["packs"][i]["pack_id"])
                     stats[1] += 1
-                    if args.log_error:
-                        clrprint("[packs]", "Incomplete Pack:", file["packs"][i]["pack_id"], clr="r,w,y")
+                    print(f"{Fore.RED}[packs] {Fore.WHITE}Incomplete Pack: {Fore.YELLOW}{file['packs'][i]['pack_id']}")
                 else:
                     # When the packid directory has stuff inside
                     stats[0] += 1
             except FileNotFoundError:
                 # If the packs don't even exist
                 stats[1] += 1
-                if args.log_error:
-                    clrprint("[packs]", "Incomplete Pack:", file["packs"][i]["pack_id"], clr="r,w,y")
+                print(f"{Fore.RED}[packs] {Fore.WHITE}Incomplete Pack: {Fore.YELLOW}{file['packs'][i]['pack_id']}")
 
             # Updates Incomplete pack_icon.png
             try:
@@ -286,13 +277,11 @@ if not "site" in args.build or (args.build and (args.only_update_html or args.on
                         # When pack icon doesn't even exist
                         incomplete_pkics[file["topic"]].append(file["packs"][i]["pack_id"])
                         pkicstats[1] += 1
-                        if args.log_error:
-                            clrprint("[packs]", "[icon]", "Incomplete Pack:", file["packs"][i]["pack_id"], clr="r,b,w,y")
+                        print(f"{Fore.RED}[packs] {Fore.LIGHTBLUE_EX}[icon] {Fore.WHITE}Incomplete Pack: {Fore.YELLOW}{file['packs'][i]['pack_id']}")
                 except KeyError:
                         incomplete_pkics[file["topic"]].append(file["packs"][i]["pack_id"])
                         pkicstats[1] += 1
-                        if args.log_error:
-                            clrprint("[packs]", "[icon]", "Incomplete Pack:", file["packs"][i]["pack_id"], clr="r,b,w,y")
+                        print(f"{Fore.RED}[packs] {Fore.LIGHTBLUE_EX}[icon] {Fore.WHITE}Incomplete Pack: {Fore.YELLOW}{file['packs'][i]['pack_id']}")
 
             # Adds Pack Conflicts
             conflicts[file["packs"][i]["pack_id"]] = []
@@ -385,15 +374,14 @@ if not "site" in args.build or (args.build and (args.only_update_html or args.on
                 dump_json(f"{cdir()}/packs/{location}/list.json", listjson)
                 comp_stats[0] += 1
             except FileNotFoundError:
-                if args.log_error:
-                    clrprint("[compatibilities]", "Incomplete Compatibility:", location, clr="r,w,y")
+                print(f"{Fore.RED}[compatibilities] {Fore.WHITE}Incomplete Compatibility: {Fore.YELLOW}{location}")
                 comp_stats[1] += 1
                 try:
                     comps[f"{ways}way"].append(location)
                 except KeyError:
                     comps[f"{ways}way"] = [location]
 
-    clrprint("Did a lot of stuff", clr="green")
+    print(f"{Fore.GREEN}Done!")
 
     # HTML formatting
     with open(f"{cdir()}/webUI/index.html.template", "r") as html_file:
@@ -405,7 +393,7 @@ if not "site" in args.build or (args.build and (args.only_update_html or args.on
     html = soup.prettify()
     html = html.replace("<br/>", "<br>")
     # Update files
-    clrprint("Updating files...", clr="yellow")
+    print(f"{Fore.YELLOW}Updating files...")
     if not args.only_update_html:
         dump_json(f"{cdir()}/jsons/others/incomplete_packs.json", incomplete_packs)
         dump_json(f"{cdir()}/jsons/others/incomplete_compatibilities.json", comps)
@@ -441,33 +429,35 @@ if not "site" in args.build or (args.build and (args.only_update_html or args.on
         else:
             # When the regex fails if I change the link
             raise IndexError("Regex Failed")
+    # Used only for CTs and BPs because RP is main
     try:
       if args.update_theme:
-        clrprint("Updating theme.css", clr="yellow")
+        print(f"{Fore.YELLOW}Updating theme.css...")
         check("requests")
         import requests
         response = requests.get("https://becomtweaks.github.io/resource-packs/theme.css")
         if response.status_code == 200:
           with open(f"{cdir()}/webUI/theme.css","w") as theme:
             theme.write(response.text)
-          clrprint("Updated theme.css!", clr="green")
+          print(f"{Fore.GREEN}Updated theme.css!")
     except requests.exceptions.ConnectionError:
-      clrprint("Get a working internet connection before rerunning with `-ut`/`--update-theme`", clr="red")
-    clrprint("Updated a lot of files!", clr="green")
+      print(f"{Fore.RED}Get a working internet connection before rerunning with `-ut`/`--update-theme`")
+    print(f"{Fore.GREEN}Updated files!")
 
     if args.format:
-        clrprint("Making files Prettier", clr="yellow")
-        os.system(f"cd {cdir()}")
+        print(f"{Fore.YELLOW}Making files Prettier\u2122")
+        run(f"cd {cdir()}")
         try:
-            os.system('npx prettier --write "**/*.{js,ts,css,json}" --log-level silent')
+            run('npx prettier --write "**/*.{js,ts,css,json}"')
         except KeyboardInterrupt:
-            clrprint("You are a bit impatient...", clr="red")
-        clrprint("Files are Prettier!", clr="green")
+            print(f"{Fore.RED}You are a bit impatient...")
+        print(f"{Fore.GREEN}Files are Prettier!")
     elif not args.only_update_html:
-        clrprint("Remember to format the files!", clr="y")
+        print(f"{Fore.YELLOW}Remember to format the files!")
 
-if "site" in args.build:
-    clrprint("Make sure you built the HTML!", clr="y")
+if "site" in args.build or "all" in args.build:
+    if not "all" in args.build and not "site" in args.build:
+        print(f"{Fore.YELLOW}Make sure you built the HTML!")
     try:
         shutil.rmtree(f"{cdir()}/build")
     except FileNotFoundError:
@@ -479,7 +469,7 @@ if "site" in args.build:
             content = file.read()
         with open(f"{cdir()}/build/index.html", "w") as file:
             file.write(content.replace("../", "https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/"))
-        clrprint("Build success!", clr="g")
+        print(f"{Fore.GREEN}Website build success!")
     except Exception as e:
-        clrprint("Build failed!", clr="r")
-        clrprint(e, clr="y")
+        print(f"{Fore.RED}Website build failed!")
+        print(e)

@@ -1,7 +1,7 @@
-import os, time, traceback, sys
-from subprocess import run
+import os, traceback, sys
+from subprocess import run as sp_run
 from importlib import import_module
-
+from typing import Union
 
 # If I need a module that isn't installed
 def check(module, module_name=""):
@@ -14,8 +14,9 @@ def check(module, module_name=""):
         else:
             run([sys.executable, "-m", "pip", "install", module_name, "--quiet"])
 
-check("clrprint")
-from clrprint import clrprint
+check("colorama")
+from colorama import *
+init(autoreset=True)
 
 check("ujson")
 from ujson import *
@@ -49,8 +50,8 @@ def load_json(path):
         try:
             return loads(file.read())
         except JSONDecodeError:
-            clrprint(f"\n{path} got a JSON Decode Error", clr="red")
-            clrprint(traceback.format_exc(), clr="yellow")
+            print(f"{Fore.RED}\n{path} got a JSON Decode Error")
+            print(f"{Fore.RED}{traceback.format_exc()}")
             exit()
 
 
@@ -62,39 +63,20 @@ def dump_json(path, dictionary):
         file.write(the_json)
 
 
-# Uses a progressive searching algorithm to match an input
-def prog_search(string: str, list_search: list):
-    # Makes both lower to make life easier
-    string = string.lower()
-    temp_list = []
-    for i in list_search:
-        temp_list.append(i.lower())
-    list_search = temp_list
-    i, found, found_at = 0, 0, 0
-    for i in range(1, len(string)):
-        found = 0
-        found_at = 0
-        for s in range(0, len(list_search)):
-            try:
-                if string[:i] in list_search[s]:
-                    # First n letters of item in list_search
-                    # matches with any specific phrase in the
-                    # string
-                    found += 1
-                    if found == 1:
-                        found_at = s
-                # When more than two have been found_at
-                # Exists to prevent searching for too
-                # long
-                if found == 2:
-                    break
-            # Some items in the list are too small,
-            # so fail safe
-            except IndexError:
-                pass
-        # There is something that matches
-        if found == 1:
-            return found_at
-    # There isn't anything that matches
-    if found != 1:
-        return None
+def run(cmd: Union[str, list]):
+    if isinstance(cmd, list):
+        print(f"{Fore.WHITE}> {Fore.LIGHTYELLOW_EX}{' '.join(cmd)}")
+    else:
+        print(f"{Fore.WHITE}> {Fore.LIGHTYELLOW_EX}{cmd}")
+    output = sp_run(cmd, shell=True, capture_output=True, text=True)
+    if output.returncode == 0:
+        for line in output.stdout.split("\n"):
+            print(f"\t{line}")
+        return output.stdout
+    else:
+        for line in output.stderr.split("\n"):
+            print(f"\t{Fore.LIGHTRED_EX}{line}")
+        exit(1)
+        
+class UnimplementedError(Exception):
+    print("In progress...")

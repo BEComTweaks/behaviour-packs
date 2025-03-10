@@ -9,7 +9,8 @@
     {
       "pack_id": "DoubleShulkerShells",
       "pack_name": "Double Shulker Shells",
-      "pack_description": "Makes Shulkers drop two shells instead of one."
+      "pack_description": "Makes Shulkers drop two shells instead of one.",
+      "regolith": true
     },
     {
       "pack_id": "DragonDrops",

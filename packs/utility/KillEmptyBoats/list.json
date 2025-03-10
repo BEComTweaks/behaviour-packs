@@ -1,1 +1,3 @@
-["bp/functions/kill_empty_boats.mcfunction"]
+[
+  "bp/functions/kill_empty_boats.mcfunction"
+]
