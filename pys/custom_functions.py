@@ -4,20 +4,25 @@ from importlib import import_module
 from typing import Union
 
 
+def sendToCF(main_args): #send vars from main to custom_functions
+    global args
+    args = main_args
+
 def run(cmd: Union[str, list]):
     if isinstance(cmd, list):
         print(f"{Fore.WHITE}> {Fore.LIGHTYELLOW_EX}{' '.join(cmd)}")
     else:
         print(f"{Fore.WHITE}> {Fore.LIGHTYELLOW_EX}{cmd}")
     output = sp_run(cmd, shell=True, capture_output=True, text=True)
-    if output.returncode == 0:
-        for line in output.stdout.split("\n"):
-            print(f"  {line}")
-        return output.stdout
-    else:
-        for line in output.stderr.split("\n"):
-            print(f"  {Fore.LIGHTRED_EX}{line}")
-        exit(1)
+    if not args.quiet:
+        if output.returncode == 0:
+            for line in output.stdout.split("\n"):
+                print(f"  {line}")
+            return output.stdout
+        else:
+            for line in output.stderr.split("\n"):
+                print(f"  {Fore.LIGHTRED_EX}{line}")
+            exit(1)
 
 # If I need a module that isn't installed
 def check(module, module_name=""):

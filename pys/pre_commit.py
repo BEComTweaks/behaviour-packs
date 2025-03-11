@@ -58,7 +58,10 @@ parser.add_argument('--only-update-jsons', '-json', action='store_true', help='O
 parser.add_argument('--build', '-b', help='Builds stuff based on specification. Can be "pack" and/or "site"')
 parser.add_argument('--update-theme', '-u', action='store_true', help='Pulls the theme used for the website from the resource-packs repository')
 parser.add_argument('--no-stash', '-ns', action='store_true', help='Does not stash changes')
+parser.add_argument('--quiet', '-q', action='store_true', help='Quieten outputs of run statements (the commands will still be shown)')
 args = parser.parse_args()
+
+sendToCF(args)
 
 if not args.no_stash:
     print(f"{Fore.YELLOW}Stashing changes...")
@@ -431,7 +434,7 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
 
     if args.format:
         print(f"{Fore.YELLOW}Making files Prettier\u2122")
-        run(f"cd {cdir()}")
+        os.chdir(cdir())
         try:
             run('npx prettier --write "**/*.{js,ts,css,json}"')
         except KeyboardInterrupt:
