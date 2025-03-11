@@ -59,17 +59,15 @@ parser.add_argument('--build', '-b', help='Builds stuff based on specification. 
 parser.add_argument('--update-theme', '-u', action='store_true', help='Pulls the theme used for the website from the resource-packs repository')
 parser.add_argument('--no-stash', '-ns', action='store_true', help='Does not stash changes')
 args = parser.parse_args()
-if args.build == None:
-    args.build = ""
 
 if not args.no_stash:
     print(f"{Fore.YELLOW}Stashing changes...")
-    run('git stash --quiet --include-untracked --message "Stashed changes before pre-commit"', capture_output=True)
-    run('git stash apply --quiet', capture_output=True)
+    run('git stash --include-untracked --message "Stashed changes before pre-commit"')
+    run('git stash apply')
     print(f"{Fore.GREEN}Stashed changes!")
 
 # Counts Packs and Compatibilities
-if (not "site" in args.build or ("all" in args.build or "pack" in args.build or "all" in args.build)) or (args.build and (args.only_update_html or args.only_update_jsons or args.format)):
+if not args.build or (args.build and (args.only_update_html or args.only_update_jsons or args.format)):
     print(f"{Fore.YELLOW}Going through packs...")
     id_to_name = {}
     for j in cat_list:
@@ -84,14 +82,7 @@ if (not "site" in args.build or ("all" in args.build or "pack" in args.build or 
             current_category_packs = { "raw": [] }
             # Runs through the packs
             for i in range(len(file["packs"])):
-                # Build if neccessary
-                if "all" in args.build or "pack" in args.build:
-                    try:
-                        # in progress
-                        raise UnimplementedError
-                    except KeyError:
-                        pass # no need to build
-                    # Updates Incomplete Packs
+                # Updates Incomplete Packs
                 try:
                     if os.listdir(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/files') == []:
                         # Adds the packid to the topic list
@@ -237,13 +228,7 @@ if (not "site" in args.build or ("all" in args.build or "pack" in args.build or 
         current_category_packs = { "raw": [] }
         # Runs through the packs
         for i in range(len(file["packs"])):
-            # Build if neccessary
-            if "all" in args.build or "pack" in args.build:
-                try:
-                    raise UnimplementedError
-                except KeyError:
-                    pass # no need to build
-                # Updates Incomplete Packs
+            # Updates Incomplete Packs
             try:
                 if os.listdir(f'{cdir()}/packs/{file["topic"].lower()}/{file["packs"][i]["pack_id"]}/files') == []:
                     # Adds the packid to the topic list
@@ -455,8 +440,8 @@ if (not "site" in args.build or ("all" in args.build or "pack" in args.build or 
     elif not args.only_update_html:
         print(f"{Fore.YELLOW}Remember to format the files!")
 
-if "site" in args.build or "all" in args.build:
-    if not "all" in args.build and not "site" in args.build:
+if args.build:
+    if not (args.only_update_html or args.only_update_jsons or args.format):
         print(f"{Fore.YELLOW}Make sure you built the HTML!")
     try:
         shutil.rmtree(f"{cdir()}/build")
