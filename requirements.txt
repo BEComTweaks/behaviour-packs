@@ -3,3 +3,4 @@ ujson
 markdown
 lzstring
 beautifulsoup4
+requests

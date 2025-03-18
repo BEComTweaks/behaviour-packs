@@ -1,5 +1,7 @@
 {
   "topic": "Drops",
+  "subcategory_of": "Fun",
+  "location": "fun/drops",
   "packs": [
     {
       "pack_id": "BatMembranes",

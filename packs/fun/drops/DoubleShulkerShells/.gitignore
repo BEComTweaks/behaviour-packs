@@ -1,0 +1,6 @@
+# ignore main built files
+/files
+# ignore incomplete build files
+/build
+# ignore cache
+/.regolith

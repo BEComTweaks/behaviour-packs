@@ -1,4 +1,4 @@
 anti_grief.json
-drops.json
 fun.json
+    drops.json
 utility.json

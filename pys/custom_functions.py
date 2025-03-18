@@ -1,4 +1,4 @@
-import os, traceback, sys
+import os, traceback, sys, stat
 from subprocess import run as sp_run
 from importlib import import_module
 from typing import Union
@@ -8,18 +8,34 @@ def sendToCF(main_args): #send vars from main to custom_functions
     global args
     args = main_args
 
-def run(cmd: Union[str, list]):
+def run(cmd: Union[str, list], quiet=False):
     if isinstance(cmd, list):
-        print(f"{Fore.WHITE}> {Fore.LIGHTYELLOW_EX}{' '.join(cmd)}")
+        print(f"{Fore.WHITE}> {Fore.LIGHTMAGENTA_EX}{' '.join(cmd)}")
     else:
-        print(f"{Fore.WHITE}> {Fore.LIGHTYELLOW_EX}{cmd}")
+        print(f"{Fore.WHITE}> {Fore.LIGHTMAGENTA_EX}{cmd}")
     output = sp_run(cmd, shell=True, capture_output=True, text=True)
-    if not args.quiet:
+    try:
+        if not args.quiet:
+            if output.returncode == 0:
+                if not quiet:
+                    for line in output.stdout.split("\n"):
+                        print(f"  {line}")
+                    return output.stdout
+            else:
+                for line in output.stdout.split("\n"):
+                    print(f"  {Fore.RED}{line}")
+                for line in output.stderr.split("\n"):
+                    print(f"  {Fore.LIGHTRED_EX}{line}")
+                exit(1)
+    except UnboundLocalError or NameError:
         if output.returncode == 0:
-            for line in output.stdout.split("\n"):
-                print(f"  {line}")
-            return output.stdout
+            if not quiet:
+                for line in output.stdout.split("\n"):
+                    print(f"  {line}")
+                return output.stdout
         else:
+            for line in output.stdout.split("\n"):
+                print(f"  {Fore.RED}{line}")
             for line in output.stderr.split("\n"):
                 print(f"  {Fore.LIGHTRED_EX}{line}")
             exit(1)
@@ -82,3 +98,8 @@ def dump_json(path, dictionary):
     the_json = the_json.replace(r"\/","/")
     with open(path, "w") as file:
         file.write(the_json)
+
+def remove_readonly(func, path, _):
+    print(f"---> {Fore.LIGHTRED_EX}Removing readonly attribute from {os.path.relpath(path, cdir())}")
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
