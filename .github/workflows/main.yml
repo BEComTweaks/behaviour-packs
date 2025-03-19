@@ -38,7 +38,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run pre_commit.py
-        run: python pys/pre_commit.py --format --no-stash --build "packs"
+        run: python pys/pre_commit.py --format --no-stash
 
       - name: Commit changes
         run: |
