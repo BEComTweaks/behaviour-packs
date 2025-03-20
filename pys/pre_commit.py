@@ -70,7 +70,7 @@ if not args.no_stash:
     print(f"{Fore.GREEN}Stashed changes!")
 
 # Counts Packs and Compatibilities
-if not args.build or (args.build and (args.only_update_html or args.only_update_jsons or args.format)):
+if "site" not in args.build or ("site" in args.build and (args.only_update_html or args.only_update_jsons or args.format)):
     print(f"{Fore.YELLOW}Going through packs...")
     id_to_name = {}
     for j in cat_list:
@@ -520,7 +520,7 @@ if not args.build or (args.build and (args.only_update_html or args.only_update_
     elif not args.only_update_html:
         print(f"{Fore.YELLOW}Remember to format the files!")
 
-if args.build:
+if "site" in args.build:
     if not (args.only_update_html or args.only_update_jsons or args.format):
         print(f"{Fore.LIGHTBLUE_EX} Make sure you built the HTML!")
     try:
