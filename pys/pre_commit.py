@@ -102,7 +102,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                     if os.path.exists(f'{category_loc}/{file["packs"][i]["pack_id"]}/build'):
                         print(f"--> {Fore.YELLOW}Purging previous incomplete build...")
                         shutil.rmtree(f'{category_loc}/{file["packs"][i]["pack_id"]}/build', onerror=remove_readonly)
-                    run("regolith run build", quiet=True)
+                    run("regolith run build --experiments size_time_check", quiet=True)
                     # Check for .gitkeep and fix folder naming
                     if os.path.exists("build"):
                         print(f"--> {Fore.YELLOW}Fixing build folder...")
@@ -287,7 +287,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                 if os.path.exists(f'{category_loc}/{file["packs"][i]["pack_id"]}/build'):
                     print(f"--> {Fore.YELLOW}Purging previous incomplete build...")
                     shutil.rmtree(f'{category_loc}/{file["packs"][i]["pack_id"]}/build', onerror=remove_readonly)
-                run("regolith run build", quiet=True)
+                run("regolith run build --experiments size_time_check", quiet=True)
                 # Check for .gitkeep and fix folder naming
                 if os.path.exists("build"):
                     print(f"--> {Fore.YELLOW}Fixing build folder...")
