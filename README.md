@@ -22,8 +22,13 @@ How to clone:
 
 ```bash
 git clone https://github.com/BEComTweaks/behaviour-packs/
-cd behaviour-packs/pys
-echo 0 | python3 folder_creator.py
+cd behaviour-packs
+# Optional: Start a venv
+python -m venv venv
+# uv is also supported
+uv venv venv
+# start venv
+venv/scripts/activate
 ```
 
 <sub>echo is to instantly start the script with no printing.</sub>

@@ -10,14 +10,9 @@ if str(os.getcwd()).endswith("system32"):
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 from custom_functions import *
-check("colorama")
-from colorama import *
-init(autoreset=True)
-check("markdown")
+from custom_functions import console
 from markdown import markdown
-check("bs4","beautifulsoup4")
 from bs4 import BeautifulSoup
-check("lzstring")
 from lzstring import LZString
 
 category_start = '<div class="category"><div oreui-type="button" oreui-color="dark" class="category-label" onclick="OreUI.toggleActive(this);toggleCategory(this);">topic_name</div><button class="category-label-selectall" onclick="selectAll(this)" data-allpacks="<all_packs>" data-category="topic_name"><img src="images/select-all-button/chiseled_bookshelf_empty.png" class="category-label-selectall-img"><div class="category-label-selectall-hovertext">Select All</div></button><div class="category-controlled" oreui-color="dark" oreui-type="general"><div class="tweaks">'
@@ -55,23 +50,32 @@ parser = argparse.ArgumentParser(description='Run a massive script that updates 
 parser.add_argument('--format', '-f', action='store_true', help='Include flag to format files')
 parser.add_argument('--only-update-html', '-html', action='store_true', help='Only update the HTML')
 parser.add_argument('--only-update-jsons', '-json', action='store_true', help='Only update the JSONs')
-parser.add_argument('--build', '-b', help='Builds stuff based on specification. Can be "pack" and/or "site"')
+parser.add_argument('--build', '-b', help='Builds stuff based on specification. Can be "pack", "site", "both" or "server"')
 parser.add_argument('--update-theme', '-u', action='store_true', help='Pulls the theme used for the website from the resource-packs repository')
 parser.add_argument('--no-stash', '-ns', action='store_true', help='Does not stash changes')
 parser.add_argument('--quiet', '-q', action='store_true', help='Quieten outputs of run statements (the commands will still be shown)')
+parser.add_argument('--dev', '-d', action='store_true', help='Show time and lines of each print statement')
 args = parser.parse_args()
+
+if args.build == "both":
+    args.build = "packsite"
+elif args.build == "server":
+    args.build = "packsite server"
+
+if args.dev:
+    print = console.log
 
 sendToCF(args)
 
 if not args.no_stash:
-    print(f"{Fore.YELLOW}Stashing changes...")
-    run('git stash --include-untracked --message "Stashed changes before pre-commit"')
-    run('git stash apply')
-    print(f"{Fore.GREEN}Stashed changes!")
+    with console.status("[bold yellow]Stashing changes..."):
+        run('git stash --include-untracked --message "Stashed changes before pre-commit"', quiet=True)
+        run('git stash apply', quiet=True)
+        print(f"[green]Stashed changes!")
 
 # Counts Packs and Compatibilities
 if "site" not in args.build or ("site" in args.build and (args.only_update_html or args.only_update_jsons or args.format)):
-    print(f"{Fore.YELLOW}Going through packs...")
+    print(f"[yellow]Going through packs...")
     id_to_name = {}
     for j in cat_list:
         origj = j
@@ -91,21 +95,21 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
             for i in range(len(file["packs"])):
                 # Build first
                 if "regolith" in file["packs"][i] and "pack" in args.build:
-                    print(f"-> {Fore.CYAN}Building {file['packs'][i]['pack_id']}")
+                    print(f"-> [cyan]Building {file['packs'][i]['pack_id']}")
                     os.chdir(f'{category_loc}/{file["packs"][i]["pack_id"]}')
                     # install filters
                     run("regolith install-all", quiet=True)
                     # check for previous builds
                     if os.path.exists(f'{category_loc}/{file["packs"][i]["pack_id"]}/files'):
-                        print(f"--> {Fore.YELLOW}Purging previous build...")
+                        print(f"--> [yellow]Purging previous build...")
                         shutil.rmtree(f'{category_loc}/{file["packs"][i]["pack_id"]}/files', onerror=remove_readonly)
                     if os.path.exists(f'{category_loc}/{file["packs"][i]["pack_id"]}/build'):
-                        print(f"--> {Fore.YELLOW}Purging previous incomplete build...")
+                        print(f"--> [yellow]Purging previous incomplete build...")
                         shutil.rmtree(f'{category_loc}/{file["packs"][i]["pack_id"]}/build', onerror=remove_readonly)
-                    run("regolith run build --experiments size_time_check", quiet=True)
+                    run(f"regolith run build {"--experiments size_time_check" if "server" in args.build else ""}", quiet=True)
                     # Check for .gitkeep and fix folder naming
                     if os.path.exists("build"):
-                        print(f"--> {Fore.YELLOW}Fixing build folder...")
+                        print(f"--> [yellow]Fixing build folder...")
                         build_dir = f"{category_loc}/{file["packs"][i]["pack_id"]}/build"
                         for folder in os.listdir("build"):
                             if folder.endswith("_bp"):
@@ -122,7 +126,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                                 else:
                                     os.rename(f"{build_dir}/{folder}", f"{build_dir}/rp")
                             else:
-                                print(f"{Fore.RED}Unknown folder found in {os.path.relpath(os.getcwd(), cdir())}/build/: {Fore.YELLOW}{folder}")
+                                print(f"[red]Unknown folder found in {os.path.relpath(os.getcwd(), cdir())}/build/: [yellow]{folder}")
                         # now move to proper folder
                     os.chdir(cdir())
                 # Updates Incomplete Packs
@@ -131,14 +135,14 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                         # Adds the packid to the topic list
                         incomplete_packs[file["topic"]].append(file["packs"][i]["pack_id"])
                         stats[1] += 1
-                        print(f"{Fore.RED}Incomplete Pack: {Fore.YELLOW}{file['packs'][i]['pack_id']}")
+                        print(f"[red]Incomplete Pack: [yellow]{file['packs'][i]['pack_id']}")
                     else:
                         # When the packid directory has stuff inside
                         stats[0] += 1
                 except FileNotFoundError:
                     # If the packs don't even exist
                     stats[1] += 1
-                    print(f"{Fore.RED}{Fore.WHITE}Incomplete Pack: {Fore.YELLOW}{file['packs'][i]['pack_id']}")
+                    print(f"[red]Incomplete Pack: [yellow]{file['packs'][i]['pack_id']}")
 
                 # Updates Incomplete pack_icon.png
                 try:
@@ -161,7 +165,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                     except KeyError:
                             incomplete_pkics[file["topic"]].append(file["packs"][i]["pack_id"])
                             pkicstats[1] += 1
-                            print(f"{Fore.RED}Incomplete Pack Icon: {Fore.YELLOW}{file['packs'][i]['pack_id']}")
+                            print(f"[red]Incomplete Pack Icon: [yellow]{file['packs'][i]['pack_id']}")
 
                 # Adds Pack Conflicts
                 conflicts[file["packs"][i]["pack_id"]] = []
@@ -178,8 +182,6 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                     priority[file["packs"][i]["pack_id"]] = file["packs"][i]["priority"]
                 except KeyError:
                     priority[file["packs"][i]["pack_id"]] = 0
-
-                # Build
 
                 # Adds respective HTML
                 confs = ""
@@ -222,17 +224,6 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                         pass
                     html += to_add_pack
                     current_category_packs["raw"].append(file["packs"][i]["pack_id"])
-                    if not args.only_update_html:
-                        listjson = []
-                        for root, _, files in os.walk(f"{category_loc}/{file["packs"][i]["pack_id"]}"):
-                            for lsfile in files:
-                                filepath = os.path.relpath(os.path.join(root, lsfile),f"{category_loc}/{file["packs"][i]["pack_id"]}")
-                                if len(filepath.split(os.path.sep)) == 1:
-                                    continue
-                                else:
-                                    listjson.append("/".join(filepath.split(os.path.sep)[1:]))
-                                listjson.sort()
-                        dump_json(f"{category_loc}/{file["packs"][i]["pack_id"]}/list.json", listjson)
                     id_to_name[file["packs"][i]["pack_id"]] = file["packs"][i]["pack_name"]
         html = html.replace("<all_packs>", LZString.compressToEncodedURIComponent(dumps(current_category_packs)))
         # handle subcategories
@@ -276,21 +267,21 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
         # Runs through the packs
         for i in range(len(file["packs"])):
             if "regolith" in file["packs"][i] and "pack" in args.build:
-                print(f"-> {Fore.CYAN}Building {file['packs'][i]['pack_id']}")
+                print(f"-> [cyan]Building {file['packs'][i]['pack_id']}")
                 os.chdir(f'{category_loc}/{file["packs"][i]["pack_id"]}')
                 # install filters
                 run("regolith install-all", quiet=True)
                 # check for previous builds
                 if os.path.exists(f'{category_loc}/{file["packs"][i]["pack_id"]}/files'):
-                    print(f"--> {Fore.YELLOW}Purging previous build...")
+                    print(f"--> [yellow]Purging previous build...")
                     shutil.rmtree(f'{category_loc}/{file["packs"][i]["pack_id"]}/files', onerror=remove_readonly)
                 if os.path.exists(f'{category_loc}/{file["packs"][i]["pack_id"]}/build'):
-                    print(f"--> {Fore.YELLOW}Purging previous incomplete build...")
+                    print(f"--> [yellow]Purging previous incomplete build...")
                     shutil.rmtree(f'{category_loc}/{file["packs"][i]["pack_id"]}/build', onerror=remove_readonly)
-                run("regolith run build --experiments size_time_check", quiet=True)
+                run(f"regolith run build {"--experiments size_time_check" if "server" in args.build else ""}", quiet=True)
                 # Check for .gitkeep and fix folder naming
                 if os.path.exists("build"):
-                    print(f"--> {Fore.YELLOW}Fixing build folder...")
+                    print(f"--> [yellow]Fixing build folder...")
                     build_dir = f"{category_loc}/{file["packs"][i]["pack_id"]}/build"
                     for folder in os.listdir("build"):
                         if folder.endswith("_bp"):
@@ -307,7 +298,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                             else:
                                 os.rename(f"{build_dir}/{folder}", f"{build_dir}/rp")
                         else:
-                            print(f"{Fore.RED}Unknown folder found in {os.path.relpath(os.getcwd(), cdir())}/build/: {Fore.YELLOW}{folder}")
+                            print(f"[red]Unknown folder found in {os.path.relpath(os.getcwd(), cdir())}/build/: [yellow]{folder}")
                     # now move to proper folder
                 os.chdir(cdir())
             # Updates Incomplete Packs
@@ -316,14 +307,14 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                     # Adds the packid to the topic list
                     incomplete_packs[file["topic"]].append(file["packs"][i]["pack_id"])
                     stats[1] += 1
-                    print(f"{Fore.RED}Incomplete Pack: {Fore.YELLOW}{file['packs'][i]['pack_id']}")
+                    print(f"[red]Incomplete Pack: [yellow]{file['packs'][i]['pack_id']}")
                 else:
                     # When the packid directory has stuff inside
                     stats[0] += 1
             except FileNotFoundError:
                 # If the packs don't even exist
                 stats[1] += 1
-                print(f"{Fore.RED}Incomplete Pack: {Fore.YELLOW}{file['packs'][i]['pack_id']}")
+                print(f"[red]Incomplete Pack: [yellow]{file['packs'][i]['pack_id']}")
 
             # Updates Incomplete pack_icon.png
             try:
@@ -346,7 +337,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                 except KeyError:
                         incomplete_pkics[file["topic"]].append(file["packs"][i]["pack_id"])
                         pkicstats[1] += 1
-                        print(f"{Fore.RED}Incomplete Pack Icon: {Fore.YELLOW}{file['packs'][i]['pack_id']}")
+                        print(f"[red]Incomplete Pack Icon: [yellow]{file['packs'][i]['pack_id']}")
 
             # Adds Pack Conflicts
             conflicts[file["packs"][i]["pack_id"]] = []
@@ -405,17 +396,6 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                     pass
                 pack_html += to_add_pack
                 current_category_packs["raw"].append(file["packs"][i]["pack_id"])
-                if not args.only_update_html:
-                    listjson = []
-                    for root, _, files in os.walk(f"{category_loc}/{file["packs"][i]["pack_id"]}"):
-                        for lsfile in files:
-                            filepath = os.path.relpath(os.path.join(root, lsfile),f"{category_loc}/{file["packs"][i]["pack_id"]}")
-                            if len(filepath.split(os.path.sep)) == 1:
-                                continue
-                            else:
-                                listjson.append("/".join(filepath.split(os.path.sep)[1:]))
-                            listjson.sort()
-                    dump_json(f"{category_loc}/{file["packs"][i]["pack_id"]}/list.json", listjson)
                 id_to_name[file["packs"][i]["pack_id"]] = file["packs"][i]["pack_name"]
         pack_html += category_end
         html = html.replace(f'<div class="subcat{j}"></div>',pack_html)
@@ -425,28 +405,17 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
     for ways in range(compatibilities["maxway"],1,-1):
         for location in compatibilities[f"{ways}way"]["locations"]:
             listjson = []
-            try:
-                for root, _, files in os.walk(f"{cdir()}/packs/{location}/files"):
-                    for lsfile in files:
-                        filepath = os.path.relpath(os.path.join(root, lsfile),f"{cdir()}/packs/{location}")
-                        if len(filepath.split(os.path.sep)) == 1:
-                            continue
-                        else:
-                            listjson.append("/".join(filepath.split(os.path.sep)[1:]))
-                        listjson.sort()
-                if len(listjson) == 0:
-                    raise FileNotFoundError
-                dump_json(f"{cdir()}/packs/{location}/list.json", listjson)
+            if os.path.exists(f"{cdir()}/packs/{location}"):
                 comp_stats[0] += 1
-            except FileNotFoundError:
-                print(f"{Fore.RED}Incomplete Compatibility: {Fore.YELLOW}{location}")
+            else:
+                print(f"[red]Incomplete Compatibility: [yellow]{location}")
                 comp_stats[1] += 1
                 try:
                     comps[f"{ways}way"].append(location)
                 except KeyError:
                     comps[f"{ways}way"] = [location]
 
-    print(f"{Fore.GREEN}Done!")
+    print(f"[green]Done!")
 
     # HTML formatting
     with open(f"{cdir()}/webUI/index.html.template", "r") as html_file:
@@ -458,7 +427,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
     html = soup.prettify()
     html = html.replace("<br/>", "<br>")
     # Update files
-    print(f"{Fore.YELLOW}Updating files...")
+    print(f"[yellow]Updating files...")
     if not args.only_update_html:
         dump_json(f"{cdir()}/jsons/others/incomplete_packs.json", incomplete_packs)
         dump_json(f"{cdir()}/jsons/others/incomplete_compatibilities.json", comps)
@@ -497,32 +466,31 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
     # Used only for CTs and BPs because RP is main
     try:
       if args.update_theme:
-        print(f"{Fore.YELLOW}Updating theme.css...")
-        check("requests")
+        print(f"[yellow]Updating theme.css...")
         import requests
         response = requests.get("https://becomtweaks.github.io/resource-packs/theme.css")
         if response.status_code == 200:
           with open(f"{cdir()}/webUI/theme.css","w") as theme:
             theme.write(response.text)
-          print(f"{Fore.GREEN}Updated theme.css!")
+          print(f"[green]Updated theme.css!")
     except requests.exceptions.ConnectionError:
-      print(f"{Fore.RED}Get a working internet connection before rerunning with `-ut`/`--update-theme`")
-    print(f"{Fore.YELLOW}Updated files!")
+      print(f"[red]Get a working internet connection before rerunning with `-ut`/`--update-theme`")
+    print(f"[yellow]Updated files!")
 
     if args.format:
-        print(f"{Fore.YELLOW} Making files Prettier\u2122")
+        print(f"[yellow]Making files Prettier\u2122")
         os.chdir(cdir())
         try:
             run('npx prettier --write "**/*.{js,ts,css,json}"', quiet=True)
         except KeyboardInterrupt:
-            print(f"---> {Fore.RED}You are a bit impatient...")
-        print(f"{Fore.GREEN}Files are Prettier!")
+            print(f"---> [red]You are a bit impatient...")
+        print(f"[green]Files are Prettier!")
     elif not args.only_update_html:
-        print(f"{Fore.YELLOW}Remember to format the files!")
+        print(f"[yellow]Remember to format the files!")
 
 if "site" in args.build:
     if not (args.only_update_html or args.only_update_jsons or args.format):
-        print(f"{Fore.LIGHTBLUE_EX} Make sure you built the HTML!")
+        print(f"[bright_cyan] Make sure you built the HTML!")
     try:
         shutil.rmtree(f"{cdir()}/build", onerror=remove_readonly)
     except FileNotFoundError:
@@ -534,7 +502,7 @@ if "site" in args.build:
             content = file.read()
         with open(f"{cdir()}/build/index.html", "w") as file:
             file.write(content.replace("../", "https://raw.githubusercontent.com/BEComTweaks/behaviour-packs/main/"))
-        print(f"{Fore.LIGHTBLUE_EX}Website build success!")
+        print(f"[bright_cyan]Website build success!")
     except Exception as e:
-        print(f"---> {Fore.RED}Website build failed!")
+        print(f"---> [red]Website build failed!")
         print(e)

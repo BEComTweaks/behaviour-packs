@@ -1,6 +1,9 @@
-colorama
+rich
 ujson
 markdown
 lzstring
 beautifulsoup4
+soupsieve
+typing-extensions
 requests
+future

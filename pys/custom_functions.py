@@ -7,12 +7,15 @@ from typing import Union
 def sendToCF(main_args): #send vars from main to custom_functions
     global args
     args = main_args
+    if args.dev:
+        global print
+        print = console.log
 
-def run(cmd: Union[str, list], quiet=False):
+def run(cmd: Union[str, list], quiet=False, exit_on_error=True):
     if isinstance(cmd, list):
-        print(f"{Fore.WHITE}> {Fore.LIGHTMAGENTA_EX}{' '.join(cmd)}")
+        print(f"[white]> [orchid]{' '.join(cmd)}")
     else:
-        print(f"{Fore.WHITE}> {Fore.LIGHTMAGENTA_EX}{cmd}")
+        print(f"[white]> [orchid]{cmd}")
     output = sp_run(cmd, shell=True, capture_output=True, text=True)
     try:
         if not args.quiet:
@@ -20,42 +23,34 @@ def run(cmd: Union[str, list], quiet=False):
                 if not quiet:
                     for line in output.stdout.split("\n"):
                         print(f"  {line}")
-                    return output.stdout
+                    return output
             else:
                 for line in output.stdout.split("\n"):
-                    print(f"  {Fore.RED}{line}")
+                    print(f"  [red]{line}")
                 for line in output.stderr.split("\n"):
-                    print(f"  {Fore.LIGHTRED_EX}{line}")
-                exit(1)
+                    print(f"  [bright_red]{line}")
+                if exit_on_error:
+                    exit(1)
+                else: return output
     except UnboundLocalError or NameError:
         if output.returncode == 0:
             if not quiet:
                 for line in output.stdout.split("\n"):
                     print(f"  {line}")
-                return output.stdout
+                return output
         else:
             for line in output.stdout.split("\n"):
-                print(f"  {Fore.RED}{line}")
+                print(f"  [red]{line}")
             for line in output.stderr.split("\n"):
-                print(f"  {Fore.LIGHTRED_EX}{line}")
-            exit(1)
+                print(f"  [bright_red]{line}")
+            if exit_on_error:
+                exit(1)
+            else: return output
 
-# If I need a module that isn't installed
-def check(module, module_name=""):
-    try:
-        import_module(module)
-    except ModuleNotFoundError:
-        print(f"{module} is not installed!")
-        if module_name == "":
-            run([sys.executable, "-m", "pip", "install", module, "--quiet"])
-        else:
-            run([sys.executable, "-m", "pip", "install", module_name, "--quiet"])
+from rich import print
+from rich.console import Console
+console = Console()
 
-check("colorama")
-from colorama import *
-init(autoreset=True)
-
-check("ujson")
 from ujson import *
 
 
@@ -87,8 +82,8 @@ def load_json(path):
         try:
             return loads(file.read())
         except JSONDecodeError:
-            print(f"{Fore.RED}\n{path} got a JSON Decode Error")
-            print(f"{Fore.RED}{traceback.format_exc()}")
+            print(f"[red]\n{path} got a JSON Decode Error")
+            print(f"[red]{traceback.format_exc()}")
             exit()
 
 
@@ -100,6 +95,6 @@ def dump_json(path, dictionary):
         file.write(the_json)
 
 def remove_readonly(func, path, _):
-    print(f"---> {Fore.LIGHTRED_EX}Removing readonly attribute from {os.path.relpath(path, cdir())}")
+    print(f"---> [bright_red]Removing readonly attribute from {os.path.relpath(path, cdir())}")
     os.chmod(path, stat.S_IWRITE)
     func(path)
