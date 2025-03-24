@@ -61,6 +61,8 @@ if args.build == "both":
     args.build = "packsite"
 elif args.build == "server":
     args.build = "packsite server"
+elif args.build == None:
+    args.build = ""
 
 if args.dev:
     print = console.log
