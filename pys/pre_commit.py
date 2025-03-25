@@ -484,6 +484,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
 
     if args.format:
         os.chdir(cdir())
+        print("[green]Making files Prettier\u2122")
         try:
             run('npx prettier --write "**/*.{js,ts,css,json}"', quiet=True)
         except KeyboardInterrupt:
