@@ -66,6 +66,8 @@ elif args.build == None:
 
 if args.dev:
     print = console.log
+else:
+    print = console.print
 
 sendToCF(args)
 
@@ -76,7 +78,7 @@ if not args.no_stash:
         print(f"[green]Stashed changes!")
 
 # Counts Packs and Compatibilities
-if "site" not in args.build or ("site" in args.build and (args.only_update_html or args.only_update_jsons or args.format)):
+if "site" not in args.build or ("site" in args.build and (args.only_update_html or args.only_update_jsons or args.format or "pack" in args.build)):
     print(f"[yellow]Going through packs...")
     id_to_name = {}
     for j in cat_list:
@@ -216,7 +218,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                     except KeyError:
                         pass
                     to_add_pack = to_add_pack.replace("pack_description", desc)
-                    to_add_pack = to_add_pack.replace("relloctopackicon", os.path.relpath(f'{category_loc}/{file["packs"][i]["pack_id"]}/pack_icon.png', start=cdir()))
+                    to_add_pack = to_add_pack.replace("relloctopackicon", f"{os.path.relpath(f'{category_loc}/{file["packs"][i]["pack_id"]}/pack_icon.png', start=cdir())}".replace("\\","/"))
                     try:
                         if os.path.exists(f'{category_loc}/{file["packs"][i]["pack_id"]}/pack_icon.{file["packs"][i]["icon"]}'):
                             # Because I can't make the html use a missing texture thing, so
@@ -234,7 +236,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
             if "\t" in cat_list[indexoforigj + 1] or "    " in cat_list[indexoforigj + 1]:
                 html += cat_end_w_subcat_no_end
                 try:
-                    if "\t" in cat_list[indexoforigj + 1] or "    " in cat_list[indexoforigj + 1]:
+                    if not ("\t" in cat_list[indexoforigj + 2] or "    " in cat_list[indexoforigj + 2]):
                         html += category_end
                 except IndexError:
                     pass
@@ -388,7 +390,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                 except KeyError:
                     pass
                 to_add_pack = to_add_pack.replace("pack_description", desc)
-                to_add_pack = to_add_pack.replace("relloctopackicon", os.path.relpath(f'{category_loc}/{file["packs"][i]["pack_id"]}/pack_icon.png', start=cdir()))
+                to_add_pack = to_add_pack.replace("relloctopackicon", f"{os.path.relpath(f'{category_loc}/{file["packs"][i]["pack_id"]}/pack_icon.png', start=cdir())}".replace("\\","/"))
                 try:
                     if os.path.exists(f'{category_loc}/{file["packs"][i]["pack_id"]}/pack_icon.{file["packs"][i]["icon"]}'):
                         # Because I can't make the html use a missing texture thing, so
@@ -465,6 +467,8 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
         else:
             # When the regex fails if I change the link
             raise IndexError("Regex Failed")
+    print("[green]Updated!")
+    """
     # Used only for CTs and BPs because RP is main
     try:
       if args.update_theme:
@@ -478,9 +482,9 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
     except requests.exceptions.ConnectionError:
       print(f"[red]Get a working internet connection before rerunning with `-ut`/`--update-theme`")
     print(f"[yellow]Updated files!")
+    """
 
     if args.format:
-        print(f"[yellow]Making files Prettier\u2122")
         os.chdir(cdir())
         try:
             run('npx prettier --write "**/*.{js,ts,css,json}"', quiet=True)
@@ -492,7 +496,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
 
 if "site" in args.build:
     if not (args.only_update_html or args.only_update_jsons or args.format):
-        print(f"[bright_cyan] Make sure you built the HTML!")
+        print(f"[bright_cyan]Make sure you built the HTML!")
     try:
         shutil.rmtree(f"{cdir()}/build", onerror=remove_readonly)
     except FileNotFoundError:

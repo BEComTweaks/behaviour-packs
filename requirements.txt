@@ -2,8 +2,10 @@ rich
 ujson
 markdown
 lzstring
-beautifulsoup4
 soupsieve
 typing-extensions
+beautifulsoup4
+charset-normalizer
+urllib3
 requests
 future
