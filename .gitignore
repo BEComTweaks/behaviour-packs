@@ -1,7 +1,6 @@
 # Ignore Python cache files as it forms merge conflicts
 pys/__pycache__/
 # node modules
-package.json
 node_modules
 # build
 build
