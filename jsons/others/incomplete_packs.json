@@ -1,6 +1,6 @@
 {
-  "Anti Grief": [],
+  "Anti Grief": ["AntiCreeperGrief"],
   "Fun": [],
-  "Drops": [],
+  "Drops": ["DoubleShulkerShells"],
   "Utility": []
 }
