@@ -150,7 +150,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                     os.chdir(cdir())
                 # Updates Incomplete Packs
                 try:
-                    if os.listdir(f'{category_loc}/{file["packs"][i]["pack_id"]}/files') == [] and not "regolith" in file["packs"][i]:
+                    if os.listdir(f'{category_loc}/{file["packs"][i]["pack_id"]}/files') == [] and "regolith" not in file["packs"][i]:
                         # screw it go to filenotfounderror
                         raise FileNotFoundError
                     else:
@@ -326,7 +326,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                 os.chdir(cdir())
             # Updates Incomplete Packs
             try:
-                if os.listdir(f'{category_loc}/{file["packs"][i]["pack_id"]}/files') == [] and not "regolith" in file["packs"][i]:
+                if os.listdir(f'{category_loc}/{file["packs"][i]["pack_id"]}/files') == [] and "regolith" not in file["packs"][i]:
                     # screw it go to filenotfounderror
                     raise FileNotFoundError
                 else:
