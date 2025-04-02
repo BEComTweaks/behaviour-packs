@@ -150,7 +150,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                     os.chdir(cdir())
                 # Updates Incomplete Packs
                 try:
-                    if os.listdir(f'{category_loc}/{file["packs"][i]["pack_id"]}/files') != [] or "regolith" in file["packs"][i]:
+                    if "regolith" in file["packs"][i] or os.listdir(f'{category_loc}/{file["packs"][i]["pack_id"]}/files') != []:
                         # When the packid directory has stuff inside or is regolith
                         stats[0] += 1
                     else:
@@ -326,7 +326,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                 os.chdir(cdir())
             # Updates Incomplete Packs
             try:
-                if os.listdir(f'{category_loc}/{file["packs"][i]["pack_id"]}/files') != [] or "regolith" in file["packs"][i]:
+                if "regolith" in file["packs"][i] or os.listdir(f'{category_loc}/{file["packs"][i]["pack_id"]}/files') != []:
                     # When the packid directory has stuff inside or is regolith
                     stats[0] += 1
                 else:
