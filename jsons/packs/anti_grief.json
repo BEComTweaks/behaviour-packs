@@ -1,6 +1,7 @@
 {
-  "$schema": "https://becomtweaks.github.io/schema.json",
+  "$schema": "https://becomtweaks.github.io/schema/packs.json",
   "topic": "Anti Grief",
+  "location": "anti_grief",
   "packs": [
     {
       "pack_id": "AntiCreeperGrief",

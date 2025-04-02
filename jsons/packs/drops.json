@@ -1,7 +1,6 @@
 {
+  "$schema": "https://becomtweaks.github.io/schema/packs.json",
   "topic": "Drops",
-  "subcategory_of": "Fun",
-  "location": "fun/drops",
   "packs": [
     {
       "pack_id": "BatMembranes",

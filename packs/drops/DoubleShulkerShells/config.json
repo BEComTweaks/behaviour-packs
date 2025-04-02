@@ -1,5 +1,4 @@
 {
-  "$schema": "https://raw.githubusercontent.com/Bedrock-OSS/regolith-schemas/main/config/v1.4.json",
   "author": "PAPISOP",
   "name": "Double Shulker Shells - Convenience - Bedrock Tweaks",
   "packs": {
@@ -12,7 +11,7 @@
     "profiles": {
       "build": {
         "export": {
-          "readOnly": true,
+          "readOnly": false,
           "target": "local",
           "build": "standard"
         },

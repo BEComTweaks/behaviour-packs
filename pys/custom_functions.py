@@ -1,7 +1,7 @@
 import os, traceback, sys, stat
 from subprocess import run as sp_run
-from importlib import import_module
 from typing import Union
+
 
 class EmptySpinner:
     def __init__(self, *objects, spinner="dots"):
@@ -64,7 +64,8 @@ def run(cmd: Union[str, list], quiet=False, exit_on_error=True):
                     print(f"  [bright_red]{line}")
                 if exit_on_error:
                     exit(1)
-                else: return output
+                else:
+                    return output
 
 from rich import print
 from rich.console import Console
@@ -99,7 +100,10 @@ def clear():
 def load_json(path):
     with open(path, "r") as file:
         try:
-            return loads(file.read())
+            json_data = loads(file.read())
+            if "$schema" in json_data:
+                del json_data["$schema"]
+            return json_data
         except JSONDecodeError:
             print(f"[red]\n{path} got a JSON Decode Error")
             print(f"[red]{traceback.format_exc()}")

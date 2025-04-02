@@ -107,6 +107,11 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                 if "regolith" in file["packs"][i] and "pack" in args.build:
                     print(f"-> [cyan]Building {file['packs'][i]['pack_id']}")
                     os.chdir(f'{category_loc}/{file["packs"][i]["pack_id"]}')
+                    print(f"--> [bright_yellow]Checking the config file...")
+                    regolith_config = load_json(f'{category_loc}/{file["packs"][i]["pack_id"]}/config.json')
+                    if regolith_config["regolith"]["profiles"]["build"]["export"]["readOnly"] == True:
+                        regolith_config["regolith"]["profiles"]["build"]["export"]["readOnly"] = False
+                    dump_json(f'{category_loc}/{file["packs"][i]["pack_id"]}/config.json', regolith_config)
                     # install filters
                     run("regolith install-all", quiet=True)
                     # check for previous builds
@@ -120,21 +125,25 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                     # Check for .gitkeep and fix folder naming
                     if os.path.exists("build"):
                         print(f"--> [yellow]Fixing build folder...")
-                        build_dir = f"{category_loc}/{file["packs"][i]["pack_id"]}/build"
+                        build_dir = f"{category_loc}/{file["packs"][i]["pack_id"]}"
+                        try:
+                            os.mkdir(f"{build_dir}/files")
+                        except FileExistsError:
+                            print(f"--> [yellow]Why does {os.path.relpath(build_dir, cdir())}/files exist?")
                         for folder in os.listdir("build"):
-                            if folder.endswith("_bp"):
+                            if folder.endswith("bp"):
                                 # This _is_ the behaviour pack repo, so there shouldn't
                                 # be a .gitkeep here, but this is for easy copy-pasting
                                 # to other repos
                                 if ".gitkeep" in os.listdir(f"build/{folder}"):
                                     shutil.rmtree(f"build/{folder}", onerror=remove_readonly)
                                 else:
-                                    os.rename(f"{build_dir}/{folder}", f"{build_dir}/bp")
-                            elif folder.endswith("_rp"):
+                                    os.rename(f"{build_dir}/build/{folder}", f"{build_dir}/files/bp")
+                            elif folder.endswith("rp"):
                                 if ".gitkeep" in os.listdir(f"build/{folder}"):
                                     shutil.rmtree(f"build/{folder}", onerror=remove_readonly)
                                 else:
-                                    os.rename(f"{build_dir}/{folder}", f"{build_dir}/rp")
+                                    os.rename(f"{build_dir}/build/{folder}", f"{build_dir}/files/rp")
                             else:
                                 print(f"[red]Unknown folder found in {os.path.relpath(os.getcwd(), cdir())}/build/: [yellow]{folder}")
                         # now move to proper folder
@@ -142,15 +151,14 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                 # Updates Incomplete Packs
                 try:
                     if os.listdir(f'{category_loc}/{file["packs"][i]["pack_id"]}/files') == []:
-                        # Adds the packid to the topic list
-                        incomplete_packs[file["topic"]].append(file["packs"][i]["pack_id"])
-                        stats[1] += 1
-                        print(f"[red]Incomplete Pack: [yellow]{file['packs'][i]['pack_id']}")
+                        # screw it go to filenotfounderror
+                        raise FileNotFoundError
                     else:
                         # When the packid directory has stuff inside
                         stats[0] += 1
                 except FileNotFoundError:
-                    # If the packs don't even exist
+                    # Adds the packid to the topic list
+                    incomplete_packs[file["topic"]].append(file["packs"][i]["pack_id"])
                     stats[1] += 1
                     print(f"[red]Incomplete Pack: [yellow]{file['packs'][i]['pack_id']}")
 
@@ -279,6 +287,11 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
             if "regolith" in file["packs"][i] and "pack" in args.build:
                 print(f"-> [cyan]Building {file['packs'][i]['pack_id']}")
                 os.chdir(f'{category_loc}/{file["packs"][i]["pack_id"]}')
+                print(f"--> [bright_yellow]Checking the config file...")
+                regolith_config = load_json(f'{category_loc}/{file["packs"][i]["pack_id"]}/config.json')
+                if regolith_config["regolith"]["profiles"]["build"]["export"]["readOnly"] == True:
+                    regolith_config["regolith"]["profiles"]["build"]["export"]["readOnly"] = False
+                dump_json(f'{category_loc}/{file["packs"][i]["pack_id"]}/config.json', regolith_config)
                 # install filters
                 run("regolith install-all", quiet=True)
                 # check for previous builds
@@ -292,21 +305,21 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
                 # Check for .gitkeep and fix folder naming
                 if os.path.exists("build"):
                     print(f"--> [yellow]Fixing build folder...")
-                    build_dir = f"{category_loc}/{file["packs"][i]["pack_id"]}/build"
+                    build_dir = f"{category_loc}/{file["packs"][i]["pack_id"]}"
                     for folder in os.listdir("build"):
-                        if folder.endswith("_bp"):
+                        if folder.endswith("bp"):
                             # This _is_ the behaviour pack repo, so there shouldn't
                             # be a .gitkeep here, but this is for easy copy-pasting
                             # to other repos
                             if ".gitkeep" in os.listdir(f"build/{folder}"):
                                 shutil.rmtree(f"build/{folder}", onerror=remove_readonly)
                             else:
-                                os.rename(f"{build_dir}/{folder}", f"{build_dir}/bp")
-                        elif folder.endswith("_rp"):
+                                os.rename(f"{build_dir}/build/{folder}", f"{build_dir}/files/bp")
+                        elif folder.endswith("rp"):
                             if ".gitkeep" in os.listdir(f"build/{folder}"):
                                 shutil.rmtree(f"build/{folder}", onerror=remove_readonly)
                             else:
-                                os.rename(f"{build_dir}/{folder}", f"{build_dir}/rp")
+                                os.rename(f"{build_dir}/build/{folder}", f"{build_dir}/files/rp")
                         else:
                             print(f"[red]Unknown folder found in {os.path.relpath(os.getcwd(), cdir())}/build/: [yellow]{folder}")
                     # now move to proper folder
@@ -314,15 +327,14 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
             # Updates Incomplete Packs
             try:
                 if os.listdir(f'{category_loc}/{file["packs"][i]["pack_id"]}/files') == []:
-                    # Adds the packid to the topic list
-                    incomplete_packs[file["topic"]].append(file["packs"][i]["pack_id"])
-                    stats[1] += 1
-                    print(f"[red]Incomplete Pack: [yellow]{file['packs'][i]['pack_id']}")
+                    # screw it go to filenotfounderror
+                    raise FileNotFoundError
                 else:
                     # When the packid directory has stuff inside
                     stats[0] += 1
             except FileNotFoundError:
-                # If the packs don't even exist
+                # Adds the packid to the topic list
+                incomplete_packs[file["topic"]].append(file["packs"][i]["pack_id"])
                 stats[1] += 1
                 print(f"[red]Incomplete Pack: [yellow]{file['packs'][i]['pack_id']}")
 
@@ -412,19 +424,15 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
         html = html.replace("<all_packs>", LZString.compressToEncodedURIComponent(dumps(current_category_packs)))
     # compatibilities
     compatibilities = load_json(f"{cdir()}/jsons/packs/compatibilities.json")
-    for ways in range(compatibilities["maxway"],1,-1):
-        for location in compatibilities[f"{ways}way"]["locations"]:
-            listjson = []
-            if os.path.exists(f"{cdir()}/packs/{location}"):
+    for ways in range(compatibilities["max_simultaneous"],1,-1):
+        for compatibility in compatibilities[f"{ways}way"]:
+            if len(compatibility["merge"]) != ways:
+                print(f"[red]Incorrect Compatibility format: [yellow]{compatibility['location']}")
+            if os.path.exists(f"{cdir()}/packs/{compatibility["location"]}"):
                 comp_stats[0] += 1
             else:
-                print(f"[red]Incomplete Compatibility: [yellow]{location}")
                 comp_stats[1] += 1
-                try:
-                    comps[f"{ways}way"].append(location)
-                except KeyError:
-                    comps[f"{ways}way"] = [location]
-
+                print(f"[red]Incomplete Compatibility: [yellow]{compatibility['location']}")
     print(f"[green]Done!")
 
     # HTML formatting
@@ -442,6 +450,10 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
         dump_json(f"{cdir()}/jsons/others/incomplete_packs.json", incomplete_packs)
         dump_json(f"{cdir()}/jsons/others/incomplete_compatibilities.json", comps)
         dump_json(f"{cdir()}/jsons/others/incomplete_pack_icons.json", incomplete_pkics)
+        try:
+            os.mkdir(f"{cdir()}/jsons/map")
+        except FileExistsError:
+            pass
         dump_json(f"{cdir()}/jsons/map/name_to_json.json", name_to_json)
         dump_json(f"{cdir()}/jsons/map/id_to_name.json", id_to_name)
         dump_json(f"{cdir()}/jsons/map/priority.json", priority)
@@ -488,11 +500,12 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
       print(f"[red]Get a working internet connection before rerunning with `-ut`/`--update-theme`")
     print(f"[yellow]Updated files!")
 
+
     if args.format:
+        print(f"[yellow]Making files Prettier\u2122")
         os.chdir(cdir())
-        print("[green]Making files Prettier\u2122")
         try:
-            run('npx prettier --write "**/*.{js,ts,css,json}"', quiet=True)
+            run('pnpm exec prettier --write "**/*.{js,ts,css,json}"', quiet=True)
         except KeyboardInterrupt:
             print(f"---> [red]You are a bit impatient...")
         print(f"[green]Files are Prettier!")

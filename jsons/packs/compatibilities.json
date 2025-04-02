@@ -1,3 +1,10 @@
 {
-  "maxway": 0
+  "$schema": "https://becomtweaks.github.io/schema/compatibilities.json",
+  "max_simultaneous": 2,
+  "2way": [
+    {
+      "merge": [],
+      "location": ""
+    }
+  ]
 }

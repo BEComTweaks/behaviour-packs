@@ -2,9 +2,10 @@
 pys/__pycache__/
 # node modules
 package.json
-package-lock.json
 node_modules
 # build
 build
 # tf is venv doing here
 venv
+# ignore maps because you can remake them
+jsons/map
