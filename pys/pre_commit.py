@@ -423,16 +423,22 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
         html = html.replace(f'<div class="subcat{j}"></div>',pack_html)
         html = html.replace("<all_packs>", LZString.compressToEncodedURIComponent(dumps(current_category_packs)))
     # compatibilities
+    # not really sure if bp will ever have compats,
+    # but for the sake of consistency, i guess
     compatibilities = load_json(f"{cdir()}/jsons/packs/compatibilities.json")
+    compat_map = {}
     for ways in range(compatibilities["max_simultaneous"],1,-1):
+        compat_map[f"{ways}way"] = []
         for compatibility in compatibilities[f"{ways}way"]:
             if len(compatibility["merge"]) != ways:
                 print(f"[red]Incorrect Compatibility format: [yellow]{compatibility['location']}")
-            if os.path.exists(f"{cdir()}/packs/{compatibility["location"]}"):
-                comp_stats[0] += 1
-            else:
                 comp_stats[1] += 1
+            elif os.path.exists(f"{cdir()}/packs/{compatibility["location"]}"):
+                comp_stats[0] += 1
+                compat_map[f"{ways}way"].append(compatibility["merge"])
+            else:
                 print(f"[red]Incomplete Compatibility: [yellow]{compatibility['location']}")
+                comp_stats[1] += 1
     print(f"[green]Done!")
 
     # HTML formatting
@@ -457,6 +463,7 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
         dump_json(f"{cdir()}/jsons/map/name_to_json.json", name_to_json)
         dump_json(f"{cdir()}/jsons/map/id_to_name.json", id_to_name)
         dump_json(f"{cdir()}/jsons/map/priority.json", priority)
+        dump_json(f"{cdir()}/jsons/map/compatibility.json", compat_map)
     if not args.only_update_jsons:
         with open(f"{cdir()}/webUI/index.html", "w") as html_file:
             html_file.write(html)
