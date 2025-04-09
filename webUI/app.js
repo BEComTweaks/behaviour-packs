@@ -165,7 +165,6 @@ function triggerPackClick(index) {
 /******************\
 | Custom functions |
 \******************/
-const lodash = _.noConflict();
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));

@@ -8,8 +8,8 @@
   <title>Behaviour Packs</title>
   <link href="images/icon.png" rel="icon" type="image/x-icon"/>
   <link href="theme.css" rel="stylesheet"/>
-  <script src="/extras/jszip.min.js"></script>
-  <script src="/extras/lz-string.min.js"></script>
+  <script src="extras/jszip.min.js"></script>
+  <script src="extras/lz-string.min.js"></script>
  </head>
  <body>
   <ul class="large-nav">
@@ -27,7 +27,7 @@
    <li style="float:right"><a class="nav-link" href="https://becomtweaks.github.io/resource-packs">RPs</a></li>
   </ul>
   <div id="background-container"></div>
-  <script src="/bg.js"></script>
+  <script src="bg.js"></script>
   <div class="half-dark"></div>
   <br>
   <br>
@@ -65,7 +65,7 @@
     <div class="tweak-list-pack">Select some packs and see them appear here!</div>
    </div>
   </div>
-  <script src="/app.js"></script>
+  <script src="app.js"></script>
  </body>
  <footer class="footer-container">
   <div class="credits-footer" oreui-type="general" oreui-color="dark">

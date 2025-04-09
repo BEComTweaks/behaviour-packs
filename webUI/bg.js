@@ -1,13 +1,13 @@
 const textures = [
-  { src: "/images/blocks/deepslate.png", probability: 0.618 },
-  { src: "/images/blocks/deepslate_copper_ore.png", probability: 0.128 },
-  { src: "/images/blocks/deepslate_coal_ore.png", probability: 0.128 },
-  { src: "/images/blocks/deepslate_iron_ore.png", probability: 0.064 },
-  { src: "/images/blocks/deepslate_lapis_ore.png", probability: 0.032 },
-  { src: "/images/blocks/deepslate_redstone_ore.png", probability: 0.016 },
-  { src: "/images/blocks/deepslate_gold_ore.png", probability: 0.008 },
-  { src: "/images/blocks/deepslate_emerald_ore.png", probability: 0.004 },
-  { src: "/images/blocks/deepslate_diamond_ore.png", probability: 0.002 },
+  { src: "images/blocks/deepslate.png", probability: 0.618 },
+  { src: "images/blocks/deepslate_copper_ore.png", probability: 0.128 },
+  { src: "images/blocks/deepslate_coal_ore.png", probability: 0.128 },
+  { src: "images/blocks/deepslate_iron_ore.png", probability: 0.064 },
+  { src: "images/blocks/deepslate_lapis_ore.png", probability: 0.032 },
+  { src: "images/blocks/deepslate_redstone_ore.png", probability: 0.016 },
+  { src: "images/blocks/deepslate_gold_ore.png", probability: 0.008 },
+  { src: "images/blocks/deepslate_emerald_ore.png", probability: 0.004 },
+  { src: "images/blocks/deepslate_diamond_ore.png", probability: 0.002 },
 ];
 function selectTexture() {
   const rand = Math.random();
