@@ -87,9 +87,43 @@
    <p class="loading-status">
    </p>
   </div>
+  <div class="devtools" oreui-color="dark" oreui-type="general">
+   <h3>
+    Devtools
+   </h3>
+   <div class="devtools-toggle-console">
+    <label class="switch">
+     <input type="checkbox"/>
+     <span class="slider">
+     </span>
+    </label>
+    <p>
+     Enable Console
+    </p>
+   </div>
+   <code class="devtools-console" oreui-color="dark">
+    <h3>
+     Console
+    </h3>
+    <div class="devtools-console-content">
+    </div>
+   </code>
+   <div class="devtools-toggle-save-to-cache">
+    <label class="switch">
+     <input disabled="" type="checkbox"/>
+     <span class="slider">
+     </span>
+    </label>
+    <p>
+     Save settings to the browser cache
+    </p>
+   </div>
+  </div>
+  <div class="capture-exit" onclick="closePanel();">
+  </div>
   <script src="extra.js">
   </script>
-  <div class="image-container">
+  <div class="image-container" onclick="showDevToolsPanel();">
    <img alt="Resource Packs" id="title" src="images/title.png"/>
   </div>
   <div class="preselected" oreui-color="dark" oreui-type="general">
