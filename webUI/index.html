@@ -140,18 +140,18 @@
     </p>
    </div>
   </div>
+  <div class="preselected" oreui-color="dark" oreui-type="general">
+   Pre-selected Tweaks!
+   <div class="preselected-unselect" onclick="processJsonData(getSelectedTweaks(),'unselect'); this.parentElement.style.top = '-20vh'; this.parentElement.innerText = 'Unselected!';">
+    Unselect?
+   </div>
+  </div>
   <div class="capture-exit" onclick="closePanel();">
   </div>
   <script src="extra.js">
   </script>
   <div class="image-container" onclick="showDevToolsPanel();">
    <img alt="Resource Packs" id="title" src="images/title.png"/>
-  </div>
-  <div class="preselected" oreui-color="dark" oreui-type="general">
-   Pre-selected Tweaks!
-   <div class="preselected-unselect" onclick="processJsonData(getSelectedTweaks(),'unselect'); this.parentElement.style.top = '-20vh'; this.parentElement.innerText = 'Unselected!';">
-    Unselect?
-   </div>
   </div>
   <div class="container">
    <div class="search-container">
@@ -163,7 +163,7 @@
     <div class="category-label" onclick="toggleCategory(this);" oreui-color="dark" oreui-type="button">
      Anti Grief
     </div>
-    <button class="category-label-selectall" data-allpacks="N4IgTghg7iBcDaICCA7ALgSwMJgKa4AdcwBxMDXAMxABpl0MBRFAE2IFsIUyLq7VMJABYQAzmh5UQAXQC+QA" data-category="Anti Grief" onclick="selectAll(this)">
+    <button class="category-label-selectall" data-allpacks="N4IgTghg7iBcAEBtEBBAdgFwJYGEwFN8AHfMAcTC3wDMQAaeVTLAUTQBNSBbCNCq2gybYyACwgBnDPxogAugF8gA" data-category="Anti Grief" onclick="selectAll(this)">
      <img class="category-label-selectall-img" src="images/select-all-button/chiseled_bookshelf_empty.png"/>
      <div class="category-label-selectall-hovertext">
       Select All
@@ -171,7 +171,7 @@
     </button>
     <div class="category-controlled" oreui-color="dark" oreui-type="general">
      <div class="tweaks">
-      <div class="tweak" data-category="Anti Grief" data-index="0" data-name="AntiCreeperGrief" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+      <div class="tweak" data-category="Anti Grief" data-conflicts="[]" data-name="AntiCreeperGrief" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
        <div class="tweak-info">
         <input name="tweak" type="checkbox"/>
         <img alt="Anti Creeper Grief" src="../packs/anti_grief/AntiCreeperGrief/pack_icon.png" style="width:82px; height:82px;"/>
@@ -184,7 +184,7 @@
         </div>
        </div>
       </div>
-      <div class="tweak" data-category="Anti Grief" data-index="1" data-name="AntiEndermanGrief" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+      <div class="tweak" data-category="Anti Grief" data-conflicts="[]" data-name="AntiEndermanGrief" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
        <div class="tweak-info">
         <input name="tweak" type="checkbox"/>
         <img alt="Anti Enderman Grief" src="../packs/anti_grief/AntiEndermanGrief/pack_icon.png" style="width:82px; height:82px;"/>
@@ -197,7 +197,7 @@
         </div>
        </div>
       </div>
-      <div class="tweak" data-category="Anti Grief" data-index="2" data-name="AntiGhastGrief" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+      <div class="tweak" data-category="Anti Grief" data-conflicts="[]" data-name="AntiGhastGrief" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
        <div class="tweak-info">
         <input name="tweak" type="checkbox"/>
         <img alt="Anti Ghast Grief" src="../packs/anti_grief/AntiGhastGrief/pack_icon.png" style="width:82px; height:82px;"/>
@@ -217,7 +217,7 @@
     <div class="category-label" onclick="toggleCategory(this);" oreui-color="dark" oreui-type="button">
      Fun
     </div>
-    <button class="category-label-selectall" data-allpacks="N4IgTghg7iBcDaIAyEwHMCmYAKALCAdgC4D2AtgM4gA0IAagJYA2TEmYAIhhEbgLIYKFNoJABdAL5A" data-category="Fun" onclick="selectAll(this)">
+    <button class="category-label-selectall" data-allpacks="N4IgTghg7iBcAEBtEAZCYDmBTMAFAFhAHYAuA9gLYDOIANPCAGoCWANqxNmACJYQn4AslipVOIkAF0AvkA" data-category="Fun" onclick="selectAll(this)">
      <img class="category-label-selectall-img" src="images/select-all-button/chiseled_bookshelf_empty.png"/>
      <div class="category-label-selectall-hovertext">
       Select All
@@ -225,7 +225,7 @@
     </button>
     <div class="category-controlled" oreui-color="dark" oreui-type="general">
      <div class="tweaks">
-      <div class="tweak" data-category="Fun" data-index="0" data-name="LargerPhantoms" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+      <div class="tweak" data-category="Fun" data-conflicts="[]" data-name="LargerPhantoms" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
        <div class="tweak-info">
         <input name="tweak" type="checkbox"/>
         <img alt="Larger Phantoms" src="../packs/fun/LargerPhantoms/pack_icon.png" style="width:82px; height:82px;"/>
@@ -238,7 +238,7 @@
         </div>
        </div>
       </div>
-      <div class="tweak" data-category="Fun" data-index="1" data-name="VillagerDeathMessages" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+      <div class="tweak" data-category="Fun" data-conflicts="[]" data-name="VillagerDeathMessages" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
        <div class="tweak-info">
         <input name="tweak" type="checkbox"/>
         <img alt="Villager Death Messages" src="../packs/fun/VillagerDeathMessages/pack_icon.png" style="width:82px; height:82px;"/>
@@ -258,7 +258,7 @@
     <div class="category-label" onclick="toggleCategory(this);" oreui-color="dark" oreui-type="button">
      Drops
     </div>
-    <button class="category-label-selectall" data-allpacks="N4IgTghg7iBcDaIBCEAuBZApgWwEaQDtMBnEAGhABEB7AV1wBtMBlAC1oYGtMw3MGGpCpUgBzagRHUADqQC6AXyA" data-category="Drops" onclick="selectAll(this)">
+    <button class="category-label-selectall" data-allpacks="N4IgTghg7iBcAEBtEAhCAXAsgUwLYCNIA7bAZxABp4QARAewFd8AbbAZQAsHmBrbMTtmbNyVWpADmdIjTB0ADuQC6AXyA" data-category="Drops" onclick="selectAll(this)">
      <img class="category-label-selectall-img" src="images/select-all-button/chiseled_bookshelf_empty.png"/>
      <div class="category-label-selectall-hovertext">
       Select All
@@ -266,7 +266,7 @@
     </button>
     <div class="category-controlled" oreui-color="dark" oreui-type="general">
      <div class="tweaks">
-      <div class="tweak" data-category="Drops" data-index="0" data-name="BatMembranes" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+      <div class="tweak" data-category="Drops" data-conflicts="[]" data-name="BatMembranes" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
        <div class="tweak-info">
         <input name="tweak" type="checkbox"/>
         <img alt="Bat Membranes" src="../packs/drops/BatMembranes/pack_icon.png" style="width:82px; height:82px;"/>
@@ -279,7 +279,7 @@
         </div>
        </div>
       </div>
-      <div class="tweak" data-category="Drops" data-index="1" data-name="DoubleShulkerShells" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+      <div class="tweak" data-category="Drops" data-conflicts="[]" data-name="DoubleShulkerShells" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
        <div class="tweak-info">
         <input name="tweak" type="checkbox"/>
         <img alt="Double Shulker Shells" src="../packs/drops/DoubleShulkerShells/pack_icon.png" style="width:82px; height:82px;"/>
@@ -292,7 +292,7 @@
         </div>
        </div>
       </div>
-      <div class="tweak" data-category="Drops" data-index="2" data-name="DragonDrops" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+      <div class="tweak" data-category="Drops" data-conflicts="[]" data-name="DragonDrops" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
        <div class="tweak-info">
         <input name="tweak" type="checkbox"/>
         <img alt="Dragon Drops" src="../packs/drops/DragonDrops/pack_icon.png" style="width:82px; height:82px;"/>
@@ -312,7 +312,7 @@
     <div class="category-label" onclick="toggleCategory(this);" oreui-color="dark" oreui-type="button">
      Utility
     </div>
-    <button class="category-label-selectall" data-allpacks="N4IgTghg7iBcDaIDSBLANmgogWwA4BcBPAIQHsJ8BnEAGhAEEAxJAERUtzQkJAF0BfIA" data-category="Utility" onclick="selectAll(this)">
+    <button class="category-label-selectall" data-allpacks="N4IgTghg7iBcAEBtEBpAlgGwwUQLYAcAXATwCEB7CQgZxABp4QBBAMRQBE1r8MJiQAugF8gA" data-category="Utility" onclick="selectAll(this)">
      <img class="category-label-selectall-img" src="images/select-all-button/chiseled_bookshelf_empty.png"/>
      <div class="category-label-selectall-hovertext">
       Select All
@@ -320,7 +320,7 @@
     </button>
     <div class="category-controlled" oreui-color="dark" oreui-type="general">
      <div class="tweaks">
-      <div class="tweak" data-category="Utility" data-index="0" data-name="KillEmptyBoats" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+      <div class="tweak" data-category="Utility" data-conflicts="[]" data-name="KillEmptyBoats" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
        <div class="tweak-info">
         <input name="tweak" type="checkbox"/>
         <img alt="Kill Empty Boats" src="../packs/utility/KillEmptyBoats/pack_icon.png" style="width:82px; height:82px;"/>
@@ -333,7 +333,7 @@
         </div>
        </div>
       </div>
-      <div class="tweak" data-category="Utility" data-index="1" data-name="AFKDisplay" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
+      <div class="tweak" data-category="Utility" data-conflicts="[]" data-name="AFKDisplay" onclick="toggleSelection(this);" oreui-active-color="green" oreui-color="dark" oreui-type="button">
        <div class="tweak-info">
         <input name="tweak" type="checkbox"/>
         <img alt="AFK Display" src="../packs/utility/AFKDisplay/pack_icon.png" style="width:82px; height:82px;"/>
@@ -394,60 +394,60 @@
   </div>
   <script src="app.js">
   </script>
+  <footer class="footer-container">
+   <div class="credits-footer" oreui-color="dark" oreui-type="general">
+    <h2>
+     This would not have been possible if not for the following
+    </h2>
+    <h3>
+     Websites
+    </h3>
+    <p>
+     <a href="https://vanillatweaks.net">
+      Vanilla Tweaks
+     </a>
+     - Without them, Bedrock Tweaks would have not been this way
+    </p>
+    <p>
+     <a href="https://bedrocktweaks.net">
+      Bedrock Tweaks
+     </a>
+     - Without DrAV, this would have taken a long time to complete
+    </p>
+    <h3>
+     Individuals
+     <br>
+    </h3>
+    <p>
+     <a href="https://github.com/yzabeast1">
+      YzaBeast1
+     </a>
+     - Pointed out issues with my code preventing Linux Distributions from running the scripts and made the webUI and backend
+    </p>
+    <p>
+     <a href="https://github.com/gyver5681">
+      Gyver5681
+     </a>
+     - Made AFK Display
+    </p>
+    <p>
+     <a href="https://github.com/NSPC911">
+      NSPC911
+     </a>
+     - Yep, that's me, the one who started this all!
+    </p>
+    <p>
+     If you contributed directly or indirectly and want a place here, contact me on Discord at
+     <code>
+      @nspg911
+     </code>
+    </p>
+    <p>
+     <a href="https://github.com/BEComTweaks/behaviour-packs">
+      GitHub
+     </a>
+    </p>
+   </div>
+  </footer>
  </body>
- <footer class="footer-container">
-  <div class="credits-footer" oreui-color="dark" oreui-type="general">
-   <h2>
-    This would not have been possible if not for the following
-   </h2>
-   <h3>
-    Websites
-   </h3>
-   <p>
-    <a href="https://vanillatweaks.net">
-     Vanilla Tweaks
-    </a>
-    - Without them, Bedrock Tweaks would have not been this way
-   </p>
-   <p>
-    <a href="https://bedrocktweaks.net">
-     Bedrock Tweaks
-    </a>
-    - Without DrAV, this would have taken a long time to complete
-   </p>
-   <h3>
-    Individuals
-    <br>
-   </h3>
-   <p>
-    <a href="https://github.com/yzabeast1">
-     YzaBeast1
-    </a>
-    - Pointed out issues with my code preventing Linux Distributions from running the scripts and made the webUI and backend
-   </p>
-   <p>
-    <a href="https://github.com/gyver5681">
-     Gyver5681
-    </a>
-    - Made AFK Display
-   </p>
-   <p>
-    <a href="https://github.com/NSPC911">
-     NSPC911
-    </a>
-    - Yep, that's me, the one who started this all!
-   </p>
-   <p>
-    If you contributed directly or indirectly and want a place here, contact me on Discord at
-    <code>
-     @nspg911
-    </code>
-   </p>
-   <p>
-    <a href="https://github.com/BEComTweaks/behaviour-packs">
-     GitHub
-    </a>
-   </p>
-  </div>
- </footer>
 </html>

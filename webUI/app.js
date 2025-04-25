@@ -212,6 +212,30 @@ function toggleSelection(element) {
   updateDownloadButton(selectedTweaks);
 }
 
+function updateSelectedConflictsActiveColor() {
+  document
+    .querySelectorAll(".tweak[oreui-active-color=purple")
+    .forEach((tweak) => OreUI.setActiveColor(tweak, "green"));
+  document.querySelectorAll(".tweak[oreui-state='active']").forEach((tweak) => {
+    OreUI.setActiveColor(tweak, "green");
+    const tweakConflicts = JSON.parse(tweak.dataset.conflicts);
+    tweakConflicts.forEach((conflict) => {
+      const conflictElement = document.querySelector(
+        `.tweak[data-name="${conflict}"][oreui-state="active"]`,
+      );
+      if (conflictElement) {
+        consoler(
+          "conflict",
+          "#ff7f7f",
+          `Conflict detected between ${tweak.dataset.name} and ${conflict}`,
+          "white",
+        );
+        OreUI.setActiveColor(tweak, "purple");
+      }
+    });
+  });
+}
+
 function updateDownloadButton(st) {
   const downloadButton = document.querySelector(".download-selected-button");
   if (st["raw"].length == 0) {
@@ -240,7 +264,7 @@ function updateSelectAllButton(st) {
       } else if (
         st[category].length ==
         selectallbutton.parentElement.querySelectorAll(
-          "& > .category-controlled > .tweaks .tweak",
+          "& > .category-controlled > :is(.tweaks, .subcattweaks) .tweak",
         ).length
       ) {
         imgElement.src =
@@ -257,6 +281,7 @@ function updateSelectAllButton(st) {
 }
 
 function updateSelectedTweaks() {
+  updateSelectedConflictsActiveColor();
   var selectedTweaks = [];
   const tweakElements = document.querySelectorAll(
     ".tweak:has(> .tweak-info > input[type='checkbox']:checked)",
@@ -409,7 +434,7 @@ function downloadSelectedTweaks() {
   // set pack name
   var packName = document.getElementById("fileNameInput").value;
   if (!packName) {
-    packName = `BTBP-${String(Math.floor(Math.random() * 1000000)).padStart(
+    packName = `BTRP-${String(Math.floor(Math.random() * 1000000)).padStart(
       6,
       "0",
     )}`;
@@ -556,6 +581,7 @@ function processJsonData(jsonData, dowhat) {
     );
   }
   fallbackCheckboxChecker();
+  updateSelectedConflictsActiveColor();
   const st = getSelectedTweaks();
   updateSelectAllButton(st);
   updateURL(st);
