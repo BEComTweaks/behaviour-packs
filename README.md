@@ -16,23 +16,9 @@
 </div>
 <div align="left">
 
-A repo containing every single tweak **possible** ported from <a href="https://vanillatweaks.net/picker/datapacks">Vanilla Tweaks' Data-Packs</a> with a Command Line and Web Interface.
+A repo containing every single tweak <b>possible</b> ported from <a href="https://vanillatweaks.net/picker/datapacks">Vanilla Tweaks' Data-Packs</a> with a Web Interface.
 
 How to clone:
 
-```bash
-git clone https://github.com/BEComTweaks/behaviour-packs/
-cd behaviour-packs
-# Optional: Start a venv
-python -m venv venv
-# uv is also supported
-uv venv venv
-# start venv
-venv/scripts/activate
-```
-
-<sub>echo is to instantly start the script with no printing.</sub>
-
 Pull Requests are greatly appreciated as I do not want this to be a single person project. I can get pretty drained out from projects.
-
 </div>
