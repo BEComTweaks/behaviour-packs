@@ -1,15 +1,17 @@
 {
+  "$schema": "https://becomtweaks.github.io/schema/packs.json",
   "topic": "Drops",
   "packs": [
     {
-      "pack_id": "Bat Membranes",
+      "pack_id": "BatMembranes",
       "pack_name": "Bat Membranes",
       "pack_description": "Makes Bats drop membranes."
     },
     {
       "pack_id": "DoubleShulkerShells",
       "pack_name": "Double Shulker Shells",
-      "pack_description": "Makes Shulkers drop two shells instead of one."
+      "pack_description": "Makes Shulkers drop two shells instead of one.",
+      "regolith": true
     },
     {
       "pack_id": "DragonDrops",

@@ -1,10 +1,13 @@
 {
+  "$schema": "https://becomtweaks.github.io/schema/packs.json",
   "topic": "Anti Grief",
+  "location": "anti_grief",
   "packs": [
     {
       "pack_id": "AntiCreeperGrief",
       "pack_name": "Anti Creeper Grief",
-      "pack_description": "Makes Creepers not destroy blocks when it explodes."
+      "pack_description": "Makes Creepers not destroy blocks when it explodes.",
+      "regolith": true
     },
     {
       "pack_id": "AntiEndermanGrief",

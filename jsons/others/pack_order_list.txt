@@ -1,4 +1,0 @@
-anti_grief.json
-drops.json
-fun.json
-utility.json

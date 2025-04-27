@@ -1,3 +1,13 @@
+const categoryDicts = {
+  "Anti Grief": [],
+  Drops: [],
+  Fun: [],
+  Utility: [],
+};
+
+const typeOfPack = "BehaviourPack";
+const extOfPack = "mcaddon";
+
 /************\
 | OreUI HTML |
 \************/
@@ -165,7 +175,7 @@ function triggerPackClick(index) {
 /******************\
 | Custom functions |
 \******************/
-// I sleep now
+
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -184,38 +194,46 @@ function toggleSelection(element) {
   const checkbox = element.querySelector('input[type="checkbox"]');
   if (checkbox.checked) {
     disableSelection(element, checkbox);
-    console.log(
-      `[%cselection%c]\nUnselected ${element.dataset.name}`,
-      "color: green",
-      "color: initial",
+    consoler(
+      "selection",
+      "green",
+      `Unselected ${element.dataset.name}`,
+      "white",
     );
   } else {
     enableSelection(element, checkbox);
-    console.log(
-      `[%cselection%c]\nSelected ${element.dataset.name}`,
-      "color: green",
-      "color: initial",
-    );
+    consoler("selection", "green", `Selected ${element.dataset.name}`, "white");
   }
+  fallbackCheckboxChecker();
   updateSelectedTweaks();
   var selectedTweaks = getSelectedTweaks();
-  var dataCategory = element.dataset.category;
-  const selectAllElement =
-    element.parentElement.parentElement.parentElement.querySelector(
-      ".category-label-selectall",
-    );
-  if (selectedTweaks[dataCategory]["packs"].length == 0) {
-    unselectAll(selectAllElement);
-  } else if (
-    selectedTweaks[dataCategory]["packs"].length ==
-    element.parentElement.querySelectorAll(".tweak").length
-  ) {
-    selectAll(selectAllElement);
-  } else {
-    partialSelected(selectAllElement);
-  }
+  updateSelectAllButton(selectedTweaks);
   updateURL(selectedTweaks);
   updateDownloadButton(selectedTweaks);
+}
+
+function updateSelectedConflictsActiveColor() {
+  document
+    .querySelectorAll(".tweak[oreui-active-color=purple")
+    .forEach((tweak) => OreUI.setActiveColor(tweak, "green"));
+  document.querySelectorAll(".tweak[oreui-state='active']").forEach((tweak) => {
+    OreUI.setActiveColor(tweak, "green");
+    const tweakConflicts = JSON.parse(tweak.dataset.conflicts);
+    tweakConflicts.forEach((conflict) => {
+      const conflictElement = document.querySelector(
+        `.tweak[data-name="${conflict}"][oreui-state="active"]`,
+      );
+      if (conflictElement) {
+        consoler(
+          "conflict",
+          "#ff7f7f",
+          `Conflict detected between ${tweak.dataset.name} and ${conflict}`,
+          "white",
+        );
+        OreUI.setActiveColor(tweak, "purple");
+      }
+    });
+  });
 }
 
 function updateDownloadButton(st) {
@@ -227,10 +245,46 @@ function updateDownloadButton(st) {
   }
 }
 
+function updateSelectAllButton(st) {
+  document
+    .querySelectorAll(".category-label-selectall")
+    .forEach((selectallbutton) => {
+      const imgElement = selectallbutton.querySelector(
+        ".category-label-selectall-img",
+      );
+      const hoverTextElement = selectallbutton.querySelector(
+        ".category-label-selectall-hovertext",
+      );
+      const category = selectallbutton.dataset.category;
+      if (st[category].length == 0) {
+        imgElement.src =
+          "images/select-all-button/chiseled_bookshelf_empty.png";
+        hoverTextElement.textContent = "Select All";
+        selectallbutton.onclick = new Function(`selectAll(this);`);
+      } else if (
+        st[category].length ==
+        selectallbutton.parentElement.querySelectorAll(
+          "& > .category-controlled > :is(.tweaks, .subcattweaks) .tweak",
+        ).length
+      ) {
+        imgElement.src =
+          "images/select-all-button/chiseled_bookshelf_occupied.png";
+        hoverTextElement.textContent = "Unselect All";
+        selectallbutton.onclick = new Function(`unselectAll(this);`);
+      } else {
+        imgElement.src =
+          "images/select-all-button/chiseled_bookshelf_has_selected.png";
+        hoverTextElement.textContent = "Select All";
+        selectallbutton.onclick = new Function(`selectAll(this);`);
+      }
+    });
+}
+
 function updateSelectedTweaks() {
+  updateSelectedConflictsActiveColor();
   var selectedTweaks = [];
   const tweakElements = document.querySelectorAll(
-    ".tweak[oreui-state='active']",
+    ".tweak:has(> .tweak-info > input[type='checkbox']:checked)",
   );
   tweakElements.forEach((tweak) => {
     const labelElement = tweak.querySelector(".tweak-info .tweak-title");
@@ -258,6 +312,7 @@ function updateSelectedTweaks() {
   if (selectedTweaks.length == 0) {
     const tweakItem = document.createElement("div");
     tweakItem.className = "tweak-list-pack";
+    tweakItem.setAttribute("no-pack", "");
     tweakItem.textContent = "Select some packs and see them appear here!";
     document.getElementById("selected-tweaks").appendChild(tweakItem);
   }
@@ -266,7 +321,7 @@ function updateSelectedTweaks() {
 function updateURL(st) {
   for (var key in st) {
     try {
-      if (st[key].packs) {
+      if (key !== "raw") {
         // remove categories
         delete st[key];
       }
@@ -289,30 +344,44 @@ function updateURL(st) {
   window.history.replaceState({}, "", newUrl);
 }
 // if query params already exists
-const loadedparams = new URLSearchParams(window.location.search);
-if (loadedparams.has("st_raw")) {
-  const st = JSON.parse(
-    LZString.decompressFromEncodedURIComponent(loadedparams.get("st_raw")),
-  );
-  processJsonData(st, "select");
-  updateDownloadButton(st);
-  const preselectAlerter = document.getElementsByClassName("preselected")[0];
-  sleep(500).then(() => {
-    // slow down before showing the alert
-    preselectAlerter.style.top = "20vh";
-  });
-  sleep(5000).then(() => {
-    preselectAlerter.style.top = "-20vh";
-  });
+function loadedParamsChecker() {
+  var loadedparams = new URLSearchParams(window.location.search);
+  if (loadedparams.has("st_raw")) {
+    const st_raw = loadedparams.get("st_raw");
+    const st = JSON.parse(LZString.decompressFromEncodedURIComponent(st_raw));
+    consoler(
+      "query",
+      "pink",
+      `Found query params, loading selected packs...`,
+      "white",
+    );
+    processJsonData(st, "select");
+    consoler(
+      "query",
+      "pink",
+      `Selected packs: ${st["raw"].join(", ")}`,
+      "cyan",
+    );
+    updateDownloadButton(st);
+    const preselectAlerter = document.getElementsByClassName("preselected")[0];
+    sleep(500).then(() => {
+      // slow down before showing the alert
+      preselectAlerter.style.top = "20vh";
+    });
+    sleep(5000).then(() => {
+      preselectAlerter.style.top = "-20vh";
+    });
+  }
 }
 
 function getTimeoutDuration() {
   // for people who want instant stuff
   const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-  return mediaQuery.matches ? 0 : 487.5;
+  return mediaQuery.matches ? 0 : 1000;
 }
 // toggle category
 function toggleCategory(label) {
+  fallbackCheckboxChecker();
   const tweaksContainer = label.parentElement.querySelector(
     ".category-controlled",
   );
@@ -325,6 +394,7 @@ function toggleCategory(label) {
     setTimeout(() => {
       tweaksContainer.style.display = "none";
       selectallbutton.style.display = "none";
+      OreUI.becomeInactive(label);
     }, timeoutDuration); // Matches the transition duration
   } else {
     // open category
@@ -345,60 +415,70 @@ function toggleCategory(label) {
       outerCatContainer.style.maxHeight =
         outerCatContainer.scrollHeight + tweaksContainer.scrollHeight + "px";
     }
+    OreUI.becomeActive(label);
   }
 }
+
 // i wonder what this is for
 function downloadSelectedTweaks() {
   // set min_engine_version
+  document.querySelector(".loading-screen").style =
+    "opacity: 1; pointer-events: all;";
   var mcVersion = document.getElementById("mev").value;
-  console.log(
-    `[%cdownload%c]\nMinimum Engine Version is set to ${mcVersion}`,
-    "color: cyan",
-    "color: initial",
+  consoler(
+    "download",
+    "cyan",
+    `Minimum Engine Version is set to ${mcVersion}`,
+    "white",
   );
   // set pack name
   var packName = document.getElementById("fileNameInput").value;
   if (!packName) {
-    packName = `BTBP-${String(Math.floor(Math.random() * 1000000)).padStart(
+    packName = `BTRP-${String(Math.floor(Math.random() * 1000000)).padStart(
       6,
       "0",
     )}`;
   }
   packName = packName.replaceAll("/", "-");
-  console.log(
-    `[%cdownload%c]\nPack Name is set to ${packName}`,
-    "color: cyan",
-    "color: initial",
-  );
+  consoler("download", "cyan", `Pack Name is set to ${packName}`, "white");
   // get selected tweaks
   jsonData = getSelectedTweaks();
   // fetch
   fetchPack("https", jsonData, packName, mcVersion);
 }
-const serverip = "localhost";
 
 function fetchPack(protocol, jsonData, packName, mcVersion) {
+  const serverip = "localhost";
   // get download button
-  var downloadbutton = document.getElementsByClassName(
-    "download-selected-button",
-  )[0];
-  // For people that spam the download button
-  downloadbutton.onclick = null;
+  var downloadbutton = document.querySelector(".download-selected-button");
+  // get status element
+  var statusElement = document.querySelector(".loading-status");
+  var statusElementBoxes =
+    statusElement.parentElement.querySelectorAll("[class^=box]");
   // set proper colors
   if (protocol === "http") {
     // when attempting through http
-    OreUI.setActiveColor(downloadbutton, "pink");
-    downloadbutton.innerText = "Retrying with HTTP...";
+    statusElementBoxes.forEach(
+      (element) => (element.style.borderColor = "orange"),
+    );
+    statusElement.innerText = "Retrying with HTTP...";
   } else {
     // when attempting through https
-    OreUI.setActiveColor(downloadbutton, "green");
-    downloadbutton.innerText = "Fetching Pack...";
+    statusElementBoxes.forEach(
+      (element) => (element.style.borderColor = "green"),
+    );
+    statusElement.innerText = "Fetching Pack...";
   }
   // become active
-  OreUI.becomeActive(downloadbutton);
-  console.log("[%cfetch%c]\nFetching pack...", "color: blue", "color: initial");
+  OreUI.becomeDisabled(downloadbutton);
+  consoler(
+    "fetch",
+    "blue",
+    `Fetching pack with ${protocol} protocol...`,
+    "white",
+  );
   // fetch
-  fetch(`${protocol}://${serverip}/exportBehaviourPack`, {
+  fetch(`${protocol}://${serverip}/export${typeOfPack}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -410,63 +490,56 @@ function fetchPack(protocol, jsonData, packName, mcVersion) {
     .then((response) => {
       // when the response doesnt feel good
       if (!response.ok) {
-        console.log(
-          "[%cerror%c]\nNetwork response was not ok",
-          "color: red",
-          "color: initial",
-        );
+        consoler("error", "red", `Response was not ok`, "white");
+        throw new Error(response);
       }
       return response.blob();
     })
     .then(async (blob) => {
       // pack received
-      console.log(
-        "[%cfetch%c]\nReceived pack!",
-        "color: blue",
-        "color: initial",
-      );
-      downloadbutton.innerText = "Obtained pack!";
+      consoler("fetch", "blue", `Pack received!`, "white");
+      statusElement.innerText = "Obtained pack!";
       // Download the file
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.style.display = "none";
       a.href = url;
-      a.download = `${packName}.mcpack`;
+      a.download = `${packName}.${extOfPack}`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
       // reset button text
       await sleep(1000);
-      OreUI.becomeInactive(downloadbutton);
-      OreUI.setActiveColor(downloadbutton, "dark");
-      downloadbutton.innerText = "Download Selected Tweaks";
-      downloadbutton.onclick = downloadSelectedTweaks;
+      OreUI.becomeEnabled(downloadbutton);
+      statusElement.innerText = "";
+      document.querySelector(".loading-screen").removeAttribute("style");
     })
     .catch(async (error) => {
+      consoler("error", "red", `Error Dump: ${error}`, "white");
       // when the response doesnt send
       if (protocol === "https") {
-        console.log(
-          `[%cerror%c]\nHTTPS error, trying HTTP: %c${error}`,
-          "color: red",
-          "color: initial",
-          "color: red",
-        );
+        consoler("error", "red", `HTTPS error, trying HTTP`, "white");
         fetchPack("http", jsonData, packName, mcVersion); // Retry with HTTP
       } else {
-        console.log(
-          `[%cerror%c] Error: %c${error}`,
-          "color: red",
-          "color: initial",
-          "color: red",
-        );
-        downloadbutton.innerText =
-          "Couldn't fetch pack. Check console for error log.";
-        OreUI.setActiveColor(downloadbutton, "red");
+        if (error.text !== undefined) {
+          const errorText = await error.text();
+          consoler("error", "red", `Error: ${errorText}`, "white");
+          statusElement.innerText = `Status Code: ${error.status}`;
+        } else {
+          consoler("error", "red", `Error: ${error}`, "white");
+          statusElement.innerText =
+            "Couldn't fetch pack. Check console for error log.";
+        }
+        statusElementBoxes.forEach((element) => {
+          element.style.borderColor = "red";
+          element.style.animationPlayState = "paused";
+        });
+        OreUI.becomeEnabled(downloadbutton);
         await sleep(3000);
-        OreUI.setActiveColor(downloadbutton, "dark");
-        downloadbutton.innerText = "Download Selected Tweaks";
-        downloadbutton.onclick = downloadSelectedTweaks;
-        OreUI.becomeInactive(downloadbutton);
+        document.querySelector(".loading-screen").style = "opacity: 0;";
+        await sleep(1000);
+        statusElementBoxes.forEach((element) => (element.style = ""));
+        document.querySelector(".loading-screen").removeAttribute("style");
       }
     });
 }
@@ -482,39 +555,35 @@ function processJsonData(jsonData, dowhat) {
         if (dowhat == "select") {
           if (!div.querySelector('input[type="checkbox"]').checked) {
             enableSelection(div, div.querySelector('input[type="checkbox"]'));
-            console.log(
-              `[%cmass%c]\nSelected ${pack}`,
-              "color: green",
-              "color: initial",
-            );
+            consoler("selection", "green", `Selected ${pack}`, "white");
           }
         } else if (dowhat == "unselect") {
           if (div.querySelector('input[type="checkbox"]').checked) {
             disableSelection(div, div.querySelector('input[type="checkbox"]'));
-            console.log(
-              `[%cmass%c]\nUnselected ${pack}`,
-              "color: green",
-              "color: initial",
-            );
+            consoler("selection", "green", `Unselected ${pack}`, "white");
           }
         }
       } else {
-        console.log(
-          `[%cerror%c]\nDiv with data-name="${pack}" not found.`,
-          "color: red",
-          "color: initial",
+        consoler(
+          "error",
+          "red",
+          `Div with data-name="${pack}" not found.`,
+          "white",
         );
       }
     });
   } else {
-    console.log(
-      "[%cerror%c]\n%cThe 'raw' field in selected_packs.json is not an array.",
-      "color: red",
-      "color: initial",
+    consoler(
+      "error",
+      "red",
+      `The 'raw' field in selected_packs.json is not an array.`,
+      "white",
     );
   }
-  updateSelectedTweaks();
+  fallbackCheckboxChecker();
+  updateSelectedConflictsActiveColor();
   const st = getSelectedTweaks();
+  updateSelectAllButton(st);
   updateURL(st);
   updateDownloadButton(st);
 }
@@ -522,7 +591,7 @@ function processJsonData(jsonData, dowhat) {
 function getSelectedTweaks() {
   const selectedTweaks = [];
   const tweakElements = document.querySelectorAll(
-    ".tweak[oreui-state='active']",
+    ".tweak:has(> .tweak-info > input[type='checkbox']:checked)",
   );
   tweakElements.forEach((tweak) => {
     selectedTweaks.push({
@@ -531,49 +600,12 @@ function getSelectedTweaks() {
       index: parseInt(tweak.dataset.index),
     });
   });
-  // yza should explain this
-  const tweaksByCategory = {
-    "Anti Grief": [],
-    Drops: [],
-    Fun: [],
-    Utility: [],
-  };
-
-  const indicesByCategory = {
-    "Anti Grief": [],
-    Drops: [],
-    Fun: [],
-    Utility: [],
-  };
-  console.log(
-    "[%cget%c]\nObtaining selected tweaks...",
-    "color: purple",
-    "color: initial",
-  );
+  const jsonData = JSON.parse(JSON.stringify(categoryDicts));
   selectedTweaks.forEach((tweak) => {
-    tweaksByCategory[tweak.category].push(tweak.name);
-    indicesByCategory[tweak.category].push(tweak.index);
+    jsonData[tweak.category].push(tweak.name);
   });
-  console.log("[%cget%c]\nObtained!", "color: purple", "color: initial");
-  const jsonData = {
-    "Anti Grief": {
-      packs: tweaksByCategory["Anti Grief"],
-      index: indicesByCategory["Anti Grief"],
-    },
-    Drops: {
-      packs: tweaksByCategory["Drops"],
-      index: indicesByCategory["Drops"],
-    },
-    Fun: {
-      packs: tweaksByCategory["Fun"],
-      index: indicesByCategory["Fun"],
-    },
-    Utility: {
-      packs: tweaksByCategory["Utility"],
-      index: indicesByCategory["Utility"],
-    },
-    raw: selectedTweaks.map((tweak) => tweak.name),
-  };
+  jsonData.raw = selectedTweaks.map((tweak) => tweak.name);
+  consoler("get", "purple", "Obtained Selected Tweaks!", "white");
   return jsonData;
 }
 // Extra code to trigger file input
@@ -610,11 +642,11 @@ zipInput.addEventListener("change", function (event) {
                       ".download-selected-button",
                     ).disabled = false;
                   } catch (error) {
-                    console.log(
-                      `[%cerror%c]\nError parsing JSON: %c${error}`,
-                      "color: red",
-                      "color: initial",
-                      "color: red",
+                    consoler(
+                      "error",
+                      "red",
+                      `Error parsing JSON: ${error}`,
+                      "white",
                     );
                     selectedFile.innerText = "Invalid JSON in pack";
                     sleep(3000).then(() => {
@@ -623,11 +655,11 @@ zipInput.addEventListener("change", function (event) {
                   }
                 })
                 .catch(function (error) {
-                  console.log(
-                    `[%cerror%c]\nError extracting selected_packs.json: %c${error}`,
-                    "color: red",
-                    "color: initial",
-                    "color: red",
+                  consoler(
+                    "error",
+                    "red",
+                    `Error extracting selected_packs.json: ${error}`,
+                    "white",
                   );
                   selectedFile.innerText = "Invalid pack";
                   sleep(3000).then(() => {
@@ -638,10 +670,11 @@ zipInput.addEventListener("change", function (event) {
           });
 
           if (!fileFound) {
-            console.log(
-              `[%cerror%c]\nselected_packs.json not found in any folder within the ZIP file.`,
-              "color: red",
-              "color: initial",
+            consoler(
+              "error",
+              "red",
+              `selected_packs.json not found in any folder within the ZIP file.`,
+              "white",
             );
             selectedFile.innerText = "Invalid pack";
             sleep(3000).then(() => {
@@ -650,12 +683,7 @@ zipInput.addEventListener("change", function (event) {
           }
         })
         .catch(function (error) {
-          console.log(
-            `[%cerror%c]\nError reading ZIP file: %c${error}`,
-            "color: red",
-            "color: initial",
-            "color: red",
-          );
+          consoler("error", "red", `Error reading ZIP file: ${error}`, "white");
           selectedFile.innerText = "Invalid file";
           sleep(3000).then(() => {
             selectedFile.innerText = "Upload pack";
@@ -664,11 +692,7 @@ zipInput.addEventListener("change", function (event) {
     };
     reader.readAsArrayBuffer(file);
   } else {
-    console.log(
-      `[%cerror%c]\nNo file selected.`,
-      "color: red",
-      "color: initial",
-    );
+    consoler("error", "red", `No file selected.`, "white");
   }
 });
 
@@ -677,15 +701,7 @@ function selectAll(element) {
     LZString.decompressFromEncodedURIComponent(element.dataset.allpacks),
   );
   processJsonData(st, "select");
-  element.onclick = new Function(`unselectAll(this);`);
-  element.innerHTML =
-    '<img src="images/select-all-button/chiseled_bookshelf_occupied.png" class="category-label-selectall-img"><div class="category-label-selectall-hovertext">Unselect All</div>';
-}
-
-function partialSelected(element) {
-  element.innerHTML =
-    '<img src="images/select-all-button/chiseled_bookshelf_has_selected.png" class="category-label-selectall-img"><div class="category-label-selectall-hovertext">Select All</div>';
-  element.onclick = new Function(`selectAll(this);`);
+  updateSelectAllButton(getSelectedTweaks());
 }
 
 function unselectAll(element) {
@@ -693,9 +709,7 @@ function unselectAll(element) {
     LZString.decompressFromEncodedURIComponent(element.dataset.allpacks),
   );
   processJsonData(st, "unselect");
-  element.onclick = new Function(`selectAll(this);`);
-  element.innerHTML =
-    '<img src="images/select-all-button/chiseled_bookshelf_empty.png" class="category-label-selectall-img"><div class="category-label-selectall-hovertext">Select All</div>';
+  updateSelectAllButton(getSelectedTweaks());
 }
 
 function updateCategoryHeight() {
@@ -708,3 +722,89 @@ function updateCategoryHeight() {
 }
 
 window.addEventListener("resize", updateCategoryHeight);
+var fallbackCheckboxesChecked = false;
+
+function fallbackCheckboxChecker() {
+  if (!fallbackCheckboxesChecked) {
+    let warned = false;
+    document
+      .querySelectorAll(".container input[type='checkbox']:checked")
+      .forEach((checkbox) => {
+        const tweak = checkbox.parentElement.parentElement;
+        if (tweak) {
+          const checkboxState = OreUI.getCurrentState(tweak);
+          if (checkboxState === "inactive") {
+            OreUI.becomeActive(tweak);
+            if (!warned) {
+              consoler(
+                "checkbox",
+                "orange",
+                `Checkbox state for ${tweak} mismatched with oreUI state, using fallback script`,
+                "white",
+              );
+              warned = true;
+            }
+          }
+        }
+      });
+    updateSelectedTweaks();
+    updateDownloadButton(getSelectedTweaks());
+    fallbackCheckboxesChecked = true;
+  }
+}
+
+document
+  .querySelector(".devtools-toggle-tweak-per-column input[type='number']")
+  .addEventListener("input", function () {
+    const checkbox = this.parentElement.parentElement.querySelector(
+      "input[type='checkbox']",
+    );
+    if (checkbox && checkbox.checked) {
+      let styleBlock = document.querySelector("#dynamic-grid-style");
+
+      // If the style block doesn't exist, create it
+      if (!styleBlock) {
+        styleBlock = document.createElement("style");
+        styleBlock.id = "dynamic-grid-style";
+        document.head.appendChild(styleBlock);
+      }
+
+      // Update the styles for `.tweaks` and `.subcattweaks`
+      styleBlock.textContent = `
+        .tweaks, .subcattweaks {
+          grid-template-columns: repeat(${this.value}, 1fr) !important;
+        }
+      `;
+      updateCategoryHeight();
+    }
+  });
+
+document
+  .querySelector(".devtools-toggle-tweak-per-column input[type='checkbox']")
+  .addEventListener("change", function () {
+    const numberInput = this.parentElement.parentElement.querySelector(
+      "input[type='number']",
+    );
+    if (this.checked) {
+      numberInput.removeAttribute("disabled");
+      numberInput.dispatchEvent(new Event("input"));
+      consoler(
+        "tweak-per-column",
+        "green",
+        `Set tweaks container column width to ${numberInput.content}`,
+        "white",
+      );
+    } else {
+      numberInput.setAttribute("disabled", "true");
+      const styleBlock = document.querySelector("#dynamic-grid-style");
+      if (styleBlock) {
+        styleBlock.remove();
+      }
+    }
+  });
+
+document.querySelectorAll("input[type=checkbox]").forEach((checkbox) => {
+  checkbox.checked = false;
+});
+
+loadedParamsChecker();
