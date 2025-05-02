@@ -18,9 +18,7 @@
   },
   "homepage": "https://github.com/BEComTweaks/behaviour-packs#readme",
   "dependencies": {
-    "braces": "^3.0.3",
     "live-server": "^1.2.2",
-    "micromatch": "^4.0.8",
     "prettier": "^3.5.3"
   }
 }
