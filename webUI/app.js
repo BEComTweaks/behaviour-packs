@@ -1,3 +1,6 @@
+/**************\
+| Not constant |
+\**************/
 const categoryDicts = {
   "Anti Grief": [],
   Drops: [],
@@ -450,7 +453,6 @@ function downloadSelectedTweaks() {
 }
 
 function fetchPack(protocol, jsonData, packName, mcVersion) {
-  const serverip = "localhost";
   // get download button
   var downloadbutton = document.querySelector(".download-selected-button");
   // get status element
