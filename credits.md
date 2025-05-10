@@ -11,6 +11,12 @@
 [YzaBeast1](https://github.com/yzabeast1)
 - Pointed out issues with my code preventing Linux Distributions from running the scripts and made the webUI and backend
 
+[SquatchHunter](https://github.com/SquatchHunter)
+- Made the regolith variant for Anti Creeper Grief
+
+[PAPISOP](https://github.com/PAPISOP)
+- Made the regolith variant for Double Shulker Shells
+
 [Gyver5681](https://github.com/gyver5681)
 - Made AFK Display
 
