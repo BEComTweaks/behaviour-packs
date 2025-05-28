@@ -12,7 +12,8 @@
     {
       "pack_id": "AntiEndermanGrief",
       "pack_name": "Anti Enderman Grief",
-      "pack_description": "Makes Enderman not pick up blocks."
+      "pack_description": "Makes Enderman not pick up blocks.",
+      "disabled": true
     },
     {
       "pack_id": "AntiGhastGrief",
