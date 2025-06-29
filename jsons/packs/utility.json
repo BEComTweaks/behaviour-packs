@@ -10,7 +10,8 @@
     {
       "pack_id": "AFKDisplay",
       "pack_name": "AFK Display",
-      "pack_description": "Marks players who are afk in the player screen."
+      "pack_description": "Marks players who are afk in the player screen.",
+      "disabled": true
     }
   ]
 }
