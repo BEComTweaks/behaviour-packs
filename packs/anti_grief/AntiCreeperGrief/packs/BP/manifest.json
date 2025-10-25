@@ -15,10 +15,6 @@
     }
   ],
   "dependencies": [
-    {
-      "uuid": "c7e4c3cb-bf32-42f1-8d0d-48ec3a617776",
-      "version": [1, 0, 0]
-    }
   ],
   "metadata": {
     "authors": ["Vanilla Tweaks", "Bedrock Tweaks", "SquatchHunter"]
