@@ -15,8 +15,7 @@
       "version": [1, 0, 0]
     }
   ],
-  "dependencies": [
-  ],
+  "dependencies": [],
   "metadata": {
     "authors": ["Vanilla Tweaks", "Bedrock Tweaks", "SquatchHunter"]
   }
