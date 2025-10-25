@@ -16,6 +16,7 @@
   ],
   "metadata": {
     "authors": ["BEComTweaks"],
-    "url": "https://github.com/BEComTweaks/behaviour-packs"
+    "url": "https://github.com/BEComTweaks/behaviour-packs",
+    "product_type": "addon"
   }
 }
