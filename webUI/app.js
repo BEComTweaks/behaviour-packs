@@ -762,7 +762,7 @@ function fallbackCheckboxChecker() {
 
 const fakeAssistantResponses = [
   "I don't know.",
-  "That response violates the <u><a href=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\" target=\"_blank\">Terms of Service</a></u>.",
+  'That response violates the <u><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Terms of Service</a></u>.',
 ];
 let fakeAssistantReplyCount = 0;
 
