@@ -694,7 +694,7 @@ select {
     font-size: 1.05em;
     transform: translateY(-0.25em);
     sub {
-      font-weight: initial
+      font-weight: initial;
     }
   }
 }
