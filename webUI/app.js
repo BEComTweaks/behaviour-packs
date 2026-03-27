@@ -840,10 +840,13 @@ function sendFakeAssistantMessage() {
     document.querySelector(".fake-assistant-send").disabled = true;
   }
   input.value = "";
-  window.setTimeout(() => {
-    appendFakeAssistantMessage(getFakeAssistantReply(), "bot");
-    document.querySelector(".fake-assistant-send").disabled = false;
-  }, Math.floor(Math.random() * 1000) + 500);
+  window.setTimeout(
+    () => {
+      appendFakeAssistantMessage(getFakeAssistantReply(), "bot");
+      document.querySelector(".fake-assistant-send").disabled = false;
+    },
+    Math.floor(Math.random() * 1000) + 500,
+  );
 }
 
 const fakeAssistantInput = document.getElementById("fakeAssistantInput");

@@ -650,7 +650,7 @@ select {
   align-items: center;
   justify-content: center;
   &:has(+ .open) {
-    display: none
+    display: none;
   }
 }
 
@@ -692,7 +692,7 @@ select {
     margin: 0;
     text-align: left;
     font-size: 1.05em;
-    transform: translateY(-0.5em)
+    transform: translateY(-0.5em);
   }
 }
 
