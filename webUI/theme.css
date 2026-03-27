@@ -134,7 +134,7 @@
       }
     }
   }
-  /* The surrounding bezel 
+  /* The surrounding bezel
      Outline could've been used but offset
      isn't flexible (the bottom offset needs
      to change, but it can't) */
@@ -649,6 +649,9 @@ select {
   display: flex;
   align-items: center;
   justify-content: center;
+  &:has(+ .open) {
+    display: none
+  }
 }
 
 .fake-assistant-toggle-img {
@@ -689,6 +692,7 @@ select {
     margin: 0;
     text-align: left;
     font-size: 1.05em;
+    transform: translateY(-0.5em)
   }
 }
 
@@ -1217,7 +1221,7 @@ input:checked + .slider:before {
   }
 
   .fake-assistant-panel {
-    bottom: 70px;
+    bottom: 15px;
   }
 
   .large-nav {

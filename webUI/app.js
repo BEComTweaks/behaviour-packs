@@ -836,9 +836,13 @@ function sendFakeAssistantMessage() {
     return;
   }
   appendFakeAssistantMessage(userMessage, "user");
+  if (!document.querySelector(".fake-assistant-send").disabled) {
+    document.querySelector(".fake-assistant-send").disabled = true;
+  }
   input.value = "";
   window.setTimeout(() => {
     appendFakeAssistantMessage(getFakeAssistantReply(), "bot");
+    document.querySelector(".fake-assistant-send").disabled = false;
   }, Math.floor(Math.random() * 1000) + 500);
 }
 
