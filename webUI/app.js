@@ -760,6 +760,7 @@ function fallbackCheckboxChecker() {
   }
 }
 
+/* merl my goat */
 const fakeAssistantResponses = [
   "I don't know.",
   'That response violates the <u><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Terms of Service</a></u>.',
@@ -838,7 +839,7 @@ function sendFakeAssistantMessage() {
   input.value = "";
   window.setTimeout(() => {
     appendFakeAssistantMessage(getFakeAssistantReply(), "bot");
-  }, 250);
+  }, Math.floor(Math.random() * 1000) + 500);
 }
 
 const fakeAssistantInput = document.getElementById("fakeAssistantInput");
