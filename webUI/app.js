@@ -905,9 +905,9 @@ document.querySelectorAll("input[type=checkbox]").forEach((checkbox) => {
 });
 
 if (merlSettingsToggle) {
-  merlSettingsToggle.checked = true;
+  merlSettingsToggle.checked = false;
 }
 
-setFakeAssistantVisibility(true);
+setFakeAssistantVisibility(false);
 
 loadedParamsChecker();
