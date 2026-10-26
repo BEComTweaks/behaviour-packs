@@ -12,6 +12,11 @@
       "pack_name": "AFK Display",
       "pack_description": "Marks players who are afk in the player screen.",
       "disabled": true
+    },
+    {
+      "pack_id": "NetherPortalCoords",
+      "pack_name": "Nether Portal Coords",
+      "pack_description": "Calculates Overworld and Nether coordinates block-accurately via custom chat commands."
     }
   ]
 }
