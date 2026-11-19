@@ -355,8 +355,9 @@ function loadedParamsChecker() {
   if (!Array.isArray(raw)) return;
 
   const knownNames = new Set(
-    Array.from(document.querySelectorAll(".tweak[data-name]"), (tweak) =>
-      tweak.dataset.name,
+    Array.from(
+      document.querySelectorAll(".tweak[data-name]"),
+      (tweak) => tweak.dataset.name,
     ),
   );
   raw = raw.filter((name) => knownNames.has(name));
