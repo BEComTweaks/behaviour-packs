@@ -1,16 +1,4 @@
-/* other vars necessary */
-const serverip = "localhost";
-const textures = [
-  { src: "images/blocks/deepslate.png", probability: 0.618 },
-  { src: "images/blocks/deepslate_copper_ore.png", probability: 0.128 },
-  { src: "images/blocks/deepslate_coal_ore.png", probability: 0.128 },
-  { src: "images/blocks/deepslate_iron_ore.png", probability: 0.064 },
-  { src: "images/blocks/deepslate_lapis_ore.png", probability: 0.032 },
-  { src: "images/blocks/deepslate_redstone_ore.png", probability: 0.016 },
-  { src: "images/blocks/deepslate_gold_ore.png", probability: 0.008 },
-  { src: "images/blocks/deepslate_emerald_ore.png", probability: 0.004 },
-  { src: "images/blocks/deepslate_diamond_ore.png", probability: 0.002 },
-];
+// Shared picker logic; edit this file in resource-packs.
 
 /* consoler object */
 function consoler(logTag, logColour, logMessage, logMessageColour) {
@@ -41,6 +29,34 @@ function consoler(logTag, logColour, logMessage, logMessageColour) {
   }
 }
 
+async function canReach(url, timeout = 5000) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    await fetch(url, {
+      method: "HEAD",
+      mode: "no-cors",
+      cache: "no-store",
+      signal: controller.signal,
+    });
+    return true;
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+async function diagnosePackConnection() {
+  const [internetAvailable, runPlaceAvailable] = await Promise.all([
+    canReach("https://example.com/"),
+    canReach("https://run.place/"),
+  ]);
+
+  return { internetAvailable, runPlaceAvailable };
+}
+
 function selectTexture() {
   const rand = Math.random();
   let cumulativeProbability = 0;
@@ -50,8 +66,8 @@ function selectTexture() {
       return texture.src;
     }
   }
+  return textures[0].src;
 }
-
 function createTiles() {
   const container = document.getElementById("background-container");
   const numColumns = Math.ceil(window.innerWidth / 100) + 2;
@@ -60,12 +76,6 @@ function createTiles() {
   for (let i = container.children.length; i < numColumns; i++) {
     const rowDiv = document.createElement("div");
     rowDiv.className = "row";
-    for (let j = 0; j < numRows; j++) {
-      const tile = document.createElement("div");
-      tile.className = "tile";
-      tile.style.backgroundImage = `url("${selectTexture()}")`;
-      rowDiv.appendChild(tile);
-    }
     container.appendChild(rowDiv);
   }
 
@@ -75,7 +85,7 @@ function createTiles() {
     for (let j = rowDiv.children.length; j < numRows; j++) {
       const tile = document.createElement("div");
       tile.className = "tile";
-      tile.style.backgroundImage = `url("${selectTexture()}")`;
+      updateTile(tile);
       rowDiv.appendChild(tile);
     }
     while (rowDiv.children.length > numRows) {
@@ -91,6 +101,13 @@ function createTiles() {
 createTiles();
 
 window.addEventListener("resize", createTiles);
+
+// utility for miner.js
+function updateTile(element) {
+  const tile_image = selectTexture();
+  element.style.backgroundImage = `url("images/blocks/${tile_image}")`;
+  element.dataset.type = tile_image;
+}
 
 // Handle Loading Screen
 const loading_screen_element = document.querySelector(".loading-screen");

@@ -147,6 +147,7 @@
       </div>
     </div>
     <div class="capture-exit" onclick="closePanel();"></div>
+    <script src="constants.js"></script>
     <script src="extra.js"></script>
     <div class="image-container" onclick="showDevToolsPanel();">
       <img alt="Resource Packs" id="title" src="images/title.png" />

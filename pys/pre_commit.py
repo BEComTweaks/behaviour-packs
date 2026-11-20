@@ -57,7 +57,7 @@ parser.add_argument('--dev', '-d', action='store_true', help='Show time and line
 parser.add_argument('--no-spinner', '-xs', action='store_true', help='Disables the spinner from rich')
 parser.add_argument('--repo', '-gr', help='Use a custom repo while building', default="BEComTweaks/behaviour-packs")
 parser.add_argument('--branch', '-gb', help='Use a custom branch while building', default="main")
-parser.add_argument('--pull-js', '-pjs', action='store_true', help="Pulls JS modules from their sources")
+parser.add_argument('--pull-js', '-pjs', action='store_true', help="Pulls app.js and extra.js from resource-packs")
 parser.add_argument('--pull-css', '-pcss', action='store_true', help="Pulls CSS from https://github.com/becomtweaks/resource-packs")
 
 args = parser.parse_args()
@@ -517,15 +517,14 @@ if "site" not in args.build or ("site" in args.build and (args.only_update_html 
 
 with spinner("[yellow]Updting resources from remote...", spinner="hamburger"):
     def request_save_to(url="", filename=""):
-        with requests.get(url, stream=True) as response:
+        with requests.get(url, timeout=30) as response:
             response.raise_for_status()
-            with open(filename, "w") as file:
-                for chunk in response.iter_content(chunk_size=8192):
-                    file.write(chunk.decode("utf-8"))
+            with open(filename, "wb") as file:
+                file.write(response.content)
     if args.pull_js:
-        # Ignore LZString, it is fine
-        # JSZip
-        request_save_to("https://raw.githubusercontent.com/Stuk/jszip/refs/heads/main/dist/jszip.min.js", f"{cdir()}/webUI/extras/jszip.min.js")
+        source = "https://raw.githubusercontent.com/BEComTweaks/resource-packs/refs/heads/main/webUI"
+        for script in ("app.js", "extra.js"):
+            request_save_to(f"{source}/{script}", f"{cdir()}/webUI/{script}")
     if args.pull_css and args.branch == "main":
         # pull css 
         request_save_to("https://raw.githubusercontent.com/becomtweaks/resource-packs/refs/heads/main/webUI/theme.css", f"{cdir()}/webUI/theme.css")
@@ -540,10 +539,16 @@ if "site" in args.build:
     except FileNotFoundError:
         pass
     try:
-        shutil.copytree(f"{cdir()}/webUI", f"{cdir()}/build")
-        os.remove(f"{cdir()}/build/index.html.template")
+        cdn_scripts = {} if "server" in args.build else {
+            "jszip.min.js": "https://cdn.jsdelivr.net/npm/jszip@3.10.2/dist/jszip.min.js",
+            "lz-string.min.js": "https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js",
+        }
+        shutil.copytree(f"{cdir()}/webUI", f"{cdir()}/build",
+                        ignore=shutil.ignore_patterns("index.html.template", *cdn_scripts))
         with open(f"{cdir()}/build/index.html", "r") as file:
             content = file.read()
+        for name, url in cdn_scripts.items():
+            content = content.replace(f'src="extras/{name}"', f'src="{url}"')
         with open(f"{cdir()}/build/index.html", "w") as file:
             file.write(content.replace("../", f"https://raw.githubusercontent.com/{args.repo}/{args.branch}/"))
         print("[bright_cyan]Website build success!")

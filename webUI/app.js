@@ -1,15 +1,4 @@
-/**************\
-| Not constant |
-\**************/
-const categoryDicts = {
-  "Anti Grief": [],
-  Drops: [],
-  Fun: [],
-  Utility: [],
-};
-
-const typeOfPack = "BehaviourPack";
-const extOfPack = "mcaddon";
+// Shared picker logic; edit this file in resource-packs.
 
 /************\
 | OreUI HTML |
@@ -245,8 +234,19 @@ function updateSelectedConflictsActiveColor() {
 }
 
 function updateDownloadButton(st) {
+  // well nspc911, behaviour packs and crafting tweaks dont have a mine-then-craft
+  // thing, then what do we do? well just ignore it :3
   const downloadButton = document.querySelector(".download-selected-button");
-  if (st["raw"].length == 0) {
+  if (
+    st["raw"].length == 0 ||
+    (document.querySelector(
+      ".devtools-toggle-mine-then-craft input[type='checkbox']",
+    )?.checked &&
+      Number(
+        document.querySelector("#mineThenCraftPoints > .number").textContent,
+      ) <
+        st["raw"].length * 20)
+  ) {
     downloadButton.disabled = true;
   } else {
     downloadButton.disabled = false;
@@ -428,7 +428,8 @@ function toggleCategory(label) {
 
 // i wonder what this is for
 function downloadSelectedTweaks() {
-  // set min_engine_version
+  // get selected tweaks
+  const jsonData = getSelectedTweaks();
   document.querySelector(".loading-screen").style =
     "opacity: 1; pointer-events: all;";
   var mcVersion = document.getElementById("mev").value;
@@ -448,8 +449,6 @@ function downloadSelectedTweaks() {
   }
   packName = packName.replaceAll("/", "-");
   consoler("download", "cyan", `Pack Name is set to ${packName}`, "white");
-  // get selected tweaks
-  jsonData = getSelectedTweaks();
   // fetch
   fetchPack("https", jsonData, packName, mcVersion);
 }
@@ -519,6 +518,22 @@ function fetchPack(protocol, jsonData, packName, mcVersion) {
       OreUI.becomeEnabled(downloadbutton);
       statusElement.innerText = "";
       document.querySelector(".loading-screen").removeAttribute("style");
+      // do the minethencraft stuff
+      if (
+        document.querySelector(
+          ".devtools-toggle-mine-then-craft input[type='checkbox']",
+        )?.checked
+      ) {
+        const numberElement = document.querySelector(
+          "#mineThenCraftPoints > .number",
+        );
+        // if it fails, skill issue
+        numberElement.innerText =
+          Number(numberElement.textContent) - jsonData["raw"].length * 20;
+        if (Number(numberElement.textContent) < jsonData["raw"].length * 20) {
+          document.querySelector(".download-selected-button").disabled = true;
+        }
+      }
     })
     .catch(async (error) => {
       consoler("error", "red", `Error Dump: ${error}`, "white");
@@ -533,15 +548,34 @@ function fetchPack(protocol, jsonData, packName, mcVersion) {
           statusElement.innerText = `Status Code: ${error.status}`;
         } else {
           consoler("error", "red", `Error: ${error}`, "white");
-          statusElement.innerText =
-            "Couldn't fetch pack. Check console for error log.";
+          statusElement.innerText = "Checking your connection...";
+
+          const { internetAvailable, runPlaceAvailable } =
+            await diagnosePackConnection();
+          consoler(
+            "diagnostics",
+            "orange",
+            `example.com: ${internetAvailable ? "reachable" : "unreachable"}; run.place: ${runPlaceAvailable ? "reachable" : "unreachable"}`,
+            "white",
+          );
+
+          if (!internetAvailable && !runPlaceAvailable) {
+            statusElement.innerText =
+              "Couldn't reach the internet. Check your connection and try again.";
+          } else if (internetAvailable && !runPlaceAvailable) {
+            statusElement.innerText =
+              "Your internet is working, but run.place could not be reached. Your ISP, DNS provider, or network may be blocking it. Try another network, DNS provider, or a VPN.";
+          } else {
+            statusElement.innerText =
+              "Your internet and run.place are reachable, but the pack server did not respond. Please try again later.";
+          }
         }
         statusElementBoxes.forEach((element) => {
           element.style.borderColor = "red";
           element.style.animationPlayState = "paused";
         });
         OreUI.becomeEnabled(downloadbutton);
-        await sleep(3000);
+        await sleep(8000);
         document.querySelector(".loading-screen").style = "opacity: 0;";
         await sleep(1000);
         statusElementBoxes.forEach((element) => (element.style = ""));
@@ -592,6 +626,7 @@ function processJsonData(jsonData, dowhat) {
   updateSelectAllButton(st);
   updateURL(st);
   updateDownloadButton(st);
+  updateSelectedTweaks();
 }
 // get selected tweaks
 function getSelectedTweaks() {
@@ -910,3 +945,4 @@ if (merlSettingsToggle) {
 setFakeAssistantVisibility(false);
 
 loadedParamsChecker();
+updateDownloadButton(getSelectedTweaks());
