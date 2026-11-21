@@ -326,22 +326,61 @@ function updateSelectedTweaks() {
   }
 }
 // query params function
-function updateURL(st) {
+let selectionRevision = 0;
+async function updateURL(st) {
+  const revision = ++selectionRevision;
   const url = new URL(window.location.href);
   url.searchParams.delete("st_raw");
+  url.searchParams.delete("st_def");
   if (st.raw.length) {
     url.searchParams.set("st", st.raw.join("*"));
   } else {
     url.searchParams.delete("st");
   }
   window.history.replaceState({}, "", url);
+  if (!st.raw.length || typeof CompressionStream === "undefined") return;
+  try {
+    const stream = new Blob([st.raw.join("*")]).stream()
+      .pipeThrough(new CompressionStream("deflate-raw"));
+    const bytes = new Uint8Array(await new Response(stream).arrayBuffer());
+    const packed = btoa(String.fromCharCode(...bytes)).replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/, "");
+    const compact = new URL(url);
+    compact.searchParams.delete("st");
+    compact.searchParams.set("st_def", packed);
+    if (compact.href.length < url.href.length && revision === selectionRevision && window.location.href === url.href) {
+      window.history.replaceState({}, "", compact);
+    }
+  } catch {}
 }
 // if query params already exists
-function loadedParamsChecker() {
+async function loadedParamsChecker() {
   const params = new URLSearchParams(window.location.search);
   let raw;
   if (params.has("st")) {
     raw = params.get("st").split("*");
+  } else if (params.has("st_def")) {
+    const revision = selectionRevision;
+    try {
+      const binary = atob(params.get("st_def").replaceAll("-", "+").replaceAll("_", "/"));
+      const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+      const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+      const reader = stream.getReader();
+      const chunks = [];
+      let size = 0;
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        if ((size += value.length) > 1024 * 1024) {
+          await reader.cancel();
+          return;
+        }
+        chunks.push(value);
+      }
+      raw = (await new Blob(chunks).text()).split("*");
+      if (revision !== selectionRevision) return;
+    } catch {
+      return;
+    }
   } else if (params.has("st_raw")) {
     try {
       const json = LZString.decompressFromEncodedURIComponent(
